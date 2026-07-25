@@ -69,6 +69,7 @@ jobs:
         run: |
           set -euo pipefail
           DEB="$(cat deb-path.txt)"
+          TWEAK="package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib"
           test "$(dpkg-deb --field "$DEB" Package)" = "com.nightvibes33.gif2ani"
           test "$(dpkg-deb --field "$DEB" Version)" = "3.1.0"
           test "$(dpkg-deb --field "$DEB" Architecture)" = "iphoneos-arm64"
@@ -79,8 +80,8 @@ jobs:
           grep -q 'var/jb/Library/PreferenceLoader/Preferences/Gif2Ani.plist' package-contents.txt
           test -x package-control/postinst
           test -x package-control/prerm
-          file package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'arm64'
-          strings package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'BKDisplayRenderOverlaySpinny'
+          file "$TWEAK" | grep -q 'arm64'
+          grep -a -q 'BKDisplayRenderOverlaySpinny' "$TWEAK"
 
           python3 - <<'PY'
           import plistlib
@@ -115,6 +116,7 @@ jobs:
           picker = controller[picker_start:picker_end]
           assert 'G2PendingGIFPath' in picker
           assert 'G2ActiveGIFPath' not in picker
+          assert 'postReload' not in picker
           assert 'postSafeReload' not in picker
           assert 'backboardd was not notified' in picker
           assert 'CFPreferencesSetAppValue(CFSTR("isEnabled"), kCFBooleanFalse' in picker
@@ -124,7 +126,9 @@ jobs:
           assert 'G2PendingGIFPath' in apply_code
           assert 'G2ActiveGIFPath' in apply_code
           assert 'rename(' in apply_code
-          assert '[self postSafeReload]' in apply_code
+          assert 'CFPreferencesSetAppValue(CFSTR("isEnabled"), kCFBooleanTrue' in apply_code
+          assert 'sbreload' in apply_code
+          assert 'postSafeReload' not in apply_code
 
           tweak = Path('Tweak.xm').read_text()
           reload_start = tweak.index('static void G2Reload')
@@ -157,7 +161,7 @@ jobs:
               Path('package-root/var/jb/Library/PreferenceLoader/Preferences/Gif2Ani.plist').read_bytes()
           )
           assert entry['entry']['bundle'] == 'Gif2AniPrefs'
-          print('Validated staged selection, fail-closed defaults, lazy decode, and automatic quarantine')
+          print('Validated staged selection, explicit respring activation, fail-closed defaults, lazy decode, and automatic quarantine')
           PY
 
       - name: Upload rootless DEB
