@@ -44,4 +44,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add gif2aniprefs/G2ThemeGalleryController.m
           git commit -m "Polish Gif2Ani gallery import controls" || exit 0
+          git pull --rebase origin main
           git push origin HEAD:main
