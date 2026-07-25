@@ -16,6 +16,7 @@ static NSString * const G2ActiveGIFPath = @"/var/mobile/Library/Application Supp
 static NSString * const G2RejectedGIFPath = @"/var/mobile/Library/Application Support/Gif2Ani/Rejected.gif";
 static NSString * const G2LoadSentinelPath = @"/var/mobile/Library/Application Support/Gif2Ani/load-in-progress";
 static NSString * const G2PendingMetadataPath = @"/var/mobile/Library/Application Support/Gif2Ani/pending-metadata.plist";
+static CFStringRef const G2ReloadNotification = CFSTR("com.nightvibes33.gif2ani/ReloadPrefs");
 
 static const NSUInteger G2MaximumDecodedFrames = 24;
 static const NSUInteger G2MaximumPixelDimension = 640;
@@ -111,6 +112,12 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
     [self presentViewController:alert animated:YES completion:nil];
 }
 
+- (void)postSafeReload {
+    // The tweak's Darwin callback only reloads preferences and clears cached
+    // frames. It never decodes media, so this cannot reproduce the old crash.
+    CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), G2ReloadNotification, NULL, NULL, YES);
+}
+
 - (void)selectGIF {
     UTType *gifType = [UTType typeWithFilenameExtension:@"gif"] ?: UTTypeImage;
     UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initForOpeningContentTypes:@[gifType] asCopy:YES];
@@ -174,7 +181,8 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
     CFPreferencesSetAppValue(CFSTR("isEnabled"), kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
     CFPreferencesSetAppValue(CFSTR("pendingReady"), kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
     CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
-    [self showMessage:@"GIF removed" body:@"Gif2Ani is disabled. Apply and respring to ensure Apple's normal animation is active."];
+    [self postSafeReload];
+    [self showMessage:@"GIF removed" body:@"Gif2Ani is disabled. Apple's normal respring animation is active."];
 }
 
 - (void)chooseBackgroundColor {
@@ -232,6 +240,7 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
         CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
     }
 
+    [self postSafeReload];
     const char *candidates[] = {"/var/jb/usr/bin/sbreload", "/usr/bin/sbreload"};
     for (NSUInteger index = 0; index < 2; index++) {
         if ([[NSFileManager defaultManager] isExecutableFileAtPath:@(candidates[index])]) {
