@@ -7,35 +7,41 @@ This repository hooks the real BackBoard respring surface through `BKDisplayRend
 ## Current version
 
 - Package: `com.nightvibes33.gif2ani`
-- Version: `3.0.1`
+- Version: `3.1.0`
 - Architecture: `iphoneos-arm64`
 - Target: rootless iOS 15 and 16
 - Injection target: `backboardd` only
 
-## 3.0.0 incident and root cause
+## 3.0.0 physical-device incident
 
-Version 3.0.0 could crash-loop `backboardd` immediately after a GIF was selected, even before **Apply and Respring** was tapped.
+Version 3.0.0 crash-looped `backboardd` immediately after a GIF was selected, before **Apply and Respring** was tapped.
 
-The cause was a combination of four unsafe behaviors:
+The physical-device crash reports confirmed the immediate failure:
 
-1. `isEnabled` defaulted to `true` when no preference existed.
-2. The document picker copied the selected file directly into the live GIF path.
-3. The picker immediately posted a Darwin reload notification to `backboardd`.
-4. `backboardd` decoded and retained a large animated-image frame array during that notification.
+1. The document picker copied the selected GIF directly into the live path.
+2. It immediately posted a Darwin reload notification to `backboardd`.
+3. The reload callback decoded the GIF on the BackBoard main thread.
+4. The old decoder called `+[UIScreen mainScreen]` to obtain an image scale while running inside `backboardd`.
+5. UIKit threw an uncaught exception from `+[UIScreen mainScreen]`; `backboardd` aborted with `SIGABRT` while `Gif2Ani.dylib` and ElleKit were loaded.
+6. The live GIF remained and `isEnabled` defaulted to `true`, so subsequent BackBoard launches repeatedly entered the bad state and were killed by the watchdog. SpringBoard also timed out.
 
-The original limits allowed up to 180 decoded frames at 2048 pixels, which can require hundreds of megabytes or more. That is not safe inside a critical process on the 2 GB iPad 5th generation.
+The captured incident contained one initial BackBoard `SIGABRT`, nine later BackBoard watchdog terminations, and one SpringBoard watchdog termination.
 
-## 3.0.1 safety redesign
+The old build also had a separate memory-safety risk: it could retain up to 180 frames at 2048 pixels in a critical process on a 2 GB device. The immediate observed abort was the invalid `UIScreen.mainScreen` call, but the decoder limits also needed a full redesign.
 
-Version 3.0.1 changes activation into a staged transaction:
+## 3.1.0 safety redesign
+
+Version 3.1.0 changes activation into a staged transaction:
 
 - The tweak is disabled by default.
 - Selecting a GIF writes only `Pending.gif`.
-- Selecting a GIF sends no live notification to `backboardd`.
+- Selecting a GIF sends no Darwin notification and does not contact `backboardd`.
 - Import validation runs inside Settings, not inside `backboardd`.
 - **Apply and Respring** atomically promotes `Pending.gif` to `Active.gif`.
-- Media is decoded lazily only when the real respring animation starts.
-- The legacy `BKImageSequence` override was replaced with a safer `CAKeyframeAnimation` on the existing BackBoard content layer.
+- The explicit respring—not a live notification—starts the new configuration.
+- The decoder uses image scale `1.0`; it never calls `UIScreen.mainScreen` inside `backboardd`.
+- Media is decoded lazily only when the actual respring animation starts.
+- The legacy `BKImageSequence` override was replaced with a bounded `CAKeyframeAnimation` on the existing BackBoard content layer.
 - A load sentinel automatically quarantines `Active.gif` if `backboardd` restarts during decode or animation startup.
 - Invalid media is moved to `Rejected.gif`, the tweak disables itself, and Apple's normal animation is used.
 
@@ -44,7 +50,7 @@ Version 3.0.1 changes activation into a staged transaction:
 - Maximum input file: 25 MB
 - Maximum decoded frames: 24
 - Maximum decoded dimension: 640 px
-- Maximum estimated/actual decoded memory: 48 MB
+- Maximum estimated and actual decoded memory: 48 MB
 
 ## Preserved features
 
@@ -76,7 +82,9 @@ The original legacy helper source remains in the repository for historical refer
 - iOS 16.7.11
 - palera1n rootless
 
-Version 3.0.0 was removed after the physical-device crash. Version 3.0.1 must remain disabled until its package build, safe-mode installation, staged-import behavior, normal boot, and explicit apply path have each been verified.
+Version 3.0.0 and all live GIF data were removed from the physical iPad in safe mode. Recovery verification confirmed the package and injection files were absent and both `backboardd` and SpringBoard were running.
+
+Version 3.1.0 must remain disabled until its package build, safe-mode installation, select-only behavior, normal boot, and explicit apply path have each been verified.
 
 ## Usage
 
@@ -98,7 +106,7 @@ make clean package FINALPACKAGE=1
 The package is created as:
 
 ```text
-packages/com.nightvibes33.gif2ani_3.0.1_iphoneos-arm64.deb
+packages/com.nightvibes33.gif2ani_3.1.0_iphoneos-arm64.deb
 ```
 
 Recovery branches:
