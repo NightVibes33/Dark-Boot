@@ -1,6 +1,6 @@
 Gif2Ani 3.3.0 Gallery Build
-run_id=30178156218
-commit=958abd9a2efb51b5bedc8b6e7134e0961f4a1a34
+run_id=30178682641
+commit=13c559ee486199102df05269c61e948df123d17f
 status=failure
 
 
@@ -12,8 +12,8 @@ status=failure
 [0;36m==> [1;39mCleaning…[m
 [1;31m> [1;3;39mMaking all for tweak Gif2Ani…[m
 [0;31m==> [1;39mPreprocessing Tweak.xm…[m
-[0;32m==> [1;39mCompiling UIImage+animatedGIF.m (arm64)…[m
 [0;32m==> [1;39mCompiling G2PreferencesManager.m (arm64)…[m
+[0;32m==> [1;39mCompiling UIImage+animatedGIF.m (arm64)…[m
 [0;32m==> [1;39mCompiling Tweak.xm (arm64)…[m
 [0;33m==> [1;39mLinking tweak Gif2Ani (arm64)…[m
 [0;34m==> [1;39mGenerating debug symbols for Gif2Ani…[m
@@ -24,62 +24,24 @@ status=failure
 [0;35m==> [1;39mCopying resource directories into the bundle wrapper…[m
 [0;32m==> [1;39mCompiling G2ThemeGalleryController.m (arm64)…[m
 In file included from G2ThemeGalleryController.m:2:
-[1m./G2ThemeGalleryPart2.inc:159:48: [0m[0;1;31merror: [0m[1mproperty 'pathExtension' not found on object of type 'id _Nullable'[0m
-    if (files.count == 1 && [files.firstObject.pathExtension.lowercaseString isEqualToString:@"gif"]) {
-[0;1;32m                                               ^
-[0mIn file included from G2ThemeGalleryController.m:3:
-[1m./G2ThemeGalleryPart3.inc:85:107: [0m[0;1;31merror: [0m[1mcannot jump from this goto statement to its label[0m
-    if (![manager moveItemAtPath:temporaryMetadata toPath:G2PendingMetadataPath error:&transactionError]) goto rollback;
-[0;1;32m                                                                                                          ^
-[0m[1m./G2ThemeGalleryPart3.inc:98:19: [0m[0;1;30mnote: [0mjump bypasses initialization of __strong variable[0m
-    NSDictionary *updates = @{
-[0;1;32m                  ^
-[0m[1m./G2ThemeGalleryPart3.inc:93:19: [0m[0;1;30mnote: [0mjump bypasses initialization of __strong variable[0m
-    NSDictionary *oldValues = @{
-[0;1;32m                  ^
-[0m[1m./G2ThemeGalleryPart3.inc:92:19: [0m[0;1;30mnote: [0mjump bypasses initialization of __strong variable[0m
-    NSDictionary *oldPrefs = [NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] ?: @{};
-[0;1;32m                  ^
-[0m[1m./G2ThemeGalleryPart3.inc:84:97: [0m[0;1;31merror: [0m[1mcannot jump from this goto statement to its label[0m
-    if (![manager moveItemAtPath:temporaryGIF toPath:G2PendingGIFPath error:&transactionError]) goto rollback;
-[0;1;32m                                                                                                ^
-[0m[1m./G2ThemeGalleryPart3.inc:98:19: [0m[0;1;30mnote: [0mjump bypasses initialization of __strong variable[0m
-    NSDictionary *updates = @{
-[0;1;32m                  ^
-[0m[1m./G2ThemeGalleryPart3.inc:93:19: [0m[0;1;30mnote: [0mjump bypasses initialization of __strong variable[0m
-    NSDictionary *oldValues = @{
-[0;1;32m                  ^
-[0m[1m./G2ThemeGalleryPart3.inc:92:19: [0m[0;1;30mnote: [0mjump bypasses initialization of __strong variable[0m
-    NSDictionary *oldPrefs = [NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] ?: @{};
-[0;1;32m                  ^
-[0m[1m./G2ThemeGalleryPart3.inc:83:119: [0m[0;1;31merror: [0m[1mcannot jump from this goto statement to its label[0m
-    if (hadMetadata && ![manager moveItemAtPath:G2PendingMetadataPath toPath:backupMetadata error:&transactionError]) goto rollback;
-[0;1;32m                                                                                                                      ^
-[0m[1m./G2ThemeGalleryPart3.inc:98:19: [0m[0;1;30mnote: [0mjump bypasses initialization of __strong variable[0m
-    NSDictionary *updates = @{
-[0;1;32m                  ^
-[0m[1m./G2ThemeGalleryPart3.inc:93:19: [0m[0;1;30mnote: [0mjump bypasses initialization of __strong variable[0m
-    NSDictionary *oldValues = @{
-[0;1;32m                  ^
-[0m[1m./G2ThemeGalleryPart3.inc:92:19: [0m[0;1;30mnote: [0mjump bypasses initialization of __strong variable[0m
-    NSDictionary *oldPrefs = [NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] ?: @{};
-[0;1;32m                  ^
-[0m[1m./G2ThemeGalleryPart3.inc:82:104: [0m[0;1;31merror: [0m[1mcannot jump from this goto statement to its label[0m
-    if (hadGIF && ![manager moveItemAtPath:G2PendingGIFPath toPath:backupGIF error:&transactionError]) goto rollback;
-[0;1;32m                                                                                                       ^
-[0m[1m./G2ThemeGalleryPart3.inc:98:19: [0m[0;1;30mnote: [0mjump bypasses initialization of __strong variable[0m
-    NSDictionary *updates = @{
-[0;1;32m                  ^
-[0m[1m./G2ThemeGalleryPart3.inc:93:19: [0m[0;1;30mnote: [0mjump bypasses initialization of __strong variable[0m
-    NSDictionary *oldValues = @{
-[0;1;32m                  ^
-[0m[1m./G2ThemeGalleryPart3.inc:92:19: [0m[0;1;30mnote: [0mjump bypasses initialization of __strong variable[0m
-    NSDictionary *oldPrefs = [NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] ?: @{};
-[0;1;32m                  ^
-[0mIn file included from G2ThemeGalleryController.m:5:
-[1m./G2ThemeGalleryPart5.inc:150:72: [0m[0;1;31merror: [0m[1mproperty 'pathExtension' not found on object of type 'id _Nullable'[0m
-            NSString *kind = (sorted.count == 1 && [sorted.firstObject.pathExtension.lowercaseString isEqualToString:@"gif"]) ? @"gif" : @"frames";
-[0;1;32m                                                                       ^
+[1m./G2ThemeGalleryPart2.inc:2:55: [0m[0;1;31merror: [0m[1muse of undeclared identifier 'ray'[0m
+            CGFloat end = m * (0.15 + 0.28 * fmod(t + ray / 18.0, 1.0));
+[0;1;32m                                                      ^
+[0m[1m./G2ThemeGalleryPart2.inc:3:76: [0m[0;1;31merror: [0m[1muse of undeclared identifier 'ray'[0m
+            CGContextSetStrokeColorWithColor(ctx, G2RGB(1.0, 0.45 + 0.4 * (ray%3)/2.0, 0.1, 0.9).CGColor);
+[0;1;32m                                                                           ^
+[0m[1m./G2ThemeGalleryPart2.inc:5:49: [0m[0;1;31merror: [0m[1muse of undeclared identifier 'angle'[0m
+            CGContextMoveToPoint(ctx, c.x + cos(angle)*start, c.y + sin(angle)*start);
+[0;1;32m                                                ^
+[0m[1m./G2ThemeGalleryPart2.inc:5:73: [0m[0;1;31merror: [0m[1muse of undeclared identifier 'angle'[0m
+            CGContextMoveToPoint(ctx, c.x + cos(angle)*start, c.y + sin(angle)*start);
+[0;1;32m                                                                        ^
+[0m[1m./G2ThemeGalleryPart2.inc:6:52: [0m[0;1;31merror: [0m[1muse of undeclared identifier 'angle'[0m
+            CGContextAddLineToPoint(ctx, c.x + cos(angle)*end, c.y + sin(angle)*end);
+[0;1;32m                                                   ^
+[0m[1m./G2ThemeGalleryPart2.inc:6:74: [0m[0;1;31merror: [0m[1muse of undeclared identifier 'angle'[0m
+            CGContextAddLineToPoint(ctx, c.x + cos(angle)*end, c.y + sin(angle)*end);
+[0;1;32m                                                                         ^
 [0m6 errors generated.
 make[4]: *** [/opt/theos/makefiles/instance/rules.mk:305: /home/runner/work/Dark-Boot/Dark-Boot/.theos/obj/arm64/G2ThemeGalleryController.m.73f945e1.o] Error 1
 make[4]: *** Waiting for unfinished jobs....
