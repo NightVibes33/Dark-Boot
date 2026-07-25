@@ -1,0 +1,51 @@
+name: Fix Gif2Ani 3.4 Unused Legacy Helper
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - triggers/fix-gif2ani-340-unused-legacy.txt
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Suppress only the retained legacy helper warning
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('gif2aniprefs/G2ThemeGalleryController.m')
+          text = path.read_text()
+          old = '''#define G2StageGIFAtPath G2LegacyStageGIFAtPath
+#include "G2ThemeGalleryPart3.inc"
+#undef G2StageGIFAtPath
+'''
+          new = '''#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
+#define G2StageGIFAtPath G2LegacyStageGIFAtPath
+#include "G2ThemeGalleryPart3.inc"
+#undef G2StageGIFAtPath
+#pragma clang diagnostic pop
+'''
+          if old not in text:
+              if '#pragma clang diagnostic ignored "-Wunused-function"' in text:
+                  raise SystemExit(0)
+              raise SystemExit('legacy include block not found')
+          path.write_text(text.replace(old, new, 1))
+          PY
+          grep -q 'diagnostic ignored "-Wunused-function"' gif2aniprefs/G2ThemeGalleryController.m
+      - name: Commit fix
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add gif2aniprefs/G2ThemeGalleryController.m
+          git commit -m "Suppress retained legacy gallery helper warning" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
