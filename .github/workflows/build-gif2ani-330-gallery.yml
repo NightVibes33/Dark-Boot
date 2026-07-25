@@ -59,7 +59,7 @@ jobs:
           legacy=text[text.index('G2LegacyCatalog'):text.index('static UIColor *G2RGB')]
           assert legacy.count('@{"name"') >= 35, legacy.count('@{"name"')
           assert 'CGImageDestinationCreateWithURL' in text
-          assert 'G2ValidateGIFAtURL' in text
+          assert 'G2ValidateGIFData' in text
           print('gallery_source_contract=success')
           PY
 
