@@ -1,49 +1,60 @@
 #import "G2PreferencesManager.h"
-#import <Cephei/HBPreferences.h>
-#import <libcolorpicker.h>
+#import <QuartzCore/QuartzCore.h>
 
-static NSString *const kG2EnabledKey = @"isEnabled";
-static NSString *const kG2ImageTransformKey = @"imageTransformation";
-static NSString *const kG2LoopKey = @"customLoop";
-static NSString *const kG2DurationKey = @"customDuration";
+static NSString * const G2PreferencesPath = @"/var/mobile/Library/Preferences/com.nightvibes33.gif2ani.plist";
+
+static UIColor *G2ColorFromHex(NSString *value) {
+    NSString *hex = [[value ?: @"#000000" stringByReplacingOccurrencesOfString:@"#" withString:@""] uppercaseString];
+    NSArray<NSString *> *parts = [hex componentsSeparatedByString:@":"];
+    hex = parts.firstObject;
+    CGFloat alpha = parts.count > 1 ? MAX(0.0, MIN(1.0, parts[1].doubleValue)) : 1.0;
+    if (hex.length == 8) {
+        unsigned int rgba = 0;
+        [[NSScanner scannerWithString:hex] scanHexInt:&rgba];
+        return [UIColor colorWithRed:((rgba >> 24) & 0xFF) / 255.0
+                               green:((rgba >> 16) & 0xFF) / 255.0
+                                blue:((rgba >> 8) & 0xFF) / 255.0
+                               alpha:(rgba & 0xFF) / 255.0];
+    }
+    if (hex.length != 6) return [UIColor blackColor];
+    unsigned int rgb = 0;
+    [[NSScanner scannerWithString:hex] scanHexInt:&rgb];
+    return [UIColor colorWithRed:((rgb >> 16) & 0xFF) / 255.0
+                           green:((rgb >> 8) & 0xFF) / 255.0
+                            blue:(rgb & 0xFF) / 255.0
+                           alpha:alpha];
+}
 
 @implementation G2PreferencesManager {
-	HBPreferences *_preferences;
+    NSDictionary *_values;
 }
 
 + (instancetype)sharedInstance {
-	static G2PreferencesManager *sharedInstance;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		sharedInstance = [[self alloc] init];
-	});
-
-	return sharedInstance;
+    static G2PreferencesManager *manager;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{ manager = [self new]; });
+    return manager;
 }
 
 - (instancetype)init {
-	if (self = [super init]) {
-		_preferences = [[HBPreferences alloc] initWithIdentifier:@"com.wizages.gif2aniprefs"];
-
-		[_preferences registerBool:&_isEnabled default:YES forKey:kG2EnabledKey];
-
-		[_preferences registerObject:&_imageTransformation default:kCAGravityResizeAspect forKey:kG2ImageTransformKey];
-
-		[_preferences registerFloat:&_customLoop default:-1.0 forKey:kG2LoopKey];
-		[_preferences registerFloat:&_customDuration default:-1.0 forKey:kG2DurationKey];
-	}
-
-	return self;
+    self = [super init];
+    if (self) [self reload];
+    return self;
 }
 
-- (UIColor *)colorForPreference:(NSString *)string fallback:(NSString *)fallback {
-
-	NSString *potentialIndividualTint = _preferences[string];
-	if (potentialIndividualTint) {
-		return LCPParseColorString(potentialIndividualTint, @"#000000");
-	}
-	return LCPParseColorString(fallback, @"#000000");
+- (void)reload {
+    NSDictionary *disk = [NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath];
+    _values = [disk isKindOfClass:NSDictionary.class] ? [disk copy] : @{};
 }
 
+- (BOOL)isEnabled { return _values[@"isEnabled"] ? [_values[@"isEnabled"] boolValue] : YES; }
+- (NSString *)imageTransformation {
+    NSString *value = _values[@"imageTransformation"];
+    NSSet *allowed = [NSSet setWithArray:@[kCAGravityResizeAspect, kCAGravityResizeAspectFill, kCAGravityResize, kCAGravityCenter]];
+    return [allowed containsObject:value] ? value : kCAGravityResizeAspect;
+}
+- (CGFloat)customLoop { return _values[@"customLoop"] ? [_values[@"customLoop"] doubleValue] : -1.0; }
+- (CGFloat)customDuration { return _values[@"customDuration"] ? [_values[@"customDuration"] doubleValue] : -1.0; }
+- (UIColor *)backgroundColor { return G2ColorFromHex(_values[@"backgroundColor"] ?: @"#000000"); }
 
 @end
