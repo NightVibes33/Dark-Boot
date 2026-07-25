@@ -19,6 +19,7 @@ static NSString * const G2LoadSentinelPath = @"/var/mobile/Library/Application S
 static NSString * const G2PendingMetadataPath = @"/var/mobile/Library/Application Support/Gif2Ani/pending-metadata.plist";
 static CFStringRef const G2ReloadNotification = CFSTR("com.nightvibes33.gif2ani/ReloadPrefs");
 
+static const NSUInteger G2MaximumSourceFrames = 240;
 static const NSUInteger G2MaximumDecodedFrames = 24;
 static const NSUInteger G2MaximumPixelDimension = 640;
 static const unsigned long long G2MaximumInputBytes = 25ULL * 1024ULL * 1024ULL;
@@ -54,7 +55,9 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
         return nil;
     }
 
-    CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
+    NSDictionary *sourceOptions = @{(NSString *)kCGImageSourceShouldCache: @NO};
+    CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)data,
+                                                          (__bridge CFDictionaryRef)sourceOptions);
     if (!source) {
         if (error) *error = [NSError errorWithDomain:@"Gif2Ani" code:2 userInfo:@{NSLocalizedDescriptionKey: @"The selected file is not a readable GIF."}];
         return nil;
@@ -62,12 +65,18 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
 
     size_t sourceFrames = CGImageSourceGetCount(source);
     NSDictionary *properties = sourceFrames ? CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(source, 0, NULL)) : nil;
+    NSDictionary *gifProperties = properties[(NSString *)kCGImagePropertyGIFDictionary];
     NSUInteger width = [properties[(NSString *)kCGImagePropertyPixelWidth] unsignedIntegerValue];
     NSUInteger height = [properties[(NSString *)kCGImagePropertyPixelHeight] unsignedIntegerValue];
     CFRelease(source);
 
-    if (sourceFrames < 2 || width == 0 || height == 0) {
-        if (error) *error = [NSError errorWithDomain:@"Gif2Ani" code:3 userInfo:@{NSLocalizedDescriptionKey: @"Choose an animated GIF with at least two readable frames."}];
+    if (!gifProperties || sourceFrames < 2 || width == 0 || height == 0) {
+        if (error) *error = [NSError errorWithDomain:@"Gif2Ani" code:3 userInfo:@{NSLocalizedDescriptionKey: @"Choose a real animated GIF with at least two readable frames."}];
+        return nil;
+    }
+
+    if (sourceFrames > G2MaximumSourceFrames) {
+        if (error) *error = [NSError errorWithDomain:@"Gif2Ani" code:4 userInfo:@{NSLocalizedDescriptionKey: @"This GIF has more than 240 source frames. Shorten it before importing so BackBoard stays stable."}];
         return nil;
     }
 
@@ -79,7 +88,7 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
     unsigned long long estimatedBytes = (unsigned long long)decodedWidth * (unsigned long long)decodedHeight * 4ULL * (unsigned long long)decodedFrames;
 
     if (estimatedBytes > G2MaximumEstimatedDecodedBytes) {
-        if (error) *error = [NSError errorWithDomain:@"Gif2Ani" code:4 userInfo:@{NSLocalizedDescriptionKey: @"This GIF would use too much decoded memory for the 2 GB iPad. Choose a smaller or shorter animation."}];
+        if (error) *error = [NSError errorWithDomain:@"Gif2Ani" code:5 userInfo:@{NSLocalizedDescriptionKey: @"This GIF would use too much decoded memory for the 2 GB iPad. Choose a smaller or shorter animation."}];
         return nil;
     }
 
@@ -92,6 +101,7 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
         @"decodedWidth": @(decodedWidth),
         @"decodedHeight": @(decodedHeight),
         @"estimatedDecodedBytes": @(estimatedBytes),
+        @"decoder": @"ImageIO-bounded-thumbnail",
     };
 }
 
@@ -114,8 +124,6 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
 }
 
 - (void)postSafeReload {
-    // Used only after an explicit Apply or Remove action. The BackBoard callback
-    // reloads preferences and clears cached frames; it never decodes media.
     CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), G2ReloadNotification, NULL, NULL, YES);
 }
 
@@ -132,41 +140,76 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
     if (!url) return;
 
     BOOL scoped = [url startAccessingSecurityScopedResource];
-    NSError *error = nil;
-    NSData *data = [NSData dataWithContentsOfURL:url options:NSDataReadingMappedIfSafe error:&error];
-    NSDictionary *metadata = error ? nil : G2ValidateGIFData(data, &error);
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        @autoreleasepool {
+            NSError *error = nil;
+            NSData *data = [NSData dataWithContentsOfURL:url options:NSDataReadingMappedIfSafe error:&error];
+            NSDictionary *metadata = error ? nil : G2ValidateGIFData(data, &error);
+            NSFileManager *manager = [NSFileManager defaultManager];
+            NSString *temporaryGIFPath = [G2PendingGIFPath stringByAppendingString:@".importing"];
+            NSString *temporaryMetadataPath = [G2PendingMetadataPath stringByAppendingString:@".importing"];
 
-    if (data && metadata && !error) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:G2MediaDirectory
-                                  withIntermediateDirectories:YES
-                                                   attributes:@{NSFilePosixPermissions: @0755}
-                                                        error:&error];
-    }
-    if (data && metadata && !error && ![data writeToFile:G2PendingGIFPath options:NSDataWritingAtomic error:&error]) data = nil;
-    if (!error && data) chmod(G2PendingGIFPath.fileSystemRepresentation, 0644);
-    if (!error && metadata) [metadata writeToFile:G2PendingMetadataPath atomically:YES];
-    if (scoped) [url stopAccessingSecurityScopedResource];
+            if (data && metadata && !error) {
+                [manager createDirectoryAtPath:G2MediaDirectory
+                   withIntermediateDirectories:YES
+                                    attributes:@{NSFilePosixPermissions: @0755}
+                                         error:&error];
+            }
 
-    if (error || !data || !metadata) {
-        [self showMessage:@"Import failed" body:error.localizedDescription ?: @"The GIF could not be staged safely."];
-        return;
-    }
+            [manager removeItemAtPath:temporaryGIFPath error:nil];
+            [manager removeItemAtPath:temporaryMetadataPath error:nil];
 
-    // Staging must not alter the currently active configuration. On a fresh
-    // install isEnabled already defaults to false; on an active setup the old
-    // animation stays active until the user explicitly applies the new GIF.
-    CFPreferencesSetAppValue(CFSTR("pendingReady"), kCFBooleanTrue, (__bridge CFStringRef)G2PreferencesDomain);
-    CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
+            if (data && metadata && !error) {
+                if (![data writeToFile:temporaryGIFPath options:NSDataWritingAtomic error:&error]) data = nil;
+            }
+            if (!error && data) chmod(temporaryGIFPath.fileSystemRepresentation, 0644);
 
-    NSString *summary = [NSString stringWithFormat:@"Staged only — backboardd was not notified.\n\n%lu source frames → %lu decoded frames\n%lux%lu → %lux%lu\nEstimated decoded memory: %.1f MB\n\nTap Apply and Respring when ready.",
-                         (unsigned long)[metadata[@"sourceFrames"] unsignedIntegerValue],
-                         (unsigned long)[metadata[@"decodedFrames"] unsignedIntegerValue],
-                         (unsigned long)[metadata[@"sourceWidth"] unsignedIntegerValue],
-                         (unsigned long)[metadata[@"sourceHeight"] unsignedIntegerValue],
-                         (unsigned long)[metadata[@"decodedWidth"] unsignedIntegerValue],
-                         (unsigned long)[metadata[@"decodedHeight"] unsignedIntegerValue],
-                         [metadata[@"estimatedDecodedBytes"] doubleValue] / (1024.0 * 1024.0)];
-    [self showMessage:@"GIF staged safely" body:summary];
+            if (!error && data && metadata) {
+                if (![metadata writeToFile:temporaryMetadataPath atomically:YES]) {
+                    error = [NSError errorWithDomain:@"Gif2Ani" code:6 userInfo:@{NSLocalizedDescriptionKey: @"The validated GIF metadata could not be staged."}];
+                }
+            }
+
+            if (!error && data && metadata) {
+                [manager removeItemAtPath:G2PendingGIFPath error:nil];
+                [manager removeItemAtPath:G2PendingMetadataPath error:nil];
+                if (rename(temporaryGIFPath.fileSystemRepresentation, G2PendingGIFPath.fileSystemRepresentation) != 0 ||
+                    rename(temporaryMetadataPath.fileSystemRepresentation, G2PendingMetadataPath.fileSystemRepresentation) != 0) {
+                    int savedErrno = errno;
+                    error = [NSError errorWithDomain:NSPOSIXErrorDomain code:savedErrno userInfo:@{NSLocalizedDescriptionKey: @"The validated GIF could not be moved into the staging area."}];
+                }
+            }
+
+            if (error) {
+                [manager removeItemAtPath:temporaryGIFPath error:nil];
+                [manager removeItemAtPath:temporaryMetadataPath error:nil];
+            }
+            if (scoped) [url stopAccessingSecurityScopedResource];
+
+            dispatch_async(dispatch_get_main_queue(), ^{
+                typeof(self) strongSelf = weakSelf;
+                if (!strongSelf) return;
+                if (error || !data || !metadata) {
+                    [strongSelf showMessage:@"Import failed" body:error.localizedDescription ?: @"The GIF could not be staged safely."];
+                    return;
+                }
+
+                CFPreferencesSetAppValue(CFSTR("pendingReady"), kCFBooleanTrue, (__bridge CFStringRef)G2PreferencesDomain);
+                CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
+
+                NSString *summary = [NSString stringWithFormat:@"Staged only — backboardd was not notified.\n\n%lu source frames → %lu bounded frames\n%lux%lu → at most %lux%lu\nEstimated decoded memory: %.1f MB\n\nTap Apply and Respring when ready.",
+                                     (unsigned long)[metadata[@"sourceFrames"] unsignedIntegerValue],
+                                     (unsigned long)[metadata[@"decodedFrames"] unsignedIntegerValue],
+                                     (unsigned long)[metadata[@"sourceWidth"] unsignedIntegerValue],
+                                     (unsigned long)[metadata[@"sourceHeight"] unsignedIntegerValue],
+                                     (unsigned long)[metadata[@"decodedWidth"] unsignedIntegerValue],
+                                     (unsigned long)[metadata[@"decodedHeight"] unsignedIntegerValue],
+                                     [metadata[@"estimatedDecodedBytes"] doubleValue] / (1024.0 * 1024.0)];
+                [strongSelf showMessage:@"GIF staged safely" body:summary];
+            });
+        }
+    });
     (void)controller;
 }
 
@@ -244,9 +287,6 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
         CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
     }
 
-    // Synchronize only the preference state with the already-running BackBoard
-    // process. Its callback cannot decode media. Decoding remains lazy and starts
-    // only when BackBoard asks the overlay to animate during the respring below.
     [self postSafeReload];
     usleep(150000);
 
