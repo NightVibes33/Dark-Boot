@@ -27,6 +27,8 @@ static NSTimeInterval g2NaturalDuration;
 static NSDictionary *g2MediaMetadata;
 static BOOL g2AnimationPending;
 static CALayer *g2PreparedContentLayer;
+static CALayer *g2DedicatedAnimationLayer;
+static CGRect g2PresentationBounds;
 
 static void G2EnsureMediaDirectory(void) {
     [[NSFileManager defaultManager] createDirectoryAtPath:G2MediaDirectory
@@ -87,6 +89,9 @@ static void G2RejectActiveGIF(NSString *reason) {
     g2MediaMetadata = nil;
     g2AnimationPending = NO;
     g2PreparedContentLayer = nil;
+    [g2DedicatedAnimationLayer removeFromSuperlayer];
+    g2DedicatedAnimationLayer = nil;
+    g2PresentationBounds = CGRectZero;
     G2WriteStatus(@"gif-auto-disabled", @{ @"reason": reason ?: @"unknown" });
 }
 
@@ -289,19 +294,78 @@ static NSArray *G2CGImageValues(void) {
     return values;
 }
 
-static BOOL G2InstallAnimationOnLayer(CALayer *layer) {
-    if (!layer || !g2Frames.count) return NO;
-    if ([layer animationForKey:G2AnimationKey]) {
-        g2AnimationPending = NO;
-        return YES;
+static CALayer *G2BestAnimationContainer(CALayer *appleLayer) {
+    if (!appleLayer) return nil;
+
+    CALayer *best = appleLayer.superlayer ?: appleLayer;
+    CGFloat targetArea = CGRectGetWidth(g2PresentationBounds) * CGRectGetHeight(g2PresentationBounds);
+    CALayer *cursor = best;
+    for (NSUInteger depth = 0; cursor && depth < 8; depth++, cursor = cursor.superlayer) {
+        best = cursor;
+        CGFloat area = CGRectGetWidth(cursor.bounds) * CGRectGetHeight(cursor.bounds);
+        if (targetArea > 0 && area >= targetArea * 0.75) break;
     }
+    return best;
+}
+
+static CGRect G2OverlayBounds(CALayer *container) {
+    CGRect bounds = container ? container.bounds : CGRectZero;
+    CGFloat containerArea = CGRectGetWidth(bounds) * CGRectGetHeight(bounds);
+    CGFloat displayArea = CGRectGetWidth(g2PresentationBounds) * CGRectGetHeight(g2PresentationBounds);
+
+    if (displayArea > 0 && containerArea < displayArea * 0.75) {
+        bounds = CGRectMake(0, 0,
+                            CGRectGetWidth(g2PresentationBounds),
+                            CGRectGetHeight(g2PresentationBounds));
+    }
+    if (CGRectIsEmpty(bounds)) bounds = UIScreen.mainScreen.bounds;
+    bounds.origin = CGPointZero;
+    return bounds;
+}
+
+static BOOL G2InstallAnimationOnLayer(CALayer *appleLayer) {
+    if (!appleLayer || !g2Frames.count) return NO;
 
     NSArray *values = G2CGImageValues();
     if (!values.count) return NO;
 
+    CALayer *container = G2BestAnimationContainer(appleLayer);
+    if (!container) return NO;
+
+    if (!g2DedicatedAnimationLayer || g2DedicatedAnimationLayer.superlayer != container) {
+        [g2DedicatedAnimationLayer removeFromSuperlayer];
+        g2DedicatedAnimationLayer = [CALayer layer];
+        g2DedicatedAnimationLayer.name = @"com.nightvibes33.gif2ani.dedicated-overlay";
+        g2DedicatedAnimationLayer.zPosition = 100000.0;
+        [container addSublayer:g2DedicatedAnimationLayer];
+    }
+
+    CGRect overlayBounds = G2OverlayBounds(container);
+    g2DedicatedAnimationLayer.bounds = overlayBounds;
+    CGRect containerBounds = container.bounds;
+    CGPoint center = CGPointMake(CGRectGetMidX(containerBounds), CGRectGetMidY(containerBounds));
+    if (CGRectIsEmpty(containerBounds)) {
+        center = CGPointMake(CGRectGetMidX(overlayBounds), CGRectGetMidY(overlayBounds));
+    }
+    g2DedicatedAnimationLayer.position = center;
+    g2DedicatedAnimationLayer.opacity = 1.0;
+    g2DedicatedAnimationLayer.hidden = NO;
+    g2DedicatedAnimationLayer.masksToBounds = YES;
+    g2DedicatedAnimationLayer.contentsScale = UIScreen.mainScreen.scale;
+
     G2PreferencesManager *preferences = [G2PreferencesManager sharedInstance];
-    layer.contentsGravity = preferences.imageTransformation;
-    layer.backgroundColor = preferences.backgroundColor.CGColor;
+    g2DedicatedAnimationLayer.contentsGravity = preferences.imageTransformation;
+    g2DedicatedAnimationLayer.backgroundColor = preferences.backgroundColor.CGColor;
+    g2DedicatedAnimationLayer.contents = values.firstObject;
+
+    BOOL appleLoaderHidden = container != appleLayer;
+    if (appleLoaderHidden) appleLayer.opacity = 0.0;
+
+    if ([g2DedicatedAnimationLayer animationForKey:G2AnimationKey]) {
+        g2AnimationPending = NO;
+        return YES;
+    }
+
     CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"contents"];
     animation.values = values;
     animation.calculationMode = kCAAnimationDiscrete;
@@ -313,7 +377,7 @@ static BOOL G2InstallAnimationOnLayer(CALayer *layer) {
     animation.fillMode = kCAFillModeBoth;
 
     @try {
-        [layer addAnimation:animation forKey:G2AnimationKey];
+        [g2DedicatedAnimationLayer addAnimation:animation forKey:G2AnimationKey];
     } @catch (NSException *exception) {
         G2RejectActiveGIF([NSString stringWithFormat:@"BackBoard animation exception: %@", exception.name ?: @"unknown"]);
         return NO;
@@ -324,12 +388,20 @@ static BOOL G2InstallAnimationOnLayer(CALayer *layer) {
         @"duration": @(animation.duration),
         @"repeatCount": @(animation.repeatCount),
         @"decoder": @"ImageIO-bounded-thumbnail",
-        @"attachmentPoint": @"prepared-content-layer",
+        @"attachmentPoint": @"dedicated-overlay-layer",
+        @"overlayWidth": @(CGRectGetWidth(overlayBounds)),
+        @"overlayHeight": @(CGRectGetHeight(overlayBounds)),
+        @"appleLoaderHidden": @(appleLoaderHidden),
     });
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         G2ClearLoadSentinel();
-        G2WriteStatus(@"custom-animation-stable", nil);
+        G2WriteStatus(@"custom-animation-stable", @{
+            @"attachmentPoint": @"dedicated-overlay-layer",
+            @"overlayWidth": @(CGRectGetWidth(g2DedicatedAnimationLayer.bounds)),
+            @"overlayHeight": @(CGRectGetHeight(g2DedicatedAnimationLayer.bounds)),
+            @"appleLoaderHidden": @(appleLoaderHidden),
+        });
         g2PreparedContentLayer = nil;
     });
     return YES;
@@ -346,6 +418,9 @@ static void G2Reload(__unused CFNotificationCenterRef center,
     g2MediaMetadata = nil;
     g2AnimationPending = NO;
     g2PreparedContentLayer = nil;
+    [g2DedicatedAnimationLayer removeFromSuperlayer];
+    g2DedicatedAnimationLayer = nil;
+    g2PresentationBounds = CGRectZero;
     G2WriteStatus(@"preferences-reloaded-without-media-decode", nil);
 }
 
@@ -371,6 +446,9 @@ static void G2Reload(__unused CFNotificationCenterRef center,
     g2AnimationPending = YES;
     %orig;
 
+    if ([self.display respondsToSelector:@selector(safeBounds)]) {
+        g2PresentationBounds = [self.display safeBounds];
+    }
     CALayer *layer = self.contentLayer ?: g2PreparedContentLayer;
     if (layer && G2InstallAnimationOnLayer(layer)) return;
 
@@ -390,9 +468,9 @@ static void G2Reload(__unused CFNotificationCenterRef center,
     G2PreferencesManager *preferences = [G2PreferencesManager sharedInstance];
     if (!preferences.isEnabled || !g2Frames.count || !layer) return layer;
 
-    layer.contentsGravity = preferences.imageTransformation;
-    if ([self.display respondsToSelector:@selector(safeBounds)]) layer.bounds = [self.display safeBounds];
-    layer.backgroundColor = preferences.backgroundColor.CGColor;
+    if ([self.display respondsToSelector:@selector(safeBounds)]) {
+        g2PresentationBounds = [self.display safeBounds];
+    }
     G2InstallAnimationOnLayer(layer);
     (void)presentation;
     return layer;
