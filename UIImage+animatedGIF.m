@@ -19,12 +19,11 @@ static UIImage *G2AnimatedImageFromSource(CGImageSourceRef source) {
     size_t sourceCount = CGImageSourceGetCount(source);
     if (sourceCount == 0) return nil;
 
-    // backboardd is a critical process and this iPad only has 2 GB of RAM.
-    // Keep the decoded animation below roughly 50 MB instead of allowing
-    // hundreds of 2048-pixel frames to be retained at once.
-    const size_t maximumDecodedFrames = 30;
+    // Hard limits for the 2 GB iPad. The old build could retain up to 180
+    // 2048-pixel frames inside backboardd, which is enough to kill it.
+    const size_t maximumDecodedFrames = 24;
     const size_t maximumPixelSize = 640;
-    const size_t maximumDecodedBytes = 56ULL * 1024ULL * 1024ULL;
+    const size_t maximumDecodedBytes = 48ULL * 1024ULL * 1024ULL;
     size_t step = MAX((size_t)1, (size_t)ceil((double)sourceCount / (double)maximumDecodedFrames));
     NSMutableArray<UIImage *> *frames = [NSMutableArray arrayWithCapacity:MIN(sourceCount, maximumDecodedFrames)];
     NSTimeInterval totalDuration = 0;
@@ -64,7 +63,7 @@ static UIImage *G2AnimatedImageFromSource(CGImageSourceRef source) {
 }
 
 + (UIImage *)animatedImageWithAnimatedGIFData:(NSData *)data {
-    if (!data.length || data.length > 20ULL * 1024ULL * 1024ULL) return nil;
+    if (!data.length || data.length > 25ULL * 1024ULL * 1024ULL) return nil;
     CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
     UIImage *image = G2AnimatedImageFromSource(source);
     if (source) CFRelease(source);
@@ -75,7 +74,7 @@ static UIImage *G2AnimatedImageFromSource(CGImageSourceRef source) {
     if (!url.isFileURL) return nil;
     NSNumber *fileSize = nil;
     [url getResourceValue:&fileSize forKey:NSURLFileSizeKey error:nil];
-    if (fileSize.unsignedLongLongValue > 20ULL * 1024ULL * 1024ULL) return nil;
+    if (fileSize.unsignedLongLongValue > 25ULL * 1024ULL * 1024ULL) return nil;
     CGImageSourceRef source = CGImageSourceCreateWithURL((__bridge CFURLRef)url, NULL);
     UIImage *image = G2AnimatedImageFromSource(source);
     if (source) CFRelease(source);
