@@ -1,10 +1,10 @@
 Dark-Boot Production Rootless DEB Build
-run_id=30159961764
-run_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30159961764
-commit=7f0cde680d75c39541ce267eb8a5eb7f7a3dec5b
-event=issues
+run_id=30160163446
+run_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30160163446
+commit=4c212e4f24235aa5b31ecd42600a85849e301bca
+event=push
 outcome=success
-completed_at_utc=2026-07-25T13:34:26Z
+completed_at_utc=2026-07-25T13:40:54Z
 
 --- build log tail ---
 [0;36m==> [1;39mCleaning…[m
@@ -37,7 +37,7 @@ completed_at_utc=2026-07-25T13:34:26Z
 dm.pl: building package `com.nightvibes33.darkboot:iphoneos-arm64' in `./packages/com.nightvibes33.darkboot_2.0.0_iphoneos-arm64.deb'
 Built packages/com.nightvibes33.darkboot_2.0.0_iphoneos-arm64.deb
  new Debian package, version 2.0.
- size 36158 bytes: control archive=874 bytes.
+ size 36128 bytes: control archive=872 bytes.
      497 bytes,    12 lines      control
      847 bytes,    26 lines   *  postinst             #!/bin/sh
      162 bytes,     7 lines   *  prerm                #!/bin/sh
@@ -53,19 +53,19 @@ Built packages/com.nightvibes33.darkboot_2.0.0_iphoneos-arm64.deb
  Architecture: iphoneos-arm64
  Version: 2.0.0
  Installed-Size: 256
-drwxr-xr-x 0/root            0 2026-07-25 13:34 .
-drwxr-xr-x 0/root            0 2026-07-25 13:34 var
-drwxr-xr-x 0/root            0 2026-07-25 13:34 var/jb
-drwxr-xr-x 0/root            0 2026-07-25 13:34 var/jb/Library
-drwxr-xr-x 0/root            0 2026-07-25 13:34 var/jb/Library/MobileSubstrate
-drwxr-xr-x 0/root            0 2026-07-25 13:34 var/jb/Library/MobileSubstrate/DynamicLibraries
--rwxr-xr-x 0/root       110128 2026-07-25 13:34 var/jb/Library/MobileSubstrate/DynamicLibraries/DarkBoot.dylib
--rw-r--r-- 0/root          110 2026-07-25 13:34 var/jb/Library/MobileSubstrate/DynamicLibraries/DarkBoot.plist
-drwxr-xr-x 0/root            0 2026-07-25 13:34 var/jb/Library/PreferenceBundles
-drwxr-xr-x 0/root            0 2026-07-25 13:34 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle
--rwxr-xr-x 0/root        89648 2026-07-25 13:34 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/DarkBootPrefs
--rw-r--r-- 0/root          822 2026-07-25 13:33 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/Info.plist
--rw-r--r-- 0/root        12375 2026-07-25 13:33 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/Root.plist
-drwxr-xr-x 0/root            0 2026-07-25 13:33 var/jb/Library/PreferenceLoader
-drwxr-xr-x 0/root            0 2026-07-25 13:33 var/jb/Library/PreferenceLoader/Preferences
--rw-r--r-- 0/root          178 2026-07-25 13:33 var/jb/Library/PreferenceLoader/Preferences/DarkBoot.plist
+drwxr-xr-x 0/root            0 2026-07-25 13:40 .
+drwxr-xr-x 0/root            0 2026-07-25 13:40 var
+drwxr-xr-x 0/root            0 2026-07-25 13:40 var/jb
+drwxr-xr-x 0/root            0 2026-07-25 13:40 var/jb/Library
+drwxr-xr-x 0/root            0 2026-07-25 13:40 var/jb/Library/MobileSubstrate
+drwxr-xr-x 0/root            0 2026-07-25 13:40 var/jb/Library/MobileSubstrate/DynamicLibraries
+-rwxr-xr-x 0/root       110128 2026-07-25 13:40 var/jb/Library/MobileSubstrate/DynamicLibraries/DarkBoot.dylib
+-rw-r--r-- 0/root          110 2026-07-25 13:40 var/jb/Library/MobileSubstrate/DynamicLibraries/DarkBoot.plist
+drwxr-xr-x 0/root            0 2026-07-25 13:40 var/jb/Library/PreferenceBundles
+drwxr-xr-x 0/root            0 2026-07-25 13:40 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle
+-rwxr-xr-x 0/root        89648 2026-07-25 13:40 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/DarkBootPrefs
+-rw-r--r-- 0/root          822 2026-07-25 13:40 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/Info.plist
+-rw-r--r-- 0/root        12375 2026-07-25 13:40 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/Root.plist
+drwxr-xr-x 0/root            0 2026-07-25 13:40 var/jb/Library/PreferenceLoader
+drwxr-xr-x 0/root            0 2026-07-25 13:40 var/jb/Library/PreferenceLoader/Preferences
+-rw-r--r-- 0/root          178 2026-07-25 13:40 var/jb/Library/PreferenceLoader/Preferences/DarkBoot.plist
