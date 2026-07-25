@@ -4,6 +4,7 @@
 #import <ImageIO/ImageIO.h>
 #import <spawn.h>
 #import <sys/stat.h>
+#import <sys/wait.h>
 #import <stdio.h>
 #import <errno.h>
 #import <unistd.h>
@@ -11,6 +12,7 @@
 extern char **environ;
 
 static NSString * const G2PreferencesDomain = @"com.nightvibes33.gif2ani";
+static NSString * const G2PreferencesPath = @"/var/mobile/Library/Preferences/com.nightvibes33.gif2ani.plist";
 static NSString * const G2MediaDirectory = @"/var/mobile/Library/Application Support/Gif2Ani";
 static NSString * const G2PendingGIFPath = @"/var/mobile/Library/Application Support/Gif2Ani/Pending.gif";
 static NSString * const G2ActiveGIFPath = @"/var/mobile/Library/Application Support/Gif2Ani/Active.gif";
@@ -46,7 +48,64 @@ static NSString *G2PreferenceFromColor(UIColor *color) {
         red = green = blue = white;
     }
     return [NSString stringWithFormat:@"#%02X%02X%02X:%.3f",
-            (int)lrint(red * 255.0), (int)lrint(green * 255.0), (int)lrint(blue * 255.0), alpha];
+            (int)lrint(red * 255.0), (int)lrint(green * 255.0),
+            (int)lrint(blue * 255.0), alpha];
+}
+
+static BOOL G2WriteEnabledPreferences(BOOL enabled, NSError **error) {
+    NSMutableDictionary *preferences = [[NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] mutableCopy];
+    if (!preferences) preferences = [NSMutableDictionary dictionary];
+
+    preferences[@"isEnabled"] = @(enabled);
+    preferences[@"pendingReady"] = @NO;
+    if (enabled) preferences[@"lastAppliedAt"] = @([[NSDate date] timeIntervalSince1970]);
+
+    CFPreferencesSetAppValue(CFSTR("isEnabled"), enabled ? kCFBooleanTrue : kCFBooleanFalse,
+                             (__bridge CFStringRef)G2PreferencesDomain);
+    CFPreferencesSetAppValue(CFSTR("pendingReady"), kCFBooleanFalse,
+                             (__bridge CFStringRef)G2PreferencesDomain);
+    if (enabled) {
+        CFPreferencesSetAppValue(CFSTR("lastAppliedAt"),
+                                 (__bridge CFPropertyListRef)preferences[@"lastAppliedAt"],
+                                 (__bridge CFStringRef)G2PreferencesDomain);
+    }
+    CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
+
+    if (![preferences writeToFile:G2PreferencesPath atomically:YES]) {
+        if (error) {
+            *error = [NSError errorWithDomain:@"Gif2Ani" code:7 userInfo:@{
+                NSLocalizedDescriptionKey: @"The enabled state could not be written to the real preferences file."
+            }];
+        }
+        return NO;
+    }
+
+    chown(G2PreferencesPath.fileSystemRepresentation, 501, 501);
+    chmod(G2PreferencesPath.fileSystemRepresentation, 0644);
+
+    NSDictionary *verified = [NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath];
+    BOOL matches = [verified[@"isEnabled"] boolValue] == enabled;
+    if (!matches && error) {
+        *error = [NSError errorWithDomain:@"Gif2Ani" code:8 userInfo:@{
+            NSLocalizedDescriptionKey: @"The enabled state did not survive verification, so BackBoard was not restarted."
+        }];
+    }
+    return matches;
+}
+
+static BOOL G2RestartProcess(NSString *processName) {
+    const char *candidates[] = {"/var/jb/usr/bin/killall", "/usr/bin/killall"};
+    for (NSUInteger index = 0; index < 2; index++) {
+        if (![[NSFileManager defaultManager] isExecutableFileAtPath:@(candidates[index])]) continue;
+
+        pid_t pid = 0;
+        char *argv[] = {(char *)"killall", (char *)"-9", (char *)processName.UTF8String, NULL};
+        if (posix_spawn(&pid, candidates[index], NULL, NULL, argv, environ) != 0) continue;
+
+        int status = 0;
+        if (waitpid(pid, &status, 0) == pid && WIFEXITED(status) && WEXITSTATUS(status) == 0) return YES;
+    }
+    return NO;
 }
 
 static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
@@ -85,7 +144,9 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
     double scale = MIN(1.0, (double)G2MaximumPixelDimension / MAX(1.0, maxDimension));
     NSUInteger decodedWidth = MAX((NSUInteger)1, (NSUInteger)ceil(width * scale));
     NSUInteger decodedHeight = MAX((NSUInteger)1, (NSUInteger)ceil(height * scale));
-    unsigned long long estimatedBytes = (unsigned long long)decodedWidth * (unsigned long long)decodedHeight * 4ULL * (unsigned long long)decodedFrames;
+    unsigned long long estimatedBytes = (unsigned long long)decodedWidth *
+                                        (unsigned long long)decodedHeight * 4ULL *
+                                        (unsigned long long)decodedFrames;
 
     if (estimatedBytes > G2MaximumEstimatedDecodedBytes) {
         if (error) *error = [NSError errorWithDomain:@"Gif2Ani" code:5 userInfo:@{NSLocalizedDescriptionKey: @"This GIF would use too much decoded memory for the 2 GB iPad. Choose a smaller or shorter animation."}];
@@ -118,13 +179,16 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
 }
 
 - (void)showMessage:(NSString *)title body:(NSString *)body {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:body preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:body
+                                                            preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)postSafeReload {
-    CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), G2ReloadNotification, NULL, NULL, YES);
+    CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(),
+                                         G2ReloadNotification, NULL, NULL, YES);
 }
 
 - (void)selectGIF {
@@ -152,23 +216,25 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
 
             if (data && metadata && !error) {
                 [manager createDirectoryAtPath:G2MediaDirectory
-                   withIntermediateDirectories:YES
-                                    attributes:@{NSFilePosixPermissions: @0755}
-                                         error:&error];
+                    withIntermediateDirectories:YES
+                                     attributes:@{NSFilePosixPermissions: @0755}
+                                          error:&error];
             }
 
             [manager removeItemAtPath:temporaryGIFPath error:nil];
             [manager removeItemAtPath:temporaryMetadataPath error:nil];
 
-            if (data && metadata && !error) {
-                if (![data writeToFile:temporaryGIFPath options:NSDataWritingAtomic error:&error]) data = nil;
+            if (data && metadata && !error &&
+                ![data writeToFile:temporaryGIFPath options:NSDataWritingAtomic error:&error]) {
+                data = nil;
             }
             if (!error && data) chmod(temporaryGIFPath.fileSystemRepresentation, 0644);
 
-            if (!error && data && metadata) {
-                if (![metadata writeToFile:temporaryMetadataPath atomically:YES]) {
-                    error = [NSError errorWithDomain:@"Gif2Ani" code:6 userInfo:@{NSLocalizedDescriptionKey: @"The validated GIF metadata could not be staged."}];
-                }
+            if (!error && data && metadata &&
+                ![metadata writeToFile:temporaryMetadataPath atomically:YES]) {
+                error = [NSError errorWithDomain:@"Gif2Ani" code:6 userInfo:@{
+                    NSLocalizedDescriptionKey: @"The validated GIF metadata could not be staged."
+                }];
             }
 
             if (!error && data && metadata) {
@@ -177,7 +243,9 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
                 if (rename(temporaryGIFPath.fileSystemRepresentation, G2PendingGIFPath.fileSystemRepresentation) != 0 ||
                     rename(temporaryMetadataPath.fileSystemRepresentation, G2PendingMetadataPath.fileSystemRepresentation) != 0) {
                     int savedErrno = errno;
-                    error = [NSError errorWithDomain:NSPOSIXErrorDomain code:savedErrno userInfo:@{NSLocalizedDescriptionKey: @"The validated GIF could not be moved into the staging area."}];
+                    error = [NSError errorWithDomain:NSPOSIXErrorDomain code:savedErrno userInfo:@{
+                        NSLocalizedDescriptionKey: @"The validated GIF could not be moved into the staging area."
+                    }];
                 }
             }
 
@@ -195,17 +263,19 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
                     return;
                 }
 
-                CFPreferencesSetAppValue(CFSTR("pendingReady"), kCFBooleanTrue, (__bridge CFStringRef)G2PreferencesDomain);
+                CFPreferencesSetAppValue(CFSTR("pendingReady"), kCFBooleanTrue,
+                                         (__bridge CFStringRef)G2PreferencesDomain);
                 CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
 
-                NSString *summary = [NSString stringWithFormat:@"Staged only — backboardd was not notified.\n\n%lu source frames → %lu bounded frames\n%lux%lu → at most %lux%lu\nEstimated decoded memory: %.1f MB\n\nTap Apply and Respring when ready.",
-                                     (unsigned long)[metadata[@"sourceFrames"] unsignedIntegerValue],
-                                     (unsigned long)[metadata[@"decodedFrames"] unsignedIntegerValue],
-                                     (unsigned long)[metadata[@"sourceWidth"] unsignedIntegerValue],
-                                     (unsigned long)[metadata[@"sourceHeight"] unsignedIntegerValue],
-                                     (unsigned long)[metadata[@"decodedWidth"] unsignedIntegerValue],
-                                     (unsigned long)[metadata[@"decodedHeight"] unsignedIntegerValue],
-                                     [metadata[@"estimatedDecodedBytes"] doubleValue] / (1024.0 * 1024.0)];
+                NSString *summary = [NSString stringWithFormat:
+                    @"Staged only — backboardd was not notified.\n\n%lu source frames → %lu bounded frames\n%lux%lu → at most %lux%lu\nEstimated decoded memory: %.1f MB\n\nTap Apply and Respring when ready.",
+                    (unsigned long)[metadata[@"sourceFrames"] unsignedIntegerValue],
+                    (unsigned long)[metadata[@"decodedFrames"] unsignedIntegerValue],
+                    (unsigned long)[metadata[@"sourceWidth"] unsignedIntegerValue],
+                    (unsigned long)[metadata[@"sourceHeight"] unsignedIntegerValue],
+                    (unsigned long)[metadata[@"decodedWidth"] unsignedIntegerValue],
+                    (unsigned long)[metadata[@"decodedHeight"] unsignedIntegerValue],
+                    [metadata[@"estimatedDecodedBytes"] doubleValue] / (1024.0 * 1024.0)];
                 [strongSelf showMessage:@"GIF staged safely" body:summary];
             });
         }
@@ -216,7 +286,8 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
 - (void)removeGIF {
     NSError *error = nil;
     NSFileManager *manager = [NSFileManager defaultManager];
-    for (NSString *path in @[G2PendingGIFPath, G2ActiveGIFPath, G2RejectedGIFPath, G2LoadSentinelPath, G2PendingMetadataPath]) {
+    for (NSString *path in @[G2PendingGIFPath, G2ActiveGIFPath, G2RejectedGIFPath,
+                             G2LoadSentinelPath, G2PendingMetadataPath]) {
         if ([manager fileExistsAtPath:path] && ![manager removeItemAtPath:path error:&error]) break;
     }
     if (error) {
@@ -224,15 +295,13 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
         return;
     }
 
-    CFPreferencesSetAppValue(CFSTR("isEnabled"), kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
-    CFPreferencesSetAppValue(CFSTR("pendingReady"), kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
-    CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
+    G2WriteEnabledPreferences(NO, nil);
     [self postSafeReload];
     [self showMessage:@"GIF removed" body:@"Gif2Ani is disabled. Apple's normal respring animation is active."];
 }
 
 - (void)chooseBackgroundColor {
-    NSDictionary *prefs = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.nightvibes33.gif2ani.plist"] ?: @{};
+    NSDictionary *prefs = [NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] ?: @{};
     UIColorPickerViewController *picker = [UIColorPickerViewController new];
     picker.delegate = self;
     picker.supportsAlpha = YES;
@@ -243,7 +312,9 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
 
 - (void)colorPickerViewControllerDidSelectColor:(UIColorPickerViewController *)viewController {
     NSString *value = G2PreferenceFromColor(viewController.selectedColor);
-    CFPreferencesSetAppValue(CFSTR("backgroundColor"), (__bridge CFPropertyListRef)value, (__bridge CFStringRef)G2PreferencesDomain);
+    CFPreferencesSetAppValue(CFSTR("backgroundColor"),
+                             (__bridge CFPropertyListRef)value,
+                             (__bridge CFStringRef)G2PreferencesDomain);
     CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
 }
 
@@ -275,30 +346,29 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
     }
 
     if (![manager fileExistsAtPath:G2ActiveGIFPath]) {
-        CFPreferencesSetAppValue(CFSTR("isEnabled"), kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
-        CFPreferencesSetAppValue(CFSTR("pendingReady"), kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
-        CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
-    } else {
-        [manager removeItemAtPath:G2RejectedGIFPath error:nil];
-        [manager removeItemAtPath:G2LoadSentinelPath error:nil];
-        CFPreferencesSetAppValue(CFSTR("isEnabled"), kCFBooleanTrue, (__bridge CFStringRef)G2PreferencesDomain);
-        CFPreferencesSetAppValue(CFSTR("pendingReady"), kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
-        CFPreferencesSetAppValue(CFSTR("lastAppliedAt"), (__bridge CFPropertyListRef)@([[NSDate date] timeIntervalSince1970]), (__bridge CFStringRef)G2PreferencesDomain);
-        CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
+        G2WriteEnabledPreferences(NO, nil);
+        [self showMessage:@"Apply failed" body:@"No active GIF exists. Select and stage a GIF first."];
+        return;
+    }
+
+    [manager removeItemAtPath:G2RejectedGIFPath error:nil];
+    [manager removeItemAtPath:G2LoadSentinelPath error:nil];
+
+    if (!G2WriteEnabledPreferences(YES, &error)) {
+        [self showMessage:@"Apply failed" body:error.localizedDescription ?: @"The enabled state could not be saved safely."];
+        return;
     }
 
     [self postSafeReload];
-    usleep(150000);
+    usleep(250000);
 
-    const char *candidates[] = {"/var/jb/usr/bin/sbreload", "/usr/bin/sbreload"};
-    for (NSUInteger index = 0; index < 2; index++) {
-        if ([[NSFileManager defaultManager] isExecutableFileAtPath:@(candidates[index])]) {
-            pid_t pid = 0;
-            char *argv[] = {(char *)candidates[index], NULL};
-            if (posix_spawn(&pid, candidates[index], NULL, NULL, argv, environ) == 0) return;
-        }
-    }
-    [self showMessage:@"Unable to respring" body:@"Run sbreload in a terminal. The staged settings were saved safely."];
+    // The animation belongs to backboardd. On this iOS build, sbreload can
+    // restart only SpringBoard and skip both Apple's spinner and Gif2Ani.
+    if (G2RestartProcess(@"backboardd")) return;
+    if (G2RestartProcess(@"SpringBoard")) return;
+
+    [self showMessage:@"Unable to restart BackBoard"
+                 body:@"The GIF is enabled and saved, but the system restart command was unavailable."];
 }
 
 - (void)respring {
