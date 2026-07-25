@@ -1,0 +1,113 @@
+name: Build Gif2Ani 3.1.3 Final
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/triggers/build-gif2ani-313-final.txt
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies and Theos
+        env:
+          THEOS: /opt/theos
+          CI: "1"
+          SHELL: /bin/bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            bash curl sudo build-essential fakeroot rsync perl git \
+            libxml2 dpkg-dev unzip xz-utils ca-certificates python3 file
+          sudo rm -rf /opt/theos
+          sudo mkdir -p /opt
+          sudo chown "$USER:$USER" /opt
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          test -x /opt/theos/toolchain/linux/iphone/bin/clang
+
+      - name: Validate final source contract
+        run: |
+          set -euo pipefail
+          test "$(awk '/^Version:/{print $2}' control)" = "3.1.3"
+          grep -q 'static CALayer \*g2PreparedContentLayer' Tweak.xm
+          grep -q 'self.contentLayer ?: g2PreparedContentLayer' Tweak.xm
+          grep -q 'if (layer) g2PreparedContentLayer = layer' Tweak.xm
+          grep -q 'G2InstallAnimationOnLayer(layer)' Tweak.xm
+          grep -q 'CGImageSourceCreateThumbnailAtIndex' Tweak.xm
+          grep -q 'kCGImageSourceThumbnailMaxPixelSize' Tweak.xm
+          grep -q 'ImageIO-bounded-thumbnail' Tweak.xm
+          ! grep -q 'animatedImageWithAnimatedGIFURL' Tweak.xm
+          grep -q 'QOS_CLASS_USER_INITIATED' gif2aniprefs/gif2ani2RootListController.m
+          grep -q 'backboardd was not notified' gif2aniprefs/gif2ani2RootListController.m
+          python3 - <<'PY'
+          from pathlib import Path
+          text=Path('Tweak.xm').read_text()
+          start=text[text.index('- (void)_startAnimating'):text.index('- (CALayer *)_prepareContentLayerForPresentation')]
+          assert start.count('%orig;') >= 2
+          enabled=start.index('g2AnimationPending = YES')
+          assert start.find('%orig;', enabled) > enabled
+          assert 'custom-animation-awaiting-content-layer' in start
+          prepare=text[text.index('- (CALayer *)_prepareContentLayerForPresentation'):text.index('%end', text.index('- (CALayer *)_prepareContentLayerForPresentation'))]
+          assert 'if (layer) g2PreparedContentLayer = layer' in prepare
+          assert 'G2InstallAnimationOnLayer(layer)' in prepare
+          print('final_source_contract=success')
+          PY
+
+      - name: Build rootless DEB
+        id: compile
+        env:
+          THEOS: /opt/theos
+        run: |
+          set -o pipefail
+          make clean package FINALPACKAGE=1 2>&1 | tee build-313-final.log
+          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.1.3_iphoneos-arm64.deb' | head -n1)"
+          test -n "$DEB"
+          echo "$DEB" > deb-path-313.txt
+          test "$(dpkg-deb --field "$DEB" Package)" = "com.nightvibes33.gif2ani"
+          test "$(dpkg-deb --field "$DEB" Version)" = "3.1.3"
+          dpkg-deb --contents "$DEB" | tee package-contents-313.txt
+          sha256sum "$DEB" | tee deb-sha256-313.txt
+
+      - name: Upload final DEB
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gif2Ani-3.1.3-final-rootless-deb
+          path: packages/com.nightvibes33.gif2ani_3.1.3_iphoneos-arm64.deb
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish final build status
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          mkdir -p status
+          {
+            echo "Gif2Ani 3.1.3 Final Build"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "commit=${GITHUB_SHA}"
+            echo "status=${JOB_STATUS}"
+            echo
+            cat deb-sha256-313.txt 2>/dev/null || true
+            echo
+            echo "--- build log tail ---"
+            tail -n 250 build-313-final.log 2>/dev/null || true
+          } > status/build-313-final.txt
+          git add status/build-313-final.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Record Gif2Ani 3.1.3 final build [skip ci]"
+            git push origin HEAD:main
+          fi
