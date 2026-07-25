@@ -16,18 +16,16 @@ This repository hooks the real BackBoard respring surface through `BKDisplayRend
 
 Version 3.0.0 crash-looped `backboardd` immediately after a GIF was selected, before **Apply and Respring** was tapped.
 
-The physical-device crash reports confirmed the immediate failure:
+The physical-device crash reports and source path identified the failure chain:
 
 1. The document picker copied the selected GIF directly into the live path.
 2. It immediately posted a Darwin reload notification to `backboardd`.
-3. The reload callback decoded the GIF on the BackBoard main thread.
-4. The old decoder called `+[UIScreen mainScreen]` to obtain an image scale while running inside `backboardd`.
-5. UIKit threw an uncaught exception from `+[UIScreen mainScreen]`; `backboardd` aborted with `SIGABRT` while `Gif2Ani.dylib` and ElleKit were loaded.
-6. The live GIF remained and `isEnabled` defaulted to `true`, so subsequent BackBoard launches repeatedly entered the bad state and were killed by the watchdog. SpringBoard also timed out.
+3. The reload callback decoded the GIF synchronously inside BackBoard.
+4. The old decoder called `+[UIScreen mainScreen]` for image scale while running inside `backboardd`.
+5. UIKit raised an uncaught exception; `backboardd` aborted while Gif2Ani and ElleKit were loaded.
+6. The live GIF remained and `isEnabled` defaulted to `true`, so subsequent BackBoard launches repeated the failure and produced a boot loop.
 
-The captured incident contained one initial BackBoard `SIGABRT`, nine later BackBoard watchdog terminations, and one SpringBoard watchdog termination.
-
-The old build also had a separate memory-safety risk: it could retain up to 180 frames at 2048 pixels in a critical process on a 2 GB device. The immediate observed abort was the invalid `UIScreen.mainScreen` call, but the decoder limits also needed a full redesign.
+The old build also had a separate memory-safety risk: it could retain up to 180 frames at 2048 pixels in a critical process on a 2 GB device. The immediate abort and the decoder limits both required correction.
 
 ## 3.1.0 safety redesign
 
@@ -38,7 +36,6 @@ Version 3.1.0 changes activation into a staged transaction:
 - Selecting a GIF sends no Darwin notification and does not contact `backboardd`.
 - Import validation runs inside Settings, not inside `backboardd`.
 - **Apply and Respring** atomically promotes `Pending.gif` to `Active.gif`.
-- The explicit respring—not a live notification—starts the new configuration.
 - The decoder uses image scale `1.0`; it never calls `UIScreen.mainScreen` inside `backboardd`.
 - Media is decoded lazily only when the actual respring animation starts.
 - The legacy `BKImageSequence` override was replaced with a bounded `CAKeyframeAnimation` on the existing BackBoard content layer.
@@ -76,15 +73,27 @@ The original project depended on Cephei, libcolorpicker, and WriteAnywhere. The 
 
 The original legacy helper source remains in the repository for historical reference, but it is not linked into the package.
 
-## Verified device target
+## Verified physical-device state
+
+Target device:
 
 - iPad 5th generation (`iPad6,11`)
 - iOS 16.7.11
 - palera1n rootless
+- 2 GB RAM
 
-Version 3.0.0 and all live GIF data were removed from the physical iPad in safe mode. Recovery verification confirmed the package and injection files were absent and both `backboardd` and SpringBoard were running.
+Verified recovery and installation results:
 
-Version 3.1.0 must remain disabled until its package build, safe-mode installation, select-only behavior, normal boot, and explicit apply path have each been verified.
+- Version 3.0.0, its injection files, preferences, and selected GIF were removed in jailbreak safe mode.
+- Recovery verification confirmed both `backboardd` and SpringBoard were running afterward.
+- Version 3.1.0 passed the rootless arm64 build and crash-safety validation workflow.
+- Version 3.1.0 was installed on the physical iPad with `isEnabled=false` and no active GIF.
+- A two-frame 64×64 test GIF was placed only in `Pending.gif` for 15 seconds.
+- `backboardd` remained on the same PID throughout that staged-only test.
+- No `Active.gif`, `Rejected.gif`, or `load-in-progress` sentinel was created.
+- The test GIF was removed; the final device state is installed, disabled, and contains no GIF media.
+
+The explicit Apply-and-Respring path has not yet been tested outside jailbreak safe mode. Keep the tweak disabled until a controlled normal-jailbreak test is completed.
 
 ## Usage
 
@@ -92,7 +101,7 @@ Version 3.1.0 must remain disabled until its package build, safe-mode installati
 2. Tap **Select and Stage GIF**.
 3. Review the displayed frame, size, and decoded-memory estimate.
 4. Configure scaling, loop count, duration, and background color.
-5. Tap **Apply and Respring**.
+5. Tap **Apply and Respring** only after the controlled normal-jailbreak test is complete.
 
 Merely selecting a GIF does not contact or reload `backboardd`.
 
