@@ -1,11 +1,11 @@
-Package: com.wizage.gif2ani2
-Name: Gif2Ani V2
-Depends: mobilesubstrate, ws.hbang.common, org.thebigboss.libcolorpicker, com.wizages.writeanywhere
-Conflicts: com.wizages.gif2ani
-Version: 2.0~beta1
-Architecture: iphoneos-arm
-Description: iOS Respring animations from any gif you want
-Maintainer: wizages <wizagesmax@gmail.com>
-Author: wizages <wizagesmax@gmail.com>
+Package: com.nightvibes33.gif2ani
+Name: Gif2Ani Rootless
+Version: 3.0.0
+Architecture: iphoneos-arm64
+Depends: firmware (>= 15.0), mobilesubstrate
+Conflicts: com.nightvibes33.darkboot, com.wizage.gif2ani2, com.wizages.gif2ani
+Replaces: com.nightvibes33.darkboot
+Description: Real custom GIF animations on the BackBoard respring screen, ported for rootless iOS 15 and 16.
+Maintainer: NightVibes33
+Author: wizages, rootless port by NightVibes33
 Section: Tweaks
-Depiction: http://wizages.com/cydia/depictions/?dep=com.wizage.gif2ani2
