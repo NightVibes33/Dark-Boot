@@ -1,0 +1,75 @@
+name: Apply Gif2Ani 3.1.6 BackBoard-Safe Overlay Fix
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/triggers/apply-gif2ani-316-no-uiscreen-fix.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-316-source-fix
+  cancel-in-progress: true
+
+jobs:
+  patch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Remove UIScreen access from backboardd path
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('Tweak.xm')
+          t=p.read_text()
+          old='''    if (CGRectIsEmpty(bounds)) bounds = UIScreen.mainScreen.bounds;
+              bounds.origin = CGPointZero;
+          '''
+          new='''    if (CGRectIsEmpty(bounds)) {
+                  CGFloat width = [g2MediaMetadata[@"decodedWidth"] doubleValue];
+                  CGFloat height = [g2MediaMetadata[@"decodedHeight"] doubleValue];
+                  bounds = CGRectMake(0, 0, MAX(1.0, width), MAX(1.0, height));
+              }
+              bounds.origin = CGPointZero;
+          '''
+          assert old in t
+          t=t.replace(old,new,1)
+          old_scale='g2DedicatedAnimationLayer.contentsScale = UIScreen.mainScreen.scale;'
+          new_scale='g2DedicatedAnimationLayer.contentsScale = appleLayer.contentsScale > 0 ? appleLayer.contentsScale : 1.0;'
+          assert old_scale in t
+          t=t.replace(old_scale,new_scale,1)
+          p.write_text(t)
+
+          c=Path('control')
+          s=c.read_text()
+          assert 'Version: 3.1.5' in s
+          c.write_text(s.replace('Version: 3.1.5','Version: 3.1.6',1))
+          PY
+      - name: Validate daemon-safe source
+        run: |
+          set -euo pipefail
+          grep -q 'Version: 3.1.6' control
+          grep -q 'dedicated-overlay-layer' Tweak.xm
+          grep -q 'appleLayer.contentsScale > 0' Tweak.xm
+          grep -q 'decodedWidth' Tweak.xm
+          ! grep -q 'UIScreen' Tweak.xm
+      - name: Commit fix
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Tweak.xm control
+          git commit -m 'Remove UIScreen crash from Gif2Ani overlay'
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 3
+          done
+          exit 1
