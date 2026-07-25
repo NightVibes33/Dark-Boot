@@ -1,0 +1,3 @@
+build=gif2ani-3.1.3-final
+requested_at=2026-07-25T17:03:00-05:00
+source_commit=6fc336a6d02827f95d3bbeb29cedba935de67a34
