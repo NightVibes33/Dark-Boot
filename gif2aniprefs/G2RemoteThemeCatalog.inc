@@ -68,6 +68,7 @@ static NSArray<NSDictionary *> *G2DownloadableBuiltInPacks(void) {
         }
     }
     NSCAssert(packs.count == 54, @"Downloadable theme catalog must contain 54 entries");
+    if (packs.count != 54 || ![packs.firstObject[@"name"] isEqualToString:@"Cyan Pulse Rings"]) return @[];
     return packs;
 }
 
