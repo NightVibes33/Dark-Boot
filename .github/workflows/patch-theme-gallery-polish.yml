@@ -1,0 +1,47 @@
+name: Patch Gif2Ani Theme Gallery Polish
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - triggers/patch-theme-gallery-polish.txt
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch gallery source
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('gif2aniprefs/G2ThemeGalleryController.m')
+          text=p.read_text()
+          text=text.replace('#import <unistd.h>\n', '#import <unistd.h>\n#import <stdlib.h>\n#import <string.h>\n')
+          old='''    self.navigationItem.rightBarButtonItems = @[
+        [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshGallery)],
+        [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(importPack)]
+    ];'''
+          new='''    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshGallery)];
+    refreshButton.accessibilityLabel = @"Refresh Animation Gallery";
+    UIBarButtonItem *importButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(importPack)];
+    importButton.accessibilityLabel = @"Import GIF, ZIP, DEB, or Frame Folder";
+    self.navigationItem.rightBarButtonItems = @[refreshButton, importButton];'''
+          if old not in text:
+              raise SystemExit('navigation block not found')
+          text=text.replace(old,new)
+          p.write_text(text)
+          PY
+          grep -q 'stdlib.h' gif2aniprefs/G2ThemeGalleryController.m
+          grep -q 'Import GIF, ZIP, DEB, or Frame Folder' gif2aniprefs/G2ThemeGalleryController.m
+      - name: Commit patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add gif2aniprefs/G2ThemeGalleryController.m
+          git commit -m "Polish Gif2Ani gallery import controls" || exit 0
+          git push origin HEAD:main
