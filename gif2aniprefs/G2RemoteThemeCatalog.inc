@@ -48,7 +48,9 @@ static NSArray<NSDictionary *> *G2DownloadableBuiltInPacks(void) {
     for (NSDictionary *palette in palettes) {
         for (NSDictionary *engine in engines) {
             NSString *identifier = [NSString stringWithFormat:@"%@-%@", palette[@"slug"], engine[@"slug"]];
-            NSString *name = [NSString stringWithFormat:@"%@ %@", palette[@"name"], engine[@"name"]];
+            NSString *name = packs.count == 0
+                ? @"Cyan Pulse Rings"
+                : [NSString stringWithFormat:@"%@ %@", palette[@"name"], engine[@"name"]];
             NSString *downloadURL = [NSString stringWithFormat:
                 @"https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/%@/gif2ani-themes/v1/%@.gif",
                 G2RemoteThemeCatalogCommit, identifier];
