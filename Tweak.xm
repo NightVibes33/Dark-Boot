@@ -3,13 +3,13 @@
 #import <QuartzCore/QuartzCore.h>
 #import <ImageIO/ImageIO.h>
 #import <objc/runtime.h>
-#import <sys/stat.h>
 
 static NSString * const G2MediaDirectory = @"/var/mobile/Library/Application Support/Gif2Ani";
 static NSString * const G2ActiveGIFPath = @"/var/mobile/Library/Application Support/Gif2Ani/Active.gif";
 static NSString * const G2RejectedGIFPath = @"/var/mobile/Library/Application Support/Gif2Ani/Rejected.gif";
 static NSString * const G2StatusPath = @"/var/mobile/Library/Application Support/Gif2Ani/runtime-status.plist";
 static NSString * const G2LoadSentinelPath = @"/var/mobile/Library/Application Support/Gif2Ani/load-in-progress";
+static NSString * const G2PreferencesPath = @"/var/mobile/Library/Preferences/com.nightvibes33.gif2ani.plist";
 static CFStringRef const G2ReloadNotification = CFSTR("com.nightvibes33.gif2ani/ReloadPrefs");
 
 static const NSUInteger G2MaximumDecodedFrames = 24;
@@ -34,7 +34,6 @@ static void G2WriteStatus(NSString *event, NSDictionary *extra) {
         @"event": event ?: @"unknown",
         @"timestamp": @([[NSDate date] timeIntervalSince1970]),
         @"process": NSProcessInfo.processInfo.processName ?: @"unknown",
-        @"BKImageSequence": @(objc_getClass("BKImageSequence") != Nil),
         @"BKDisplayRenderOverlaySpinny": @(objc_getClass("BKDisplayRenderOverlaySpinny") != Nil),
         @"gifExists": @([[NSFileManager defaultManager] fileExistsAtPath:G2ActiveGIFPath]),
         @"frameCount": @(g2Frames.count),
@@ -50,17 +49,27 @@ static void G2WriteStatus(NSString *event, NSDictionary *extra) {
     [status writeToFile:G2StatusPath atomically:YES];
 }
 
+static void G2SetEnabledOnDisk(BOOL enabled) {
+    NSMutableDictionary *preferences = [[NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] mutableCopy];
+    if (!preferences) preferences = [NSMutableDictionary dictionary];
+    preferences[@"isEnabled"] = @(enabled);
+    [preferences writeToFile:G2PreferencesPath atomically:YES];
+}
+
 static void G2ClearLoadSentinel(void) {
     [[NSFileManager defaultManager] removeItemAtPath:G2LoadSentinelPath error:nil];
 }
 
 static void G2RejectActiveGIF(NSString *reason) {
     NSFileManager *manager = [NSFileManager defaultManager];
+    G2EnsureMediaDirectory();
     [manager removeItemAtPath:G2RejectedGIFPath error:nil];
     if ([manager fileExistsAtPath:G2ActiveGIFPath]) {
         [manager moveItemAtPath:G2ActiveGIFPath toPath:G2RejectedGIFPath error:nil];
     }
     G2ClearLoadSentinel();
+    G2SetEnabledOnDisk(NO);
+    [[G2PreferencesManager sharedInstance] reload];
     g2Frames = nil;
     g2NaturalDuration = 0;
     g2MediaMetadata = nil;
@@ -70,15 +79,13 @@ static void G2RejectActiveGIF(NSString *reason) {
 static NSDictionary *G2ValidateActiveGIF(void) {
     NSFileManager *manager = [NSFileManager defaultManager];
     NSDictionary *attributes = [manager attributesOfItemAtPath:G2ActiveGIFPath error:nil];
-    unsigned long long inputBytes = [attributes fileSize];
+    unsigned long long inputBytes = [attributes[NSFileSize] unsignedLongLongValue];
     if (!attributes || inputBytes == 0 || inputBytes > G2MaximumInputBytes) return nil;
 
-    NSURL *url = [NSURL fileURLWithPath:G2ActiveGIFPath];
-    CGImageSourceRef source = CGImageSourceCreateWithURL((__bridge CFURLRef)url, NULL);
+    CGImageSourceRef source = CGImageSourceCreateWithURL((__bridge CFURLRef)[NSURL fileURLWithPath:G2ActiveGIFPath], NULL);
     if (!source) return nil;
-
     size_t sourceFrames = CGImageSourceGetCount(source);
-    NSDictionary *properties = CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(source, 0, NULL));
+    NSDictionary *properties = sourceFrames ? CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(source, 0, NULL)) : nil;
     NSUInteger width = [properties[(NSString *)kCGImagePropertyPixelWidth] unsignedIntegerValue];
     NSUInteger height = [properties[(NSString *)kCGImagePropertyPixelHeight] unsignedIntegerValue];
     CFRelease(source);
@@ -89,7 +96,7 @@ static NSDictionary *G2ValidateActiveGIF(void) {
     double scale = MIN(1.0, (double)G2MaximumPixelDimension / MAX(1.0, maxDimension));
     NSUInteger decodedWidth = MAX((NSUInteger)1, (NSUInteger)ceil(width * scale));
     NSUInteger decodedHeight = MAX((NSUInteger)1, (NSUInteger)ceil(height * scale));
-    unsigned long long estimatedBytes = (unsigned long long)decodedWidth * (unsigned long long)decodedHeight * 4ULL * (unsigned long long)decodedFrames;
+    unsigned long long estimatedBytes = (unsigned long long)decodedWidth * decodedHeight * 4ULL * decodedFrames;
     if (estimatedBytes > G2MaximumEstimatedDecodedBytes) return nil;
 
     return @{
@@ -105,30 +112,29 @@ static NSDictionary *G2ValidateActiveGIF(void) {
 }
 
 static BOOL G2LoadGIF(void) {
+    G2PreferencesManager *preferences = [G2PreferencesManager sharedInstance];
+    if (!preferences.isEnabled) return NO;
+
+    NSFileManager *manager = [NSFileManager defaultManager];
     g2Frames = nil;
     g2NaturalDuration = 0;
     g2MediaMetadata = nil;
 
-    NSFileManager *manager = [NSFileManager defaultManager];
     if (![manager fileExistsAtPath:G2ActiveGIFPath]) {
         G2WriteStatus(@"no-active-gif", nil);
         return NO;
     }
 
+    // Any leftover sentinel means backboardd previously died while decoding.
+    // Quarantine immediately instead of retrying and creating a boot loop.
     if ([manager fileExistsAtPath:G2LoadSentinelPath]) {
-        NSDictionary *attributes = [manager attributesOfItemAtPath:G2LoadSentinelPath error:nil];
-        NSDate *modified = attributes[NSFileModificationDate];
-        NSTimeInterval age = modified ? -modified.timeIntervalSinceNow : 0;
-        if (age >= 0 && age < 300) {
-            G2RejectActiveGIF(@"previous backboardd load did not complete");
-            return NO;
-        }
-        G2ClearLoadSentinel();
+        G2RejectActiveGIF(@"previous backboardd GIF decode did not complete");
+        return NO;
     }
 
     NSDictionary *metadata = G2ValidateActiveGIF();
     if (!metadata) {
-        G2RejectActiveGIF(@"GIF exceeded the safe size, frame, dimension, or memory limits");
+        G2RejectActiveGIF(@"GIF exceeded safe size, frame, dimension, or memory limits");
         return NO;
     }
     g2MediaMetadata = metadata;
@@ -136,7 +142,13 @@ static BOOL G2LoadGIF(void) {
     G2EnsureMediaDirectory();
     [@"loading" writeToFile:G2LoadSentinelPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
 
-    UIImage *animation = [UIImage animatedImageWithAnimatedGIFURL:[NSURL fileURLWithPath:G2ActiveGIFPath]];
+    UIImage *animation = nil;
+    @try {
+        animation = [UIImage animatedImageWithAnimatedGIFURL:[NSURL fileURLWithPath:G2ActiveGIFPath]];
+    } @catch (NSException *exception) {
+        G2WriteStatus(@"decode-exception", @{ @"name": exception.name ?: @"unknown" });
+    }
+
     if (!animation) {
         G2RejectActiveGIF(@"ImageIO could not decode the active GIF");
         return NO;
@@ -145,26 +157,35 @@ static BOOL G2LoadGIF(void) {
     NSArray<UIImage *> *frames = animation.images;
     if (!frames.count) frames = @[animation];
     if (!frames.count || frames.count > G2MaximumDecodedFrames) {
-        G2RejectActiveGIF(@"decoded frame count was invalid");
+        G2RejectActiveGIF(@"decoded frame count was outside the safe limit");
+        return NO;
+    }
+
+    unsigned long long decodedBytes = 0;
+    for (UIImage *frame in frames) {
+        CGImageRef image = frame.CGImage;
+        if (!image) continue;
+        decodedBytes += (unsigned long long)CGImageGetBytesPerRow(image) * CGImageGetHeight(image);
+        if (decodedBytes > G2MaximumEstimatedDecodedBytes) break;
+    }
+    if (decodedBytes == 0 || decodedBytes > G2MaximumEstimatedDecodedBytes) {
+        G2RejectActiveGIF(@"actual decoded memory exceeded the safe limit");
         return NO;
     }
 
     g2Frames = [frames copy];
     g2NaturalDuration = MAX(0.05, animation.duration);
-    G2WriteStatus(@"gif-loaded-safely", @{ @"duration": @(g2NaturalDuration) });
-
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        G2ClearLoadSentinel();
-        G2WriteStatus(@"gif-load-stable", nil);
+    G2ClearLoadSentinel();
+    G2WriteStatus(@"gif-loaded-safely", @{
+        @"duration": @(g2NaturalDuration),
+        @"decodedBytes": @(decodedBytes),
     });
     return YES;
 }
 
 static NSArray *G2CGImageValues(void) {
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:g2Frames.count];
-    for (UIImage *frame in g2Frames) {
-        if (frame.CGImage) [values addObject:(__bridge id)frame.CGImage];
-    }
+    for (UIImage *frame in g2Frames) if (frame.CGImage) [values addObject:(__bridge id)frame.CGImage];
     return values;
 }
 
@@ -173,7 +194,11 @@ static void G2Reload(__unused CFNotificationCenterRef center,
                      __unused CFStringRef name,
                      __unused const void *object,
                      __unused CFDictionaryRef userInfo) {
+    // Reload preferences only. Never decode media from a Settings notification.
     [[G2PreferencesManager sharedInstance] reload];
+    g2Frames = nil;
+    g2NaturalDuration = 0;
+    g2MediaMetadata = nil;
     G2WriteStatus(@"preferences-reloaded-without-media-decode", nil);
 }
 
@@ -191,7 +216,7 @@ static void G2Reload(__unused CFNotificationCenterRef center,
 
 - (void)_startAnimating {
     G2PreferencesManager *preferences = [G2PreferencesManager sharedInstance];
-    if (!preferences.isEnabled || !g2Frames.count) {
+    if (!preferences.isEnabled || (!g2Frames.count && !G2LoadGIF())) {
         %orig;
         return;
     }
@@ -212,11 +237,9 @@ static void G2Reload(__unused CFNotificationCenterRef center,
     animation.removedOnCompletion = NO;
     animation.fillMode = kCAFillModeBoth;
     [self.contentLayer addAnimation:animation forKey:@"com.nightvibes33.gif2ani.animation"];
-    G2WriteStatus(@"custom-animation-started", @{ @"duration": @(animation.duration), @"repeatCount": @(animation.repeatCount) });
-
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        G2ClearLoadSentinel();
-        G2WriteStatus(@"custom-animation-stable", nil);
+    G2WriteStatus(@"custom-animation-started", @{
+        @"duration": @(animation.duration),
+        @"repeatCount": @(animation.repeatCount),
     });
 }
 
@@ -237,8 +260,13 @@ static void G2Reload(__unused CFNotificationCenterRef center,
     @autoreleasepool {
         if (![NSProcessInfo.processInfo.processName isEqualToString:@"backboardd"]) return;
         G2EnsureMediaDirectory();
+
+        // Recover before hooks become active if the prior decode killed backboardd.
+        if ([[NSFileManager defaultManager] fileExistsAtPath:G2LoadSentinelPath]) {
+            G2RejectActiveGIF(@"recovered automatically after backboardd restart");
+        }
+
         [[G2PreferencesManager sharedInstance] reload];
-        if ([G2PreferencesManager sharedInstance].isEnabled) G2LoadGIF();
         CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
                                         NULL,
                                         G2Reload,
@@ -246,6 +274,6 @@ static void G2Reload(__unused CFNotificationCenterRef center,
                                         NULL,
                                         CFNotificationSuspensionBehaviorDeliverImmediately);
         if (objc_getClass("BKDisplayRenderOverlaySpinny")) %init(G2SpinnyHooks);
-        G2WriteStatus([G2PreferencesManager sharedInstance].isEnabled ? @"tweak-loaded-enabled" : @"tweak-loaded-disabled", nil);
+        G2WriteStatus(@"tweak-loaded-no-media-decode", nil);
     }
 }
