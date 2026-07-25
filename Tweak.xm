@@ -26,6 +26,7 @@ static NSArray<UIImage *> *g2Frames;
 static NSTimeInterval g2NaturalDuration;
 static NSDictionary *g2MediaMetadata;
 static BOOL g2AnimationPending;
+static CALayer *g2PreparedContentLayer;
 
 static void G2EnsureMediaDirectory(void) {
     [[NSFileManager defaultManager] createDirectoryAtPath:G2MediaDirectory
@@ -85,6 +86,7 @@ static void G2RejectActiveGIF(NSString *reason) {
     g2NaturalDuration = 0;
     g2MediaMetadata = nil;
     g2AnimationPending = NO;
+    g2PreparedContentLayer = nil;
     G2WriteStatus(@"gif-auto-disabled", @{ @"reason": reason ?: @"unknown" });
 }
 
@@ -298,6 +300,8 @@ static BOOL G2InstallAnimationOnLayer(CALayer *layer) {
     if (!values.count) return NO;
 
     G2PreferencesManager *preferences = [G2PreferencesManager sharedInstance];
+    layer.contentsGravity = preferences.imageTransformation;
+    layer.backgroundColor = preferences.backgroundColor.CGColor;
     CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"contents"];
     animation.values = values;
     animation.calculationMode = kCAAnimationDiscrete;
@@ -326,6 +330,7 @@ static BOOL G2InstallAnimationOnLayer(CALayer *layer) {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         G2ClearLoadSentinel();
         G2WriteStatus(@"custom-animation-stable", nil);
+        g2PreparedContentLayer = nil;
     });
     return YES;
 }
@@ -340,6 +345,7 @@ static void G2Reload(__unused CFNotificationCenterRef center,
     g2NaturalDuration = 0;
     g2MediaMetadata = nil;
     g2AnimationPending = NO;
+    g2PreparedContentLayer = nil;
     G2WriteStatus(@"preferences-reloaded-without-media-decode", nil);
 }
 
@@ -365,14 +371,14 @@ static void G2Reload(__unused CFNotificationCenterRef center,
     g2AnimationPending = YES;
     %orig;
 
-    CALayer *layer = self.contentLayer;
+    CALayer *layer = self.contentLayer ?: g2PreparedContentLayer;
     if (layer && G2InstallAnimationOnLayer(layer)) return;
 
     G2WriteStatus(@"custom-animation-awaiting-content-layer", nil);
     __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (!g2AnimationPending) return;
-        CALayer *delayedLayer = weakSelf.contentLayer;
+        CALayer *delayedLayer = weakSelf.contentLayer ?: g2PreparedContentLayer;
         if (delayedLayer && G2InstallAnimationOnLayer(delayedLayer)) return;
         G2RejectActiveGIF(@"BackBoard content layer never became available after Apple animation setup");
     });
@@ -380,6 +386,7 @@ static void G2Reload(__unused CFNotificationCenterRef center,
 
 - (CALayer *)_prepareContentLayerForPresentation:(id)presentation {
     CALayer *layer = %orig;
+    if (layer) g2PreparedContentLayer = layer;
     G2PreferencesManager *preferences = [G2PreferencesManager sharedInstance];
     if (!preferences.isEnabled || !g2Frames.count || !layer) return layer;
 
