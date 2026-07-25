@@ -12,6 +12,13 @@
 #import <string.h>
 #import <fcntl.h>
 
+// Older Theos SDKs lose NSString typing while chaining NSArray.firstObject.
+// Every value used here is an NSString path; declaring the selector keeps the
+// source compatible without changing runtime behavior.
+@interface NSObject (G2PathExtensionCompatibility)
+- (NSString *)pathExtension;
+@end
+
 extern char **environ;
 
 static NSString * const G2PreferencesDomain = @"com.nightvibes33.gif2ani";
@@ -48,7 +55,9 @@ static NSArray<NSDictionary *> *G2BuiltInPacks(void) {
 
 static NSArray<NSDictionary *> *G2LegacyCatalog(void) {
     return @[
-        @{@"name":@"Alone", @"package":@"io.github.virenmohindra.alone"},
+        @{@"name":@"A Wave", @"package":@"io.github.virenmohindra.a-wave", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{@"name":@"Alone", @"package":@"io.github.virenmohindra.alone", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{@"name":@"Amalgamation", @"package":@"io.github.virenmohindra.amalgamation", @"source":@"Viren's Repo", @"format":@"Springy"},
         @{@"name":@"Apple Glitch", @"package":@"io.github.virenmohindra.apple-glitch"},
         @{@"name":@"Bipolar Balls", @"package":@"io.github.virenmohindra.bipolar-balls"},
         @{@"name":@"Black Hole", @"package":@"io.github.virenmohindra.black-hole"},
@@ -82,7 +91,24 @@ static NSArray<NSDictionary *> *G2LegacyCatalog(void) {
         @{@"name":@"Super Mario", @"package":@"io.github.virenmohindra.super-mario"},
         @{@"name":@"Time And Money", @"package":@"io.github.virenmohindra.time-and-money"},
         @{@"name":@"Upload", @"package":@"io.github.virenmohindra.upload"},
-        @{@"name":@"Yin And Yang", @"package":@"io.github.virenmohindra.yin-and-yang"}
+        @{@"name":@"Colorful Stars In Space", @"package":@"io.github.virenmohindra.colorful-stars-in-space", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{@"name":@"GameCube Logo", @"package":@"io.github.virenmohindra.gamecube-logo", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{@"name":@"Only Human", @"package":@"io.github.virenmohindra.only-human", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{@"name":@"Spinning Rings", @"package":@"io.github.virenmohindra.spinning-rings", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{@"name":@"Stranger Things", @"package":@"io.github.virenmohindra.stranger-things", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{@"name":@"Tesseract", @"package":@"io.github.virenmohindra.tesseract", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{@"name":@"Twisting Cubes", @"package":@"io.github.virenmohindra.twisting-cubes", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{@"name":@"Percentage Animation", @"package":@"com.yourepo.samgisaninja.percentageanimationforspringy", @"source":@"Samg_is_a_Ninja's Repo", @"format":@"Springy"},
+        @{@"name":@"Tech Compass", @"package":@"com.thecomputerwhisperer.techcompass", @"source":@"TheComputerWhisperer's Repo", @"format":@"Springy"},
+        @{@"name":@"Windows XP Pro Loading", @"package":@"com.thecomputerwhisperer.winxpstartup", @"source":@"TheComputerWhisperer's Repo", @"format":@"Springy"},
+        @{@"name":@"Brooklyn Apple Logos", @"package":@"com.project.brooklyn", @"source":@"Basepack", @"format":@"SnowBoard Respring"},
+        @{@"name":@"Aku Aku", @"package":@"com.yourepo.easytoast.akuakurespringtheme", @"source":@"YouRepo", @"format":@"WinterBoard Respring"},
+        @{@"name":@"Prayer", @"package":@"com.yourepo.easytoast.prayerrespringtheme", @"source":@"YouRepo", @"format":@"WinterBoard Respring"},
+        @{@"name":@"SparkCube", @"package":@"com.yourepo.easytoast.sparkcuberespringtheme", @"source":@"YouRepo", @"format":@"WinterBoard Respring"},
+        @{@"name":@"YingYang", @"package":@"com.yourepo.easytoast.yingyangrespringtheme", @"source":@"YouRepo", @"format":@"WinterBoard Respring"},
+        @{@"name":@"Phoenix-like", @"package":@"com.nostalgia.jbrespring", @"source":@"Nostalgia", @"format":@"Legacy Respring"},
+        @{@"name":@"RedSn0w", @"package":@"com.nostalgia.redsn0wrespring", @"source":@"Nostalgia", @"format":@"Legacy Respring"},
+        @{@"name":@"Yin And Yang", @"package":@"io.github.virenmohindra.yin-and-yang", @"source":@"Viren's Repo", @"format":@"Springy"}
     ];
 }
 
@@ -178,10 +204,3 @@ static UIImage *G2RenderBuiltInFrame(NSString *style, NSUInteger index, NSUInteg
         for (NSUInteger square = 0; square < 8; square++) {
             CGFloat phase = fmod(t + square / 8.0, 1.0);
             CGFloat side = m * (0.08 + phase * 0.78);
-            CGContextSetStrokeColorWithColor(ctx, G2RGB(0.8, 0.2 + 0.7 * phase, 1.0, 1.0-phase*0.55).CGColor);
-            CGContextSetLineWidth(ctx, 4.0);
-            CGContextStrokeRect(ctx, CGRectMake(c.x-side/2.0, c.y-side/2.0, side, side));
-        }
-    } else if ([style isEqualToString:@"spark"]) {
-        for (NSUInteger ray = 0; ray < 18; ray++) {
-            CGFloat angle = ray / 18.0 * M_PI * 2.0 + t * M_PI * 2.0;
