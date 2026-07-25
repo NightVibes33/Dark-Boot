@@ -73,7 +73,7 @@ jobs:
           DEB="$(cat deb-path.txt)"
           TWEAK="package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib"
           test "$(dpkg-deb --field "$DEB" Package)" = "com.nightvibes33.gif2ani"
-          test "$(dpkg-deb --field "$DEB" Version)" = "3.1.1"
+          test "$(dpkg-deb --field "$DEB" Version)" = "3.1.2"
           test "$(dpkg-deb --field "$DEB" Architecture)" = "iphoneos-arm64"
           grep -q 'var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib' package-contents.txt
           grep -q 'var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.plist' package-contents.txt
@@ -84,6 +84,7 @@ jobs:
           test -x package-control/prerm
           file "$TWEAK" | grep -q 'arm64'
           grep -a -q 'BKDisplayRenderOverlaySpinny' "$TWEAK"
+          grep -a -q 'ImageIO-bounded-thumbnail' "$TWEAK"
 
           python3 - <<'PY'
           import plistlib
@@ -123,6 +124,9 @@ jobs:
           assert 'backboardd was not notified' in picker
           assert 'CFPreferencesSetAppValue(CFSTR("isEnabled")' not in picker
           assert 'pendingReady' in picker
+          assert 'QOS_CLASS_USER_INITIATED' in picker
+          assert 'NSDataReadingMappedIfSafe' in picker
+          assert 'G2MaximumSourceFrames = 240' in controller
 
           apply_start = controller.index('- (void)applyAndRespring')
           apply_code = controller[apply_start:]
@@ -146,6 +150,7 @@ jobs:
           start_code = tweak[start_start:start_end]
           assert 'G2LoadGIF' in start_code
           assert '%orig' in start_code
+          assert '@try' in start_code
 
           ctor = tweak[tweak.index('%ctor'):]
           assert 'G2LoadGIF' not in ctor
@@ -153,9 +158,14 @@ jobs:
           assert 'G2LoadSentinelPath' in ctor
           assert 'G2RejectActiveGIF' in ctor
           assert 'G2SetEnabledOnDisk(NO)' in tweak
+          assert 'G2MaximumSourceFrames = 240' in tweak
           assert 'G2MaximumDecodedFrames = 24' in tweak
           assert 'G2MaximumPixelDimension = 640' in tweak
           assert 'G2MaximumEstimatedDecodedBytes = 48ULL' in tweak
+          assert 'CGImageSourceCreateThumbnailAtIndex' in tweak
+          assert 'kCGImageSourceThumbnailMaxPixelSize' in tweak
+          assert 'ImageIO-bounded-thumbnail' in tweak
+          assert 'animatedImageWithAnimatedGIFURL' not in tweak
           assert 'Respring.gif' not in tweak
 
           prefs = Path('G2PreferencesManager.m').read_text()
@@ -165,14 +175,14 @@ jobs:
               Path('package-root/var/jb/Library/PreferenceLoader/Preferences/Gif2Ani.plist').read_bytes()
           )
           assert entry['entry']['bundle'] == 'Gif2AniPrefs'
-          print('Validated inert selection, preferences-only Apply synchronization, fail-closed defaults, lazy decode, and automatic quarantine')
+          print('Validated inert background import, bounded pre-allocation decoding, fail-closed defaults, lazy decode, and automatic quarantine')
           PY
 
       - name: Upload rootless DEB
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: Gif2Ani-3.1.1-rootless-deb
+          name: Gif2Ani-3.1.2-rootless-deb
           path: packages/*.deb
           if-no-files-found: error
           retention-days: 30
@@ -181,7 +191,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Gif2Ani-3.1.1-build-diagnostics
+          name: Gif2Ani-3.1.2-build-diagnostics
           path: |
             build.log
             package-contents.txt
@@ -199,7 +209,7 @@ jobs:
           git pull --rebase origin main
           mkdir -p status
           {
-            echo "Gif2Ani 3.1.1 Rootless Build"
+            echo "Gif2Ani 3.1.2 Rootless Build"
             echo "run_id=${GITHUB_RUN_ID}"
             echo "commit=${GITHUB_SHA}"
             echo "status=${JOB_STATUS}"
@@ -210,6 +220,6 @@ jobs:
           } > status/build-status.txt
           git add status/build-status.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Record Gif2Ani 3.1.1 build status [skip ci]"
+            git commit -m "Record Gif2Ani 3.1.2 build status [skip ci]"
             git push origin HEAD:main
           fi
