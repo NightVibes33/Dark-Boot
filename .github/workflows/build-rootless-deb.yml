@@ -44,7 +44,7 @@ jobs:
           test -x /opt/theos/toolchain/linux/iphone/bin/clang++
           test -n "$(find /opt/theos/sdks -maxdepth 1 -type d -name '*.sdk' -print -quit)"
 
-      - name: Build and inspect rootless package
+      - name: Build and inspect production rootless package
         id: build
         env:
           THEOS: /opt/theos
@@ -66,20 +66,42 @@ jobs:
           echo "Built $DEB" | tee -a build.log
           dpkg-deb --info "$DEB" 2>&1 | tee -a build.log
           dpkg-deb --contents "$DEB" 2>&1 | tee package-contents.txt | tee -a build.log
-          grep -q 'DarkBoot.dylib' package-contents.txt
-          grep -q 'DarkBootPrefs.bundle' package-contents.txt
+          rm -rf package-control
+          dpkg-deb -e "$DEB" package-control
 
-      - name: Upload DEB
+          grep -q '^ Version: 2.0.0$' <(dpkg-deb --info "$DEB")
+          grep -q 'var/jb/Library/MobileSubstrate/DynamicLibraries/DarkBoot.dylib' package-contents.txt
+          grep -q 'var/jb/Library/MobileSubstrate/DynamicLibraries/DarkBoot.plist' package-contents.txt
+          grep -q 'var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/DarkBootPrefs' package-contents.txt
+          grep -q 'var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/Root.plist' package-contents.txt
+          grep -q 'var/jb/Library/PreferenceLoader/Preferences/DarkBoot.plist' package-contents.txt
+          test -x package-control/postinst
+          test -x package-control/prerm
+          grep -q 'killall -9 Preferences' package-control/postinst
+          grep -q 'sbreload' package-control/postinst
+
+      - name: Upload production DEB
         if: steps.build.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: Dark-Boot-rootless-deb
+          name: Dark-Boot-2.0-rootless-deb
           path: packages/*.deb
           if-no-files-found: error
           retention-days: 30
 
-      - name: Publish build status
+      - name: Upload build diagnostics
         if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dark-Boot-build-diagnostics
+          path: |
+            build.log
+            package-contents.txt
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Publish build status
+        if: always() && github.event_name != 'pull_request'
         env:
           BUILD_OUTCOME: ${{ steps.build.outcome }}
         run: |
@@ -89,7 +111,7 @@ jobs:
           git pull --rebase origin main
           mkdir -p status
           {
-            echo "Dark-Boot Rootless DEB Build"
+            echo "Dark-Boot Production Rootless DEB Build"
             echo "run_id=${GITHUB_RUN_ID}"
             echo "run_url=https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
             echo "commit=${GITHUB_SHA}"
@@ -99,13 +121,13 @@ jobs:
             echo
             echo "--- build log tail ---"
             if [ -f build.log ]; then
-              tail -n 220 build.log
+              tail -n 260 build.log
             else
               echo "No build.log was produced; failure occurred before compilation."
             fi
           } > status/build-status.txt
           git add status/build-status.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Record Dark-Boot build status [skip ci]"
+            git commit -m "Record Dark-Boot production build status [skip ci]"
             git push origin HEAD:main
           fi
