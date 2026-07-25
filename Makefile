@@ -6,8 +6,8 @@ FINALPACKAGE = 1
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = DarkBoot
-DarkBoot_FILES = Tweak.xm
-DarkBoot_CFLAGS = -fobjc-arc -Wall -Wextra -Wno-deprecated-declarations
+DarkBoot_FILES = Tweak.xm DBGraphicsCompat.m
+DarkBoot_CFLAGS = -fobjc-arc -Wall -Wextra -Wno-deprecated-declarations -Wno-error=missing-field-initializers -include $(THEOS_PROJECT_DIR)/DBGraphicsCompat.h
 DarkBoot_FRAMEWORKS = UIKit AVFoundation AudioToolbox QuartzCore ImageIO
 
 include $(THEOS_MAKE_PATH)/tweak.mk
