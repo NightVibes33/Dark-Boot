@@ -82,19 +82,25 @@ jobs:
           DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.4.0_iphoneos-arm64.deb' -print -quit)"
           test -n "$DEB"
           echo "$DEB" > deb-path-340.txt
-          test "$(dpkg-deb --field "$DEB" Package)" = "com.nightvibes33.gif2ani"
-          test "$(dpkg-deb --field "$DEB" Version)" = "3.4.0"
-          rm -rf package-root-340
-          dpkg-deb -x "$DEB" package-root-340
-          BUNDLE=package-root-340/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle
-          test -f "$BUNDLE/Gif2AniPrefs"
-          test -f "$BUNDLE/Root.plist"
-          strings "$BUNDLE/Gif2AniPrefs" > bundle-strings-340.txt
-          grep -Fq '54 Downloadable' bundle-strings-340.txt
-          grep -Fq 'Legacy Source Catalog' bundle-strings-340.txt
-          grep -Fq 'Stage This Animation' bundle-strings-340.txt
           dpkg-deb --contents "$DEB" | tee package-contents-340.txt
           sha256sum "$DEB" | tee deb-sha256-340.txt
+          test "$(dpkg-deb --field "$DEB" Package)" = "com.nightvibes33.gif2ani"
+          test "$(dpkg-deb --field "$DEB" Version)" = "3.4.0"
+          test "$(dpkg-deb --field "$DEB" Architecture)" = "iphoneos-arm64"
+
+          rm -rf package-root-340
+          dpkg-deb -x "$DEB" package-root-340
+          BUNDLE="$(find package-root-340 -type d -name 'Gif2AniPrefs.bundle' -print -quit)"
+          test -n "$BUNDLE"
+          test -s "$BUNDLE/Gif2AniPrefs"
+          test -f "$BUNDLE/Root.plist"
+          test -f package-root-340/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib
+          test -f package-root-340/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.plist
+          grep -Fq '<string>GIF2ANI 3.4</string>' "$BUNDLE/Root.plist"
+          grep -Fq '54 downloadable built-in themes' "$BUNDLE/Root.plist"
+          grep -Fq 'Browse and Preview Animations' "$BUNDLE/Root.plist"
+          grep -Fq 'Apply and Respring' "$BUNDLE/Root.plist"
+          file "$BUNDLE/Gif2AniPrefs" package-root-340/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | tee packaged-binaries-340.txt
 
       - name: Upload Gif2Ani 3.4.0 DEB
         uses: actions/upload-artifact@v4
@@ -122,6 +128,9 @@ jobs:
             echo "completed_at_utc=$(date -u +%FT%TZ)"
             echo
             cat deb-sha256-340.txt 2>/dev/null || true
+            echo
+            echo "--- packaged binaries ---"
+            cat packaged-binaries-340.txt 2>/dev/null || true
             echo
             echo "--- package contents ---"
             cat package-contents-340.txt 2>/dev/null || true
