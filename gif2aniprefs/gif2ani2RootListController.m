@@ -6,6 +6,7 @@
 #import <sys/stat.h>
 #import <stdio.h>
 #import <errno.h>
+#import <unistd.h>
 
 extern char **environ;
 
@@ -113,8 +114,8 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
 }
 
 - (void)postSafeReload {
-    // This notification is used only when disabling/removing an active GIF.
-    // The tweak callback reloads preferences and clears cached frames; it never decodes media.
+    // Used only after an explicit Apply or Remove action. The BackBoard callback
+    // reloads preferences and clears cached frames; it never decodes media.
     CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), G2ReloadNotification, NULL, NULL, YES);
 }
 
@@ -151,7 +152,9 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
         return;
     }
 
-    CFPreferencesSetAppValue(CFSTR("isEnabled"), kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
+    // Staging must not alter the currently active configuration. On a fresh
+    // install isEnabled already defaults to false; on an active setup the old
+    // animation stays active until the user explicitly applies the new GIF.
     CFPreferencesSetAppValue(CFSTR("pendingReady"), kCFBooleanTrue, (__bridge CFStringRef)G2PreferencesDomain);
     CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
 
@@ -230,6 +233,7 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
 
     if (![manager fileExistsAtPath:G2ActiveGIFPath]) {
         CFPreferencesSetAppValue(CFSTR("isEnabled"), kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
+        CFPreferencesSetAppValue(CFSTR("pendingReady"), kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
         CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
     } else {
         [manager removeItemAtPath:G2RejectedGIFPath error:nil];
@@ -240,8 +244,12 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
         CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
     }
 
-    // Do not notify the currently running BackBoard process. The explicit
-    // respring below starts a fresh process that reads the promoted GIF once.
+    // Synchronize only the preference state with the already-running BackBoard
+    // process. Its callback cannot decode media. Decoding remains lazy and starts
+    // only when BackBoard asks the overlay to animate during the respring below.
+    [self postSafeReload];
+    usleep(150000);
+
     const char *candidates[] = {"/var/jb/usr/bin/sbreload", "/usr/bin/sbreload"};
     for (NSUInteger index = 0; index < 2; index++) {
         if ([[NSFileManager defaultManager] isExecutableFileAtPath:@(candidates[index])]) {
