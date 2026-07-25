@@ -1,8 +1,8 @@
 Gif2Ani 3.0.0 Rootless Build
-run_id=30162625254
-commit=d9fc4f234f3bf07838a864f2a5194146ab2d2b11
+run_id=30163173338
+commit=08229a6623d93bf8ef78da6a166d3348ceda14ad
 status=success
-completed_at_utc=2026-07-25T14:57:18Z
+completed_at_utc=2026-07-25T15:13:43Z
 
 --- build log tail ---
 [0;36m==> [1;39mCleaning…[m
@@ -10,8 +10,8 @@ completed_at_utc=2026-07-25T14:57:18Z
 [0;36m==> [1;39mCleaning…[m
 [1;31m> [1;3;39mMaking all for tweak Gif2Ani…[m
 [0;31m==> [1;39mPreprocessing Tweak.xm…[m
-[0;32m==> [1;39mCompiling G2PreferencesManager.m (arm64)…[m
 [0;32m==> [1;39mCompiling UIImage+animatedGIF.m (arm64)…[m
+[0;32m==> [1;39mCompiling G2PreferencesManager.m (arm64)…[m
 [0;32m==> [1;39mCompiling Tweak.xm (arm64)…[m
 [0;33m==> [1;39mLinking tweak Gif2Ani (arm64)…[m
 [0;34m==> [1;39mGenerating debug symbols for Gif2Ani…[m
@@ -31,7 +31,7 @@ completed_at_utc=2026-07-25T14:57:18Z
 [0;36m==> [1;36mNotice:[m Neither plutil, ply, or libplist-utils are installed, so XML plist files were not optimized.
 dm.pl: building package `com.nightvibes33.gif2ani:iphoneos-arm64' in `./packages/com.nightvibes33.gif2ani_3.0.0_iphoneos-arm64.deb'
  new Debian package, version 2.0.
- size 15988 bytes: control archive=575 bytes.
+ size 15998 bytes: control archive=575 bytes.
      478 bytes,    12 lines      control
      297 bytes,     7 lines   *  postinst             #!/bin/sh
       60 bytes,     3 lines   *  prerm                #!/bin/sh
