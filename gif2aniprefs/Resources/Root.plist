@@ -8,13 +8,25 @@
   <array>
     <dict>
       <key>cell</key><string>PSGroupCell</string>
-      <key>label</key><string>GIF2ANI 3.2</string>
-      <key>footerText</key><string>Select only stages and validates a GIF. Apply saves every option to the real preferences file, verifies the result, and then restarts BackBoard.</string>
+      <key>label</key><string>GIF2ANI 3.3</string>
+      <key>footerText</key><string>Choose a built-in animation, preview an installed theme, or safely stage your own GIF. Apply verifies the media and every option before restarting BackBoard.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSButtonCell</string>
       <key>label</key><string>Current Status and Diagnostics</string>
       <key>action</key><string>showStatus</string>
+    </dict>
+
+    <dict>
+      <key>cell</key><string>PSGroupCell</string>
+      <key>label</key><string>ANIMATION GALLERY</string>
+      <key>footerText</key><string>Includes original built-in themes, animated previews, automatic Springy and SnowBoard theme discovery, and GIF, ZIP, DEB, frame-folder, and legacy-pack importing.</string>
+    </dict>
+    <dict>
+      <key>cell</key><string>PSLinkCell</string>
+      <key>label</key><string>Browse and Preview Animations</string>
+      <key>detail</key><string>G2ThemeGalleryController</string>
+      <key>isController</key><true/>
     </dict>
 
     <dict>
@@ -59,7 +71,7 @@
     <dict>
       <key>cell</key><string>PSGroupCell</string>
       <key>label</key><string>PLAYBACK</string>
-      <key>footerText</key><string>Loop Forever matches the current runtime behavior for -1. Play Once uses zero repeats. Original GIF Timing preserves the frame delays stored in the GIF.</string>
+      <key>footerText</key><string>Loop Forever matches the runtime behavior for -1. Play Once uses zero repeats. Original GIF Timing preserves the frame delays stored in the GIF.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSLinkListCell</string>
@@ -70,18 +82,11 @@
       <key>default</key><real>-1</real>
       <key>validTitles</key>
       <array>
-        <string>Loop Forever</string>
-        <string>Play Once</string>
-        <string>Repeat Once</string>
-        <string>Repeat 2 Times</string>
-        <string>Repeat 3 Times</string>
-        <string>Repeat 5 Times</string>
-        <string>Repeat 10 Times</string>
+        <string>Loop Forever</string><string>Play Once</string><string>Repeat Once</string>
+        <string>Repeat 2 Times</string><string>Repeat 3 Times</string><string>Repeat 5 Times</string><string>Repeat 10 Times</string>
       </array>
       <key>validValues</key>
-      <array>
-        <real>-1</real><real>0</real><real>1</real><real>2</real><real>3</real><real>5</real><real>10</real>
-      </array>
+      <array><real>-1</real><real>0</real><real>1</real><real>2</real><real>3</real><real>5</real><real>10</real></array>
     </dict>
     <dict>
       <key>cell</key><string>PSLinkListCell</string>
@@ -92,21 +97,11 @@
       <key>default</key><real>-1</real>
       <key>validTitles</key>
       <array>
-        <string>Original GIF Timing</string>
-        <string>0.5 Seconds</string>
-        <string>1 Second</string>
-        <string>2 Seconds</string>
-        <string>3 Seconds</string>
-        <string>5 Seconds</string>
-        <string>10 Seconds</string>
-        <string>15 Seconds</string>
-        <string>30 Seconds</string>
-        <string>60 Seconds</string>
+        <string>Original GIF Timing</string><string>0.5 Seconds</string><string>1 Second</string><string>2 Seconds</string><string>3 Seconds</string>
+        <string>5 Seconds</string><string>10 Seconds</string><string>15 Seconds</string><string>30 Seconds</string><string>60 Seconds</string>
       </array>
       <key>validValues</key>
-      <array>
-        <real>-1</real><real>0.5</real><real>1</real><real>2</real><real>3</real><real>5</real><real>10</real><real>15</real><real>30</real><real>60</real>
-      </array>
+      <array><real>-1</real><real>0.5</real><real>1</real><real>2</real><real>3</real><real>5</real><real>10</real><real>15</real><real>30</real><real>60</real></array>
     </dict>
     <dict>
       <key>cell</key><string>PSButtonCell</string>
