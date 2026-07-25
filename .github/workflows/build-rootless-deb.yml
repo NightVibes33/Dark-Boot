@@ -46,13 +46,23 @@ jobs:
         env:
           THEOS: /opt/theos
         run: |
+          set -uo pipefail
+          : > build.log
+          set +e
+          make clean package FINALPACKAGE=1 2>&1 | tee build.log
+          make_status=${PIPESTATUS[0]}
+          set -e
+          if [ "$make_status" -ne 0 ]; then
+            echo "make_exit_code=$make_status" | tee -a build.log
+            exit "$make_status"
+          fi
+
           set -euo pipefail
-          make clean package FINALPACKAGE=1
           DEB="$(find packages -maxdepth 1 -type f -name '*.deb' | head -n 1)"
           test -n "$DEB"
-          echo "Built $DEB"
-          dpkg-deb --info "$DEB"
-          dpkg-deb --contents "$DEB" | tee package-contents.txt
+          echo "Built $DEB" | tee -a build.log
+          dpkg-deb --info "$DEB" 2>&1 | tee -a build.log
+          dpkg-deb --contents "$DEB" 2>&1 | tee package-contents.txt | tee -a build.log
           grep -q 'DarkBoot.dylib' package-contents.txt
           grep -q 'DarkBootPrefs.bundle' package-contents.txt
 
@@ -75,15 +85,22 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase origin main
           mkdir -p status
-          cat > status/build-status.txt <<EOF
-          Dark-Boot Rootless DEB Build
-          run_id=${GITHUB_RUN_ID}
-          run_url=https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
-          commit=${GITHUB_SHA}
-          event=${GITHUB_EVENT_NAME}
-          outcome=${BUILD_OUTCOME}
-          completed_at_utc=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
-          EOF
+          {
+            echo "Dark-Boot Rootless DEB Build"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "run_url=https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo "commit=${GITHUB_SHA}"
+            echo "event=${GITHUB_EVENT_NAME}"
+            echo "outcome=${BUILD_OUTCOME}"
+            echo "completed_at_utc=$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+            echo
+            echo "--- build log tail ---"
+            if [ -f build.log ]; then
+              tail -n 220 build.log
+            else
+              echo "No build.log was produced; failure occurred before compilation."
+            fi
+          } > status/build-status.txt
           git add status/build-status.txt
           if ! git diff --cached --quiet; then
             git commit -m "Record Dark-Boot build status [skip ci]"
