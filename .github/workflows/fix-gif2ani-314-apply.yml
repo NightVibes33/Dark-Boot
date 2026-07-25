@@ -1,0 +1,182 @@
+name: Fix Gif2Ani 3.1.4 Apply Path
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/triggers/fix-gif2ani-314-apply.txt
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fix-gif2ani-314-apply
+  cancel-in-progress: true
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Patch apply state and restart path
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          controller = Path('gif2aniprefs/gif2ani2RootListController.m')
+          text = controller.read_text()
+
+          old = 'static NSString * const G2PreferencesDomain = @"com.nightvibes33.gif2ani";\n'
+          new = old + 'static NSString * const G2PreferencesPath = @"/var/mobile/Library/Preferences/com.nightvibes33.gif2ani.plist";\n'
+          assert old in text
+          if 'G2PreferencesPath = @"/var/mobile/Library/Preferences/com.nightvibes33.gif2ani.plist"' not in text:
+              text = text.replace(old, new, 1)
+
+          marker = '}\n\nstatic NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {'
+          helpers = r'''}
+
+static BOOL G2WriteEnabledPreferences(BOOL enabled, NSError **error) {
+    NSMutableDictionary *preferences = [[NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] mutableCopy];
+    if (!preferences) preferences = [NSMutableDictionary dictionary];
+    preferences[@"isEnabled"] = @(enabled);
+    preferences[@"pendingReady"] = @NO;
+    if (enabled) preferences[@"lastAppliedAt"] = @([[NSDate date] timeIntervalSince1970]);
+
+    CFPreferencesSetAppValue(CFSTR("isEnabled"), enabled ? kCFBooleanTrue : kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
+    CFPreferencesSetAppValue(CFSTR("pendingReady"), kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
+    if (enabled) {
+        CFPreferencesSetAppValue(CFSTR("lastAppliedAt"), (__bridge CFPropertyListRef)preferences[@"lastAppliedAt"], (__bridge CFStringRef)G2PreferencesDomain);
+    }
+    CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
+
+    if (![preferences writeToFile:G2PreferencesPath atomically:YES]) {
+        if (error) *error = [NSError errorWithDomain:@"Gif2Ani" code:7 userInfo:@{NSLocalizedDescriptionKey: @"The enabled state could not be written to the real preferences file."}];
+        return NO;
+    }
+    chown(G2PreferencesPath.fileSystemRepresentation, 501, 501);
+    chmod(G2PreferencesPath.fileSystemRepresentation, 0644);
+
+    NSDictionary *verified = [NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath];
+    BOOL matches = [verified[@"isEnabled"] boolValue] == enabled;
+    if (!matches && error) {
+        *error = [NSError errorWithDomain:@"Gif2Ani" code:8 userInfo:@{NSLocalizedDescriptionKey: @"The enabled state did not survive verification, so BackBoard was not restarted."}];
+    }
+    return matches;
+}
+
+static BOOL G2RestartProcess(NSString *processName) {
+    const char *candidates[] = {"/var/jb/usr/bin/killall", "/usr/bin/killall"};
+    for (NSUInteger index = 0; index < 2; index++) {
+        if (![[NSFileManager defaultManager] isExecutableFileAtPath:@(candidates[index])]) continue;
+        pid_t pid = 0;
+        char *argv[] = {(char *)"killall", (char *)"-9", (char *)processName.UTF8String, NULL};
+        if (posix_spawn(&pid, candidates[index], NULL, NULL, argv, environ) == 0) return YES;
+    }
+    return NO;
+}
+
+static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {'''
+          if 'static BOOL G2WriteEnabledPreferences' not in text:
+              assert marker in text
+              text = text.replace(marker, helpers, 1)
+
+          old_remove = '''    CFPreferencesSetAppValue(CFSTR("isEnabled"), kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
+    CFPreferencesSetAppValue(CFSTR("pendingReady"), kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
+    CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
+    [self postSafeReload];'''
+          new_remove = '''    G2WriteEnabledPreferences(NO, nil);
+    [self postSafeReload];'''
+          assert old_remove in text
+          text = text.replace(old_remove, new_remove, 1)
+
+          old_apply = '''    if (![manager fileExistsAtPath:G2ActiveGIFPath]) {
+        CFPreferencesSetAppValue(CFSTR("isEnabled"), kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
+        CFPreferencesSetAppValue(CFSTR("pendingReady"), kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
+        CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
+    } else {
+        [manager removeItemAtPath:G2RejectedGIFPath error:nil];
+        [manager removeItemAtPath:G2LoadSentinelPath error:nil];
+        CFPreferencesSetAppValue(CFSTR("isEnabled"), kCFBooleanTrue, (__bridge CFStringRef)G2PreferencesDomain);
+        CFPreferencesSetAppValue(CFSTR("pendingReady"), kCFBooleanFalse, (__bridge CFStringRef)G2PreferencesDomain);
+        CFPreferencesSetAppValue(CFSTR("lastAppliedAt"), (__bridge CFPropertyListRef)@([[NSDate date] timeIntervalSince1970]), (__bridge CFStringRef)G2PreferencesDomain);
+        CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
+    }
+
+    [self postSafeReload];
+    usleep(150000);
+
+    const char *candidates[] = {"/var/jb/usr/bin/sbreload", "/usr/bin/sbreload"};
+    for (NSUInteger index = 0; index < 2; index++) {
+        if ([[NSFileManager defaultManager] isExecutableFileAtPath:@(candidates[index])]) {
+            pid_t pid = 0;
+            char *argv[] = {(char *)candidates[index], NULL};
+            if (posix_spawn(&pid, candidates[index], NULL, NULL, argv, environ) == 0) return;
+        }
+    }
+    [self showMessage:@"Unable to respring" body:@"Run sbreload in a terminal. The staged settings were saved safely."];'''
+          new_apply = '''    if (![manager fileExistsAtPath:G2ActiveGIFPath]) {
+        G2WriteEnabledPreferences(NO, nil);
+        [self showMessage:@"Apply failed" body:@"No active GIF exists. Select and stage a GIF first."];
+        return;
+    }
+
+    [manager removeItemAtPath:G2RejectedGIFPath error:nil];
+    [manager removeItemAtPath:G2LoadSentinelPath error:nil];
+    if (!G2WriteEnabledPreferences(YES, &error)) {
+        [self showMessage:@"Apply failed" body:error.localizedDescription ?: @"The enabled state could not be saved safely."];
+        return;
+    }
+
+    [self postSafeReload];
+    usleep(250000);
+
+    // The custom animation is owned by backboardd. sbreload can restart only
+    // SpringBoard on iOS 16, which produces neither Apple's spinner nor ours.
+    // Restarting backboardd follows the physically validated animation path.
+    if (G2RestartProcess(@"backboardd")) return;
+    if (G2RestartProcess(@"SpringBoard")) return;
+    [self showMessage:@"Unable to restart BackBoard" body:@"The GIF is enabled and saved, but the system restart command was unavailable."];'''
+          assert old_apply in text
+          text = text.replace(old_apply, new_apply, 1)
+
+          controller.write_text(text)
+
+          control = Path('control')
+          c = control.read_text()
+          assert 'Version: 3.1.3' in c
+          c = c.replace('Version: 3.1.3', 'Version: 3.1.4', 1)
+          c = c.replace('Apply uses bounded ImageIO decoding and attaches the animation only after BackBoard prepares a valid content layer, with automatic quarantine on failure.', 'Apply writes and verifies the real preferences file, restarts backboardd through the physically validated path, uses bounded ImageIO decoding, and attaches only after BackBoard prepares a valid content layer, with automatic quarantine on failure.')
+          control.write_text(c)
+
+          root = Path('gif2aniprefs/Resources/Root.plist')
+          r = root.read_text()
+          r = r.replace('Apply atomically promotes the staged GIF to the active slot, enables the tweak, and resprings.', 'Apply atomically promotes the staged GIF, verifies the enabled state on disk, and restarts BackBoard so the custom animation callback actually runs.')
+          root.write_text(r)
+
+          assert 'G2RestartProcess(@"backboardd")' in text
+          assert 'G2WriteEnabledPreferences(YES, &error)' in text
+          assert '/usr/bin/sbreload' not in text
+          print('patch_result=success')
+          PY
+
+      - name: Validate source contract
+        run: |
+          set -euo pipefail
+          test "$(awk '/^Version:/{print $2}' control)" = "3.1.4"
+          grep -q 'G2WriteEnabledPreferences(YES, &error)' gif2aniprefs/gif2ani2RootListController.m
+          grep -q 'G2RestartProcess(@"backboardd")' gif2aniprefs/gif2ani2RootListController.m
+          grep -q 'writeToFile:G2PreferencesPath atomically:YES' gif2aniprefs/gif2ani2RootListController.m
+          ! grep -q '/usr/bin/sbreload' gif2aniprefs/gif2ani2RootListController.m
+
+      - name: Commit patch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add control gif2aniprefs/gif2ani2RootListController.m gif2aniprefs/Resources/Root.plist
+          git commit -m "Fix Gif2Ani apply persistence and BackBoard restart (3.1.4)"
+          git push origin HEAD:main
