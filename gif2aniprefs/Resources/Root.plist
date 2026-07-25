@@ -8,36 +8,37 @@
   <array>
     <dict>
       <key>cell</key><string>PSGroupCell</string>
-      <key>label</key><string>REAL RESPRING ANIMATION</string>
-      <key>footerText</key><string>Replaces the BackBoard respring spinner with your own animated GIF. If the GIF cannot load, iOS falls back to the normal animation.</string>
+      <key>label</key><string>SAFE RESPRING ANIMATION</string>
+      <key>footerText</key><string>Selecting a GIF only stages and validates it. backboardd is not notified and nothing is decoded until you explicitly tap Apply and Respring.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSSwitchCell</string>
-      <key>label</key><string>Enable Gif2Ani</string>
+      <key>label</key><string>Enable After Apply</string>
       <key>defaults</key><string>com.nightvibes33.gif2ani</string>
       <key>key</key><string>isEnabled</string>
-      <key>default</key><true/>
-      <key>PostNotification</key><string>com.nightvibes33.gif2ani/ReloadPrefs</string>
+      <key>default</key><false/>
     </dict>
 
     <dict>
       <key>cell</key><string>PSGroupCell</string>
       <key>label</key><string>ANIMATION</string>
+      <key>footerText</key><string>Safety limits for the 2 GB iPad: 25 MB input, 24 decoded frames, 640 px maximum dimension, and about 48 MB decoded memory.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSLinkCell</string>
-      <key>label</key><string>Select GIF</string>
+      <key>label</key><string>Select and Stage GIF</string>
       <key>action</key><string>selectGIF</string>
     </dict>
     <dict>
       <key>cell</key><string>PSLinkCell</string>
-      <key>label</key><string>Remove Current GIF</string>
+      <key>label</key><string>Remove Staged and Active GIF</string>
       <key>action</key><string>removeGIF</string>
     </dict>
 
     <dict>
       <key>cell</key><string>PSGroupCell</string>
       <key>label</key><string>LAYOUT</string>
+      <key>footerText</key><string>Layout changes are saved but are not sent live to backboardd. They take effect on the next Apply and Respring.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSLinkListCell</string>
@@ -50,7 +51,6 @@
       <array><string>Fit</string><string>Fill</string><string>Stretch</string><string>Center</string></array>
       <key>validValues</key>
       <array><string>resizeAspect</string><string>resizeAspectFill</string><string>resize</string><string>center</string></array>
-      <key>PostNotification</key><string>com.nightvibes33.gif2ani/ReloadPrefs</string>
     </dict>
     <dict>
       <key>cell</key><string>PSLinkCell</string>
@@ -61,7 +61,7 @@
     <dict>
       <key>cell</key><string>PSGroupCell</string>
       <key>label</key><string>PLAYBACK</string>
-      <key>footerText</key><string>Use -1 for the GIF's original loop behavior or duration.</string>
+      <key>footerText</key><string>Use -1 for the GIF's original loop behavior or duration. Changes apply only after an explicit respring.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSSliderCell</string>
@@ -72,7 +72,6 @@
       <key>min</key><real>-1</real>
       <key>max</key><real>10</real>
       <key>showValue</key><true/>
-      <key>PostNotification</key><string>com.nightvibes33.gif2ani/ReloadPrefs</string>
     </dict>
     <dict>
       <key>cell</key><string>PSSliderCell</string>
@@ -83,17 +82,16 @@
       <key>min</key><real>-1</real>
       <key>max</key><real>60</real>
       <key>showValue</key><true/>
-      <key>PostNotification</key><string>com.nightvibes33.gif2ani/ReloadPrefs</string>
     </dict>
 
     <dict>
       <key>cell</key><string>PSGroupCell</string>
-      <key>footerText</key><string>Applying will respring the iPad. The first respring also records whether the required iOS 16 BackBoard classes were found.</string>
+      <key>footerText</key><string>Apply atomically promotes the staged GIF to the active slot, enables the tweak, and resprings. If backboardd fails during loading, the active GIF is automatically rejected on the next launch.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSButtonCell</string>
       <key>label</key><string>Apply and Respring</string>
-      <key>action</key><string>respring</string>
+      <key>action</key><string>applyAndRespring</string>
     </dict>
   </array>
 </dict>
