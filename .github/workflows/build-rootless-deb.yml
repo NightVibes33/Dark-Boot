@@ -73,7 +73,7 @@ jobs:
           DEB="$(cat deb-path.txt)"
           TWEAK="package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib"
           test "$(dpkg-deb --field "$DEB" Package)" = "com.nightvibes33.gif2ani"
-          test "$(dpkg-deb --field "$DEB" Version)" = "3.1.0"
+          test "$(dpkg-deb --field "$DEB" Version)" = "3.1.1"
           test "$(dpkg-deb --field "$DEB" Architecture)" = "iphoneos-arm64"
           grep -q 'var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib' package-contents.txt
           grep -q 'var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.plist' package-contents.txt
@@ -121,7 +121,8 @@ jobs:
           assert 'postReload' not in picker
           assert 'postSafeReload' not in picker
           assert 'backboardd was not notified' in picker
-          assert 'CFPreferencesSetAppValue(CFSTR("isEnabled"), kCFBooleanFalse' in picker
+          assert 'CFPreferencesSetAppValue(CFSTR("isEnabled")' not in picker
+          assert 'pendingReady' in picker
 
           apply_start = controller.index('- (void)applyAndRespring')
           apply_code = controller[apply_start:]
@@ -129,8 +130,9 @@ jobs:
           assert 'G2ActiveGIFPath' in apply_code
           assert 'rename(' in apply_code
           assert 'CFPreferencesSetAppValue(CFSTR("isEnabled"), kCFBooleanTrue' in apply_code
-          assert 'sbreload' in apply_code
-          assert '[self postSafeReload]' not in apply_code
+          assert '[self postSafeReload]' in apply_code
+          assert 'usleep(150000)' in apply_code
+          assert apply_code.index('[self postSafeReload]') < apply_code.index('sbreload')
 
           tweak = Path('Tweak.xm').read_text()
           reload_start = tweak.index('static void G2Reload')
@@ -163,14 +165,14 @@ jobs:
               Path('package-root/var/jb/Library/PreferenceLoader/Preferences/Gif2Ani.plist').read_bytes()
           )
           assert entry['entry']['bundle'] == 'Gif2AniPrefs'
-          print('Validated staged selection, explicit respring activation, fail-closed defaults, lazy decode, and automatic quarantine')
+          print('Validated inert selection, preferences-only Apply synchronization, fail-closed defaults, lazy decode, and automatic quarantine')
           PY
 
       - name: Upload rootless DEB
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: Gif2Ani-3.1.0-rootless-deb
+          name: Gif2Ani-3.1.1-rootless-deb
           path: packages/*.deb
           if-no-files-found: error
           retention-days: 30
@@ -179,7 +181,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Gif2Ani-3.1.0-build-diagnostics
+          name: Gif2Ani-3.1.1-build-diagnostics
           path: |
             build.log
             package-contents.txt
@@ -197,7 +199,7 @@ jobs:
           git pull --rebase origin main
           mkdir -p status
           {
-            echo "Gif2Ani 3.1.0 Rootless Build"
+            echo "Gif2Ani 3.1.1 Rootless Build"
             echo "run_id=${GITHUB_RUN_ID}"
             echo "commit=${GITHUB_SHA}"
             echo "status=${JOB_STATUS}"
@@ -208,6 +210,6 @@ jobs:
           } > status/build-status.txt
           git add status/build-status.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Record Gif2Ani 3.1.0 build status [skip ci]"
+            git commit -m "Record Gif2Ani 3.1.1 build status [skip ci]"
             git push origin HEAD:main
           fi
