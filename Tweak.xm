@@ -405,6 +405,9 @@ static BOOL G2InstallAnimationOnLayer(CALayer *appleLayer) {
             @"overlayWidth": @(CGRectGetWidth(g2DedicatedAnimationLayer.bounds)),
             @"overlayHeight": @(CGRectGetHeight(g2DedicatedAnimationLayer.bounds)),
             @"appleLoaderHidden": @(appleLoaderHidden),
+            @"duration": @(animation.duration),
+            @"repeatCount": @(animation.repeatCount),
+            @"contentsGravity": g2DedicatedAnimationLayer.contentsGravity ?: @"unknown",
         });
         g2PreparedContentLayer = nil;
     });
