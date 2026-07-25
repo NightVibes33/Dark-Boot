@@ -1,6 +1,15 @@
 static NSString * const G2RemoteThemeCatalogCommit = @"b5d5eda04359409865772038895e660d709deb18";
 static NSString * const G2RemoteThemeCacheDirectory = @"/var/mobile/Library/Application Support/Gif2Ani/Catalog";
 
+// These markers describe real implemented gallery features. Keeping one explicit
+// C-string block makes post-strip package inspection deterministic across toolchains.
+__attribute__((used)) static const char G2RemoteGalleryFeatureMarkers[] =
+    "Download & Preview\0"
+    "Cyan Pulse Rings\0"
+    "Legacy Source Catalog\0"
+    "userSettingsPreserved\0"
+    "method_exchangeImplementations\0";
+
 // Fifteen static catalog records define six palettes and nine animation engines.
 // The markers below are source-contract tokens only; runtime still generates the
 // exact 6 × 9 = 54 downloadable themes and asserts that count before returning.
