@@ -1,10 +1,10 @@
 Dark-Boot 2.0.1 Rootless DEB Build
-run_id=30160749991
-run_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30160749991
-commit=aeaf43de452a7381f4c3971bedf4174785bd1f53
+run_id=30161042620
+run_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30161042620
+commit=6ac002499bfb25d0c7310be152a4a2fd50de99cf
 event=push
 outcome=success
-completed_at_utc=2026-07-25T13:59:45Z
+completed_at_utc=2026-07-25T14:08:42Z
 
 --- build log tail ---
 [0;36m==> [1;39mCleaning…[m
@@ -37,7 +37,7 @@ completed_at_utc=2026-07-25T13:59:45Z
 dm.pl: building package `com.nightvibes33.darkboot:iphoneos-arm64' in `./packages/com.nightvibes33.darkboot_2.0.1_iphoneos-arm64.deb'
 Built packages/com.nightvibes33.darkboot_2.0.1_iphoneos-arm64.deb
  new Debian package, version 2.0.
- size 35988 bytes: control archive=839 bytes.
+ size 35894 bytes: control archive=839 bytes.
      443 bytes,    12 lines      control
      847 bytes,    26 lines   *  postinst             #!/bin/sh
      162 bytes,     7 lines   *  prerm                #!/bin/sh
@@ -53,19 +53,19 @@ Built packages/com.nightvibes33.darkboot_2.0.1_iphoneos-arm64.deb
  Architecture: iphoneos-arm64
  Version: 2.0.1
  Installed-Size: 252
-drwxr-xr-x 0/root            0 2026-07-25 13:59 .
-drwxr-xr-x 0/root            0 2026-07-25 13:59 var
-drwxr-xr-x 0/root            0 2026-07-25 13:59 var/jb
-drwxr-xr-x 0/root            0 2026-07-25 13:59 var/jb/Library
-drwxr-xr-x 0/root            0 2026-07-25 13:59 var/jb/Library/MobileSubstrate
-drwxr-xr-x 0/root            0 2026-07-25 13:59 var/jb/Library/MobileSubstrate/DynamicLibraries
--rwxr-xr-x 0/root       110128 2026-07-25 13:59 var/jb/Library/MobileSubstrate/DynamicLibraries/DarkBoot.dylib
--rw-r--r-- 0/root          110 2026-07-25 13:59 var/jb/Library/MobileSubstrate/DynamicLibraries/DarkBoot.plist
-drwxr-xr-x 0/root            0 2026-07-25 13:59 var/jb/Library/PreferenceBundles
-drwxr-xr-x 0/root            0 2026-07-25 13:59 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle
--rwxr-xr-x 0/root        89648 2026-07-25 13:59 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/DarkBootPrefs
--rw-r--r-- 0/root          822 2026-07-25 13:58 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/Info.plist
--rw-r--r-- 0/root        12114 2026-07-25 13:58 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/Root.plist
-drwxr-xr-x 0/root            0 2026-07-25 13:58 var/jb/Library/PreferenceLoader
-drwxr-xr-x 0/root            0 2026-07-25 13:58 var/jb/Library/PreferenceLoader/Preferences
--rw-r--r-- 0/root          178 2026-07-25 13:58 var/jb/Library/PreferenceLoader/Preferences/DarkBoot.plist
+drwxr-xr-x 0/root            0 2026-07-25 14:08 .
+drwxr-xr-x 0/root            0 2026-07-25 14:08 var
+drwxr-xr-x 0/root            0 2026-07-25 14:08 var/jb
+drwxr-xr-x 0/root            0 2026-07-25 14:08 var/jb/Library
+drwxr-xr-x 0/root            0 2026-07-25 14:08 var/jb/Library/MobileSubstrate
+drwxr-xr-x 0/root            0 2026-07-25 14:08 var/jb/Library/MobileSubstrate/DynamicLibraries
+-rwxr-xr-x 0/root       110128 2026-07-25 14:08 var/jb/Library/MobileSubstrate/DynamicLibraries/DarkBoot.dylib
+-rw-r--r-- 0/root          110 2026-07-25 14:08 var/jb/Library/MobileSubstrate/DynamicLibraries/DarkBoot.plist
+drwxr-xr-x 0/root            0 2026-07-25 14:08 var/jb/Library/PreferenceBundles
+drwxr-xr-x 0/root            0 2026-07-25 14:08 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle
+-rwxr-xr-x 0/root        89648 2026-07-25 14:08 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/DarkBootPrefs
+-rw-r--r-- 0/root          822 2026-07-25 14:07 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/Info.plist
+-rw-r--r-- 0/root        12114 2026-07-25 14:07 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/Root.plist
+drwxr-xr-x 0/root            0 2026-07-25 14:07 var/jb/Library/PreferenceLoader
+drwxr-xr-x 0/root            0 2026-07-25 14:07 var/jb/Library/PreferenceLoader/Preferences
+-rw-r--r-- 0/root          178 2026-07-25 14:07 var/jb/Library/PreferenceLoader/Preferences/DarkBoot.plist
