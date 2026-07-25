@@ -1,11 +1,11 @@
 Package: com.nightvibes33.gif2ani
 Name: Gif2Ani Rootless
-Version: 3.0.0
+Version: 3.0.1
 Architecture: iphoneos-arm64
 Depends: firmware (>= 15.0), mobilesubstrate
 Conflicts: com.nightvibes33.darkboot, com.wizage.gif2ani2, com.wizages.gif2ani
 Replaces: com.nightvibes33.darkboot
-Description: Real custom GIF animations on the BackBoard respring screen, ported for rootless iOS 15 and 16.
+Description: Crash-safe custom GIF animations for the BackBoard respring screen on rootless iOS 15 and 16. GIF selection is staged until explicit apply.
 Maintainer: NightVibes33
 Author: wizages, rootless port by NightVibes33
 Section: Tweaks
