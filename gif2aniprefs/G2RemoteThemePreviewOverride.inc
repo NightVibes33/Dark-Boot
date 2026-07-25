@@ -1,3 +1,5 @@
+#import <objc/runtime.h>
+
 static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
     NSString *path = G2RemoteThemeCachePath(pack);
     if (!path.length || ![[NSFileManager defaultManager] fileExistsAtPath:path]) return NO;
@@ -11,7 +13,21 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
 
 @implementation G2ThemePreviewController (G2RemoteThemeDownload)
 
-- (void)loadPreview {
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Class cls = objc_getClass("G2ThemePreviewController");
+        Method originalPreview = class_getInstanceMethod(cls, @selector(loadPreview));
+        Method remotePreview = class_getInstanceMethod(cls, @selector(g2_remoteLoadPreview));
+        Method originalStage = class_getInstanceMethod(cls, @selector(stageAnimation));
+        Method remoteStage = class_getInstanceMethod(cls, @selector(g2_remoteStageAnimation));
+        NSCAssert(originalPreview && remotePreview && originalStage && remoteStage, @"Gif2Ani remote preview method routing is incomplete");
+        method_exchangeImplementations(originalPreview, remotePreview);
+        method_exchangeImplementations(originalStage, remoteStage);
+    });
+}
+
+- (void)g2_remoteLoadPreview {
     NSUInteger generation = ++self.previewGeneration;
     self.stageButton.enabled = NO;
     self.stageButton.alpha = 0.45;
@@ -182,7 +198,7 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
     [task resume];
 }
 
-- (void)stageAnimation {
+- (void)g2_remoteStageAnimation {
     NSString *kind = self.pack[@"kind"];
     if ([kind isEqualToString:@"remote"] && !G2RemoteCachedThemeIsValid(self.pack)) {
         [self g2_downloadRemoteTheme];

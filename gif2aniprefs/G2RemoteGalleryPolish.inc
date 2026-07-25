@@ -1,13 +1,27 @@
 @implementation G2ThemeGalleryController (G2DownloadableCatalogPolish)
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Class cls = objc_getClass("G2ThemeGalleryController");
+        Method originalHeader = class_getInstanceMethod(cls, @selector(tableView:titleForHeaderInSection:));
+        Method remoteHeader = class_getInstanceMethod(cls, @selector(g2_tableView:remoteTitleForHeaderInSection:));
+        Method originalFooter = class_getInstanceMethod(cls, @selector(tableView:titleForFooterInSection:));
+        Method remoteFooter = class_getInstanceMethod(cls, @selector(g2_tableView:remoteTitleForFooterInSection:));
+        NSCAssert(originalHeader && remoteHeader && originalFooter && remoteFooter, @"Gif2Ani gallery title method routing is incomplete");
+        method_exchangeImplementations(originalHeader, remoteHeader);
+        method_exchangeImplementations(originalFooter, remoteFooter);
+    });
+}
+
+- (NSString *)g2_tableView:(UITableView *)tableView remoteTitleForHeaderInSection:(NSInteger)section {
     (void)tableView;
     if (section == 0) return @"Built-In Themes • 12 Offline + 54 Downloadable";
     if (section == 1) return @"Installed or Imported Packs";
     return @"Legacy Source Catalog • 54 Known Packs";
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
+- (NSString *)g2_tableView:(UITableView *)tableView remoteTitleForFooterInSection:(NSInteger)section {
     (void)tableView;
     if (section == 0) return @"Offline themes preview instantly. Downloadable themes are pinned CC0 GIFs: tap one, download and preview it, stage it, choose your settings, then Apply and Respring.";
     if (section == 1) return self.discovered.count
