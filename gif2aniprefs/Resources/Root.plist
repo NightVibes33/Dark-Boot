@@ -8,8 +8,8 @@
   <array>
     <dict>
       <key>cell</key><string>PSGroupCell</string>
-      <key>label</key><string>GIF2ANI 3.3</string>
-      <key>footerText</key><string>Choose a built-in animation, preview an installed theme, or safely stage your own GIF. Apply verifies the media and every option before restarting BackBoard.</string>
+      <key>label</key><string>GIF2ANI 3.4</string>
+      <key>footerText</key><string>Choose from 12 offline themes, 54 downloadable built-in themes, installed packs, or your own GIF. Staging preserves your settings; Apply verifies everything before restarting BackBoard.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSButtonCell</string>
@@ -20,7 +20,7 @@
     <dict>
       <key>cell</key><string>PSGroupCell</string>
       <key>label</key><string>ANIMATION GALLERY</string>
-      <key>footerText</key><string>Includes original built-in themes, animated previews, automatic Springy and SnowBoard theme discovery, and GIF, ZIP, DEB, frame-folder, and legacy-pack importing.</string>
+      <key>footerText</key><string>Tap a downloadable built-in theme to download and preview its pinned CC0 GIF. Stage it, return here, choose scaling, background, repeat, and duration, then tap Apply and Respring.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSLinkCell</string>
