@@ -1,0 +1,109 @@
+name: Build Gif2Ani Rootless DEB
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gif2ani-rootless-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            bash curl sudo build-essential fakeroot rsync perl git \
+            libxml2 dpkg-dev unzip xz-utils ca-certificates python3 file
+
+      - name: Install Theos and SDK
+        env:
+          THEOS: /opt/theos
+          CI: "1"
+          SHELL: /bin/bash
+        run: |
+          set -euo pipefail
+          sudo rm -rf /opt/theos
+          sudo mkdir -p /opt
+          sudo chown "$USER:$USER" /opt
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          test -x /opt/theos/toolchain/linux/iphone/bin/clang
+          test -n "$(find /opt/theos/sdks -maxdepth 1 -type d -name '*.sdk' -print -quit)"
+
+      - name: Build rootless package
+        env:
+          THEOS: /opt/theos
+        run: |
+          set -euo pipefail
+          make clean package FINALPACKAGE=1 2>&1 | tee build.log
+          DEB="$(find packages -maxdepth 1 -type f -name '*.deb' | head -n 1)"
+          test -n "$DEB"
+          echo "$DEB" > deb-path.txt
+          dpkg-deb --info "$DEB" | tee -a build.log
+          dpkg-deb --contents "$DEB" | tee package-contents.txt
+          rm -rf package-root package-control
+          dpkg-deb -x "$DEB" package-root
+          dpkg-deb -e "$DEB" package-control
+
+      - name: Validate package and Settings
+        run: |
+          set -euo pipefail
+          DEB="$(cat deb-path.txt)"
+          test "$(dpkg-deb --field "$DEB" Package)" = "com.nightvibes33.gif2ani"
+          test "$(dpkg-deb --field "$DEB" Version)" = "3.0.0"
+          test "$(dpkg-deb --field "$DEB" Architecture)" = "iphoneos-arm64"
+          grep -q 'var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib' package-contents.txt
+          grep -q 'var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.plist' package-contents.txt
+          grep -q 'var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs' package-contents.txt
+          grep -q 'var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Root.plist' package-contents.txt
+          grep -q 'var/jb/Library/PreferenceLoader/Preferences/Gif2Ani.plist' package-contents.txt
+          test -x package-control/postinst
+          test -x package-control/prerm
+          file package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'arm64'
+          strings package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'BKDisplayRenderOverlaySpinny'
+          strings package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'BKImageSequence'
+          python3 - <<'PY'
+          import plistlib
+          from pathlib import Path
+          root = plistlib.loads(Path('package-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Root.plist').read_bytes())
+          assert isinstance(root, dict)
+          items = root.get('items')
+          assert isinstance(items, list) and len(items) >= 12
+          labels = {item.get('label') for item in items if isinstance(item, dict)}
+          required = {'Enable Gif2Ani', 'Select GIF', 'Remove Current GIF', 'Scaling', 'Background Color', 'Loop Count', 'Duration (Seconds)', 'Apply and Respring'}
+          assert not (required - labels), sorted(required - labels)
+          entry = plistlib.loads(Path('package-root/var/jb/Library/PreferenceLoader/Preferences/Gif2Ani.plist').read_bytes())
+          assert entry['entry']['bundle'] == 'Gif2AniPrefs'
+          print(f'Validated {len(items)} Settings specifiers')
+          PY
+
+      - name: Upload rootless DEB
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gif2Ani-3.0.0-rootless-deb
+          path: packages/*.deb
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gif2Ani-build-diagnostics
+          path: |
+            build.log
+            package-contents.txt
+          if-no-files-found: ignore
+          retention-days: 7
