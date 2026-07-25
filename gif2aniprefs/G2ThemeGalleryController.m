@@ -16,9 +16,12 @@ static BOOL G2StageGIFAtPath(NSString *sourcePath, NSDictionary *recommended, NS
 #include "G2ThemeGalleryPart1Tail.inc"
 #include "G2ThemeGalleryPart2.inc"
 
-#define G2StageGIFAtPath __attribute__((unused)) G2LegacyStageGIFAtPath
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
+#define G2StageGIFAtPath G2LegacyStageGIFAtPath
 #include "G2ThemeGalleryPart3.inc"
 #undef G2StageGIFAtPath
+#pragma clang diagnostic pop
 
 #include "G2ThemeGalleryPart4.inc"
 #include "G2ThemeGalleryPart5.inc"
