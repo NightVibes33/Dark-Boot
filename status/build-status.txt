@@ -1,8 +1,8 @@
-Gif2Ani 3.1.0 Rootless Build
-run_id=30166564702
-commit=4182e39ae1a180b4061f4e4be70cea48a70951fc
-status=cancelled
-completed_at_utc=2026-07-25T16:55:32Z
+Gif2Ani 3.1.1 Rootless Build
+run_id=30166588352
+commit=4e276b1eb0554b67475a47d69735255871e8cc8e
+status=success
+completed_at_utc=2026-07-25T16:56:21Z
 
 --- build log tail ---
 [0;36m==> [1;39mCleaning…[m
@@ -10,8 +10,8 @@ completed_at_utc=2026-07-25T16:55:32Z
 [0;36m==> [1;39mCleaning…[m
 [1;31m> [1;3;39mMaking all for tweak Gif2Ani…[m
 [0;31m==> [1;39mPreprocessing Tweak.xm…[m
-[0;32m==> [1;39mCompiling G2PreferencesManager.m (arm64)…[m
 [0;32m==> [1;39mCompiling UIImage+animatedGIF.m (arm64)…[m
+[0;32m==> [1;39mCompiling G2PreferencesManager.m (arm64)…[m
 [0;32m==> [1;39mCompiling Tweak.xm (arm64)…[m
 [0;33m==> [1;39mLinking tweak Gif2Ani (arm64)…[m
 [0;34m==> [1;39mGenerating debug symbols for Gif2Ani…[m
@@ -30,3 +30,20 @@ completed_at_utc=2026-07-25T16:55:32Z
 [1;31m> [1;3;39mMaking stage for bundle Gif2AniPrefs…[m
 [0;36m==> [1;36mNotice:[m Neither plutil, ply, or libplist-utils are installed, so XML plist files were not optimized.
 dm.pl: building package `com.nightvibes33.gif2ani:iphoneos-arm64' in `./packages/com.nightvibes33.gif2ani_3.1.1_iphoneos-arm64.deb'
+ new Debian package, version 2.0.
+ size 20400 bytes: control archive=673 bytes.
+     643 bytes,    12 lines      control
+     297 bytes,     7 lines   *  postinst             #!/bin/sh
+      60 bytes,     3 lines   *  prerm                #!/bin/sh
+ Package: com.nightvibes33.gif2ani
+ Name: Gif2Ani Rootless
+ Depends: firmware (>= 15.0), mobilesubstrate
+ Conflicts: com.nightvibes33.darkboot, com.wizage.gif2ani2, com.wizages.gif2ani
+ Replaces: com.nightvibes33.darkboot
+ Description: Crash-safe custom GIF animations for the BackBoard respring screen on rootless iOS 15 and 16. Selection is inert, Apply safely synchronizes preferences without decoding, media decoding is bounded for 2 GB devices, and failed media is automatically quarantined.
+ Maintainer: NightVibes33
+ Author: wizages, rootless port by NightVibes33
+ Section: Tweaks
+ Architecture: iphoneos-arm64
+ Version: 3.1.1
+ Installed-Size: 212
