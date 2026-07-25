@@ -1,4 +1,4 @@
-name: Fix Gif2Ani 3.3.0 Gallery Compile
+name: Fix and Expand Gif2Ani 3.3.0 Gallery
 
 on:
   workflow_dispatch:
@@ -15,56 +15,118 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Fix Objective-C gallery compile errors
+        with:
+          fetch-depth: 0
+
+      - name: Fix compiler errors and expand catalog
         run: |
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
 
+          p1 = Path('gif2aniprefs/G2ThemeGalleryPart1.inc')
+          t1 = p1.read_text()
+          if 'io.github.virenmohindra.a-wave' not in t1:
+              anchor = '        @{"name":@"Alone", @"package":@"io.github.virenmohindra.alone"},'
+              replacement = '''        @{"name":@"A Wave", @"package":@"io.github.virenmohindra.a-wave", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{"name":@"Alone", @"package":@"io.github.virenmohindra.alone", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{"name":@"Amalgamation", @"package":@"io.github.virenmohindra.amalgamation", @"source":@"Viren's Repo", @"format":@"Springy"},'''
+              if anchor not in t1:
+                  raise SystemExit('catalog start anchor missing')
+              t1 = t1.replace(anchor, replacement, 1)
+
+          if 'com.project.brooklyn' not in t1:
+              anchor = '        @{"name":@"Yin And Yang", @"package":@"io.github.virenmohindra.yin-and-yang"}'
+              replacement = '''        @{"name":@"Colorful Stars In Space", @"package":@"io.github.virenmohindra.colorful-stars-in-space", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{"name":@"GameCube Logo", @"package":@"io.github.virenmohindra.gamecube-logo", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{"name":@"Only Human", @"package":@"io.github.virenmohindra.only-human", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{"name":@"Spinning Rings", @"package":@"io.github.virenmohindra.spinning-rings", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{"name":@"Stranger Things", @"package":@"io.github.virenmohindra.stranger-things", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{"name":@"Tesseract", @"package":@"io.github.virenmohindra.tesseract", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{"name":@"Twisting Cubes", @"package":@"io.github.virenmohindra.twisting-cubes", @"source":@"Viren's Repo", @"format":@"Springy"},
+        @{"name":@"Percentage Animation", @"package":@"com.yourepo.samgisaninja.percentageanimationforspringy", @"source":@"Samg_is_a_Ninja's Repo", @"format":@"Springy"},
+        @{"name":@"Tech Compass", @"package":@"com.thecomputerwhisperer.techcompass", @"source":@"TheComputerWhisperer's Repo", @"format":@"Springy"},
+        @{"name":@"Windows XP Pro Loading", @"package":@"com.thecomputerwhisperer.winxpstartup", @"source":@"TheComputerWhisperer's Repo", @"format":@"Springy"},
+        @{"name":@"Brooklyn Apple Logos", @"package":@"com.project.brooklyn", @"source":@"Basepack", @"format":@"SnowBoard Respring"},
+        @{"name":@"Aku Aku", @"package":@"com.yourepo.easytoast.akuakurespringtheme", @"source":@"YouRepo", @"format":@"WinterBoard Respring"},
+        @{"name":@"Prayer", @"package":@"com.yourepo.easytoast.prayerrespringtheme", @"source":@"YouRepo", @"format":@"WinterBoard Respring"},
+        @{"name":@"SparkCube", @"package":@"com.yourepo.easytoast.sparkcuberespringtheme", @"source":@"YouRepo", @"format":@"WinterBoard Respring"},
+        @{"name":@"YingYang", @"package":@"com.yourepo.easytoast.yingyangrespringtheme", @"source":@"YouRepo", @"format":@"WinterBoard Respring"},
+        @{"name":@"Phoenix-like", @"package":@"com.nostalgia.jbrespring", @"source":@"Nostalgia", @"format":@"Legacy Respring"},
+        @{"name":@"RedSn0w", @"package":@"com.nostalgia.redsn0wrespring", @"source":@"Nostalgia", @"format":@"Legacy Respring"},
+        @{"name":@"Yin And Yang", @"package":@"io.github.virenmohindra.yin-and-yang", @"source":@"Viren's Repo", @"format":@"Springy"}'''
+              if anchor not in t1:
+                  raise SystemExit('catalog end anchor missing')
+              t1 = t1.replace(anchor, replacement, 1)
+          p1.write_text(t1)
+
           p2 = Path('gif2aniprefs/G2ThemeGalleryPart2.inc')
           t2 = p2.read_text()
-          old = '    NSArray *files = G2NaturallySortedImageFiles(directory);\n'
-          new = '    NSArray<NSString *> *files = G2NaturallySortedImageFiles(directory);\n'
-          if old not in t2:
-              raise SystemExit('part2 typed files target missing')
-          p2.write_text(t2.replace(old, new, 1))
+          old = '''    if (files.count == 1 && [files.firstObject.pathExtension.lowercaseString isEqualToString:@"gif"]) {
+        return G2FramesFromGIF(files.firstObject, maximumDimension);
+    }'''
+          new = '''    NSString *firstFile = files.firstObject;
+    if (files.count == 1 && [firstFile.pathExtension.lowercaseString isEqualToString:@"gif"]) {
+        return G2FramesFromGIF(firstFile, maximumDimension);
+    }'''
+          if old in t2:
+              t2 = t2.replace(old, new, 1)
+          elif 'NSString *firstFile = files.firstObject;' not in t2:
+              raise SystemExit('part2 firstObject block missing')
+          p2.write_text(t2)
 
           p5 = Path('gif2aniprefs/G2ThemeGalleryPart5.inc')
           t5 = p5.read_text()
-          old = '            NSArray *sorted = G2NaturallySortedImageFiles(canonical);\n'
-          new = '            NSArray<NSString *> *sorted = G2NaturallySortedImageFiles(canonical);\n'
-          if old not in t5:
-              raise SystemExit('part5 typed sorted target missing')
-          p5.write_text(t5.replace(old, new, 1))
+          old = '''            NSString *kind = (sorted.count == 1 && [sorted.firstObject.pathExtension.lowercaseString isEqualToString:@"gif"]) ? @"gif" : @"frames";
+            NSString *path = [kind isEqualToString:@"gif"] ? sorted.firstObject : canonical;'''
+          new = '''            NSString *firstSortedFile = sorted.firstObject;
+            NSString *kind = (sorted.count == 1 && [firstSortedFile.pathExtension.lowercaseString isEqualToString:@"gif"]) ? @"gif" : @"frames";
+            NSString *path = [kind isEqualToString:@"gif"] ? firstSortedFile : canonical;'''
+          if old in t5:
+              t5 = t5.replace(old, new, 1)
+          elif 'NSString *firstSortedFile = sorted.firstObject;' not in t5:
+              raise SystemExit('part5 firstObject block missing')
+          t5 = t5.replace('legacy[@"subtitle"] = [NSString stringWithFormat:@"Legacy package: %@", legacy[@"package"]];', 'legacy[@"subtitle"] = [NSString stringWithFormat:@"%@ • %@ • %@", legacy[@"format"] ?: @"Springy", legacy[@"source"] ?: @"Legacy free pack", legacy[@"package"]];')
+          p5.write_text(t5)
 
           p3 = Path('gif2aniprefs/G2ThemeGalleryPart3.inc')
           t3 = p3.read_text()
-          marker = '    NSError *transactionError = nil;\n'
-          insertion = marker + '    NSDictionary *oldPrefs = nil;\n    NSDictionary *oldValues = nil;\n    NSDictionary *updates = nil;\n'
-          if marker not in t3:
-              raise SystemExit('part3 transaction marker missing')
-          t3 = t3.replace(marker, insertion, 1)
-          replacements = {
-              '    NSDictionary *oldPrefs = [NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] ?: @{};\n':
-                  '    oldPrefs = [NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] ?: @{};\n',
-              '    NSDictionary *oldValues = @{\n': '    oldValues = @{\n',
-              '    NSDictionary *updates = @{\n': '    updates = @{\n',
-          }
-          for old, new in replacements.items():
-              if old not in t3:
-                  raise SystemExit(f'part3 replacement missing: {old!r}')
-              t3 = t3.replace(old, new, 1)
+          if 'NSDictionary *oldPrefs = nil;' not in t3:
+              marker = '    NSError *transactionError = nil;\n'
+              insertion = marker + '    NSDictionary *oldPrefs = nil;\n    NSDictionary *oldValues = nil;\n    NSDictionary *updates = nil;\n'
+              if marker not in t3:
+                  raise SystemExit('part3 transaction marker missing')
+              t3 = t3.replace(marker, insertion, 1)
+              t3 = t3.replace('    NSDictionary *oldPrefs = [NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] ?: @{};\n', '    oldPrefs = [NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] ?: @{};\n', 1)
+              t3 = t3.replace('    NSDictionary *oldValues = @{\n', '    oldValues = @{\n', 1)
+              t3 = t3.replace('    NSDictionary *updates = @{\n', '    updates = @{\n', 1)
           p3.write_text(t3)
+
+          build = Path('.github/workflows/build-gif2ani-330-gallery.yml')
+          tb = build.read_text()
+          tb = tb.replace("assert legacy.count('@\"name\":') >= 35", "assert legacy.count('@\"name\":') >= 52")
+          build.write_text(tb)
+
+          combined = ''.join(Path(f'gif2aniprefs/G2ThemeGalleryPart{i}.inc').read_text() for i in range(1,7))
+          legacy = combined[combined.index('G2LegacyCatalog'):combined.index('static UIColor *G2RGB')]
+          built = combined[combined.index('G2BuiltInPacks'):combined.index('G2LegacyCatalog')]
+          legacy_count = legacy.count('@"name":')
+          built_count = built.count('@"identifier":')
+          assert legacy_count >= 52, legacy_count
+          assert built_count == 12, built_count
+          assert legacy_count + built_count >= 64
+          assert 'NSString *firstFile = files.firstObject;' in combined
+          assert 'NSString *firstSortedFile = sorted.firstObject;' in combined
+          print(f'gallery_total={legacy_count + built_count} built_in={built_count} legacy={legacy_count}')
           PY
-          grep -q 'NSArray<NSString \*> \*files' gif2aniprefs/G2ThemeGalleryPart2.inc
-          grep -q 'NSArray<NSString \*> \*sorted' gif2aniprefs/G2ThemeGalleryPart5.inc
-          grep -q 'NSDictionary \*oldPrefs = nil' gif2aniprefs/G2ThemeGalleryPart3.inc
-          printf 'build=%s\nsource=gallery-compile-fixed\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > triggers/build-gif2ani-330-gallery.txt
+          printf 'build=%s\nsource=gallery-64-plus-expanded\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > triggers/build-gif2ani-330-gallery.txt
+
       - name: Commit fixes and trigger build
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add gif2aniprefs/G2ThemeGalleryPart2.inc gif2aniprefs/G2ThemeGalleryPart3.inc gif2aniprefs/G2ThemeGalleryPart5.inc triggers/build-gif2ani-330-gallery.txt
-          git commit -m "Fix Gif2Ani 3.3 gallery compilation"
+          git add gif2aniprefs/G2ThemeGalleryPart1.inc gif2aniprefs/G2ThemeGalleryPart2.inc gif2aniprefs/G2ThemeGalleryPart3.inc gif2aniprefs/G2ThemeGalleryPart5.inc .github/workflows/build-gif2ani-330-gallery.yml triggers/build-gif2ani-330-gallery.txt
+          git commit -m "Expand Gif2Ani gallery to 64 plus themes and fix compilation" || exit 0
+          git pull --rebase origin main
           git push origin HEAD:main
