@@ -1,18 +1,22 @@
-#define G2BuiltInPacks G2OfflineBuiltInPacks
-#include "G2ThemeGalleryPart1.inc"
-#include "G2ThemeGalleryPart1Tail.inc"
-#undef G2BuiltInPacks
+static NSArray<NSDictionary *> *G2OfflineBuiltInPacks(void);
+static BOOL G2StageGIFAtPath(NSString *sourcePath, NSDictionary *recommended, NSError **error);
 
 #include "G2RemoteThemeCatalog.inc"
+
+#define G2BuiltInPacks G2OfflineBuiltInPacks
+#include "G2ThemeGalleryPart1.inc"
+#undef G2BuiltInPacks
+#include "G2ThemeGalleryPart1Tail.inc"
 #include "G2ThemeGalleryPart2.inc"
 
 #define G2StageGIFAtPath G2LegacyStageGIFAtPath
 #include "G2ThemeGalleryPart3.inc"
 #undef G2StageGIFAtPath
 
-#include "G2ThemeStageOverride.inc"
 #include "G2ThemeGalleryPart4.inc"
 #include "G2ThemeGalleryPart5.inc"
 #include "G2ThemeGalleryPart6.inc"
+
+#include "G2ThemeStageOverride.inc"
 #include "G2RemoteThemePreviewOverride.inc"
 #include "G2RemoteGalleryPolish.inc"
