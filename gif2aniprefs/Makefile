@@ -4,7 +4,7 @@ TARGET = iphone:clang:latest:15.0
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = Gif2AniPrefs
-Gif2AniPrefs_FILES = gif2ani2RootListController.m
+Gif2AniPrefs_FILES = gif2ani2RootListController.m G2ThemeGalleryController.m
 Gif2AniPrefs_INSTALL_PATH = /Library/PreferenceBundles
 Gif2AniPrefs_FRAMEWORKS = UIKit UniformTypeIdentifiers ImageIO QuartzCore
 Gif2AniPrefs_PRIVATE_FRAMEWORKS = Preferences
