@@ -1,2 +1,2 @@
-build=2026-07-25T22:46:45Z
-source=gallery-compile-fixed
+build=2026-07-25T23:59:00Z
+source=gallery-66-direct
