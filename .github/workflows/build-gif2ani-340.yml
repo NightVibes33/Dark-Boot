@@ -1,0 +1,135 @@
+name: Build Gif2Ani 3.4.0 Gallery
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-gif2ani-340.yml
+      - triggers/build-gif2ani-340.txt
+      - control
+      - Makefile
+      - Tweak.xm
+      - gif2aniprefs/**
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-340-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies and Theos
+        env:
+          THEOS: /opt/theos
+          CI: "1"
+          SHELL: /bin/bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            bash curl sudo build-essential fakeroot rsync perl git \
+            libxml2 dpkg-dev unzip xz-utils ca-certificates python3 file
+          sudo rm -rf /opt/theos
+          sudo mkdir -p /opt
+          sudo chown "$USER:$USER" /opt
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          test -x /opt/theos/toolchain/linux/iphone/bin/clang
+
+      - name: Validate 3.4 source contract
+        run: |
+          set -euo pipefail
+          test "$(awk '/^Version:/{print $2}' control)" = "3.4.0"
+          test -f gif2aniprefs/G2ThemeGalleryController.m
+          test -f gif2aniprefs/G2RemoteThemeCatalog.inc
+          test -f gif2aniprefs/G2RemoteThemePreviewOverride.inc
+          test -f gif2aniprefs/G2RemoteGalleryPolish.inc
+          grep -q 'G2ThemeGalleryController.m' gif2aniprefs/Makefile
+          grep -q 'G2ThemeGalleryController' gif2aniprefs/Resources/Root.plist
+          python3 - <<'PY'
+          from pathlib import Path
+          wrapper = Path('gif2aniprefs/G2ThemeGalleryController.m').read_text()
+          required_includes = [
+              'G2RemoteThemeCatalog.inc',
+              'G2RemoteThemePreviewOverride.inc',
+              'G2RemoteGalleryPolish.inc',
+          ]
+          for name in required_includes:
+              assert f'#include "{name}"' in wrapper, name
+          text = '\n'.join(Path('gif2aniprefs', name).read_text() for name in required_includes)
+          required = [
+              '54 Downloadable', 'NSURLSession', 'method_exchangeImplementations',
+              'previewGeneration', 'Stage This Animation', 'Legacy Source Catalog'
+          ]
+          missing = [item for item in required if item not in text]
+          assert not missing, missing
+          print('gif2ani_340_source_contract=success')
+          PY
+
+      - name: Build rootless DEB
+        env:
+          THEOS: /opt/theos
+        run: |
+          set -euo pipefail
+          make clean package FINALPACKAGE=1 2>&1 | tee build-340.log
+          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.4.0_iphoneos-arm64.deb' | head -n1)"
+          test -n "$DEB"
+          echo "$DEB" > deb-path-340.txt
+          test "$(dpkg-deb --field "$DEB" Package)" = "com.nightvibes33.gif2ani"
+          test "$(dpkg-deb --field "$DEB" Version)" = "3.4.0"
+          rm -rf package-root-340
+          dpkg-deb -x "$DEB" package-root-340
+          BUNDLE=package-root-340/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle
+          test -f "$BUNDLE/Gif2AniPrefs"
+          test -f "$BUNDLE/Root.plist"
+          strings "$BUNDLE/Gif2AniPrefs" | grep -q '54 Downloadable'
+          strings "$BUNDLE/Gif2AniPrefs" | grep -q 'Legacy Source Catalog'
+          strings "$BUNDLE/Gif2AniPrefs" | grep -q 'Stage This Animation'
+          dpkg-deb --contents "$DEB" | tee package-contents-340.txt
+          sha256sum "$DEB" | tee deb-sha256-340.txt
+
+      - name: Upload Gif2Ani 3.4.0 DEB
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gif2Ani-3.4.0-rootless-deb
+          path: packages/com.nightvibes33.gif2ani_3.4.0_iphoneos-arm64.deb
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish build status
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          mkdir -p status
+          {
+            echo "Gif2Ani 3.4.0 Gallery Build"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "commit=${GITHUB_SHA}"
+            echo "status=${JOB_STATUS}"
+            echo "completed_at_utc=$(date -u +%FT%TZ)"
+            echo
+            cat deb-sha256-340.txt 2>/dev/null || true
+            echo
+            echo "--- package contents ---"
+            cat package-contents-340.txt 2>/dev/null || true
+            echo
+            echo "--- build log tail ---"
+            tail -n 350 build-340.log 2>/dev/null || true
+          } > status/build-340.txt
+          git add status/build-340.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Record Gif2Ani 3.4.0 build [skip ci]"
+            git push origin HEAD:main
+          fi
