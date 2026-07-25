@@ -1,0 +1,96 @@
+name: Finalize Gif2Ani 3.2 Settings
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/triggers/finalize-gif2ani-320-settings.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-320-settings-source
+  cancel-in-progress: true
+
+jobs:
+  finalize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add persistent runtime settings diagnostics
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('Tweak.xm')
+          t=p.read_text()
+          old='''        G2WriteStatus(@"custom-animation-stable", @{
+            @"attachmentPoint": @"dedicated-overlay-layer",
+            @"overlayWidth": @(CGRectGetWidth(g2DedicatedAnimationLayer.bounds)),
+            @"overlayHeight": @(CGRectGetHeight(g2DedicatedAnimationLayer.bounds)),
+            @"appleLoaderHidden": @(appleLoaderHidden),
+        });'''
+          new='''        G2WriteStatus(@"custom-animation-stable", @{
+            @"attachmentPoint": @"dedicated-overlay-layer",
+            @"overlayWidth": @(CGRectGetWidth(g2DedicatedAnimationLayer.bounds)),
+            @"overlayHeight": @(CGRectGetHeight(g2DedicatedAnimationLayer.bounds)),
+            @"appleLoaderHidden": @(appleLoaderHidden),
+            @"duration": @(animation.duration),
+            @"repeatCount": @(animation.repeatCount),
+            @"contentsGravity": g2DedicatedAnimationLayer.contentsGravity ?: @"unknown",
+        });'''
+          if old not in t:
+              raise SystemExit('stable-status-block-not-found')
+          p.write_text(t.replace(old,new,1))
+          PY
+
+      - name: Validate Settings source and plist
+        run: |
+          set -euo pipefail
+          test "$(awk '/^Version:/{print $2}' control)" = "3.2.0"
+          grep -q 'readPreferenceValue' gif2aniprefs/gif2ani2RootListController.m
+          grep -q 'setPreferenceValue' gif2aniprefs/gif2ani2RootListController.m
+          grep -q 'G2WritePreferences' gif2aniprefs/gif2ani2RootListController.m
+          grep -q 'confirmRemoveGIF' gif2aniprefs/gif2ani2RootListController.m
+          grep -q 'showStatus' gif2aniprefs/gif2ani2RootListController.m
+          grep -q 'Active.previous.gif' gif2aniprefs/gif2ani2RootListController.m
+          grep -q 'Loop Forever' gif2aniprefs/Resources/Root.plist
+          grep -q 'Original GIF Timing' gif2aniprefs/Resources/Root.plist
+          grep -q 'Current Status and Diagnostics' gif2aniprefs/Resources/Root.plist
+          grep -q '@"repeatCount": @(animation.repeatCount)' Tweak.xm
+          grep -q '@"duration": @(animation.duration)' Tweak.xm
+          python3 - <<'PY'
+          import plistlib
+          from pathlib import Path
+          root=plistlib.loads(Path('gif2aniprefs/Resources/Root.plist').read_bytes())
+          items=root['items']
+          actions={i.get('action') for i in items if 'action' in i}
+          required={'showStatus','selectGIF','confirmRemoveGIF','chooseBackgroundColor','resetVisualAndPlaybackSettings','applyAndRespring'}
+          assert required <= actions, (required-actions)
+          keys={i.get('key') for i in items if 'key' in i}
+          assert {'imageTransformation','customLoop','customDuration'} <= keys
+          for item in items:
+              if item.get('cell')=='PSLinkListCell':
+                  assert len(item.get('validTitles',[]))==len(item.get('validValues',[])), item.get('label')
+          print('settings_plist_semantics=valid')
+          PY
+
+      - name: Commit finalizer
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Tweak.xm
+          git commit -m 'Persist playback settings in Gif2Ani runtime status'
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 3
+          done
+          exit 1
