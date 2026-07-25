@@ -3,6 +3,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import <ImageIO/ImageIO.h>
 #import <objc/runtime.h>
+#import <unistd.h>
+#include <sys/stat.h>
 
 static NSString * const G2MediaDirectory = @"/var/mobile/Library/Application Support/Gif2Ani";
 static NSString * const G2ActiveGIFPath = @"/var/mobile/Library/Application Support/Gif2Ani/Active.gif";
@@ -53,7 +55,10 @@ static void G2SetEnabledOnDisk(BOOL enabled) {
     NSMutableDictionary *preferences = [[NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] mutableCopy];
     if (!preferences) preferences = [NSMutableDictionary dictionary];
     preferences[@"isEnabled"] = @(enabled);
-    [preferences writeToFile:G2PreferencesPath atomically:YES];
+    if ([preferences writeToFile:G2PreferencesPath atomically:YES]) {
+        chown(G2PreferencesPath.fileSystemRepresentation, 501, 501);
+        chmod(G2PreferencesPath.fileSystemRepresentation, 0644);
+    }
 }
 
 static void G2ClearLoadSentinel(void) {
@@ -125,10 +130,8 @@ static BOOL G2LoadGIF(void) {
         return NO;
     }
 
-    // Any leftover sentinel means backboardd previously died while decoding.
-    // Quarantine immediately instead of retrying and creating a boot loop.
     if ([manager fileExistsAtPath:G2LoadSentinelPath]) {
-        G2RejectActiveGIF(@"previous backboardd GIF decode did not complete");
+        G2RejectActiveGIF(@"previous backboardd GIF decode or animation startup did not complete");
         return NO;
     }
 
@@ -175,10 +178,16 @@ static BOOL G2LoadGIF(void) {
 
     g2Frames = [frames copy];
     g2NaturalDuration = MAX(0.05, animation.duration);
-    G2ClearLoadSentinel();
-    G2WriteStatus(@"gif-loaded-safely", @{
+    G2WriteStatus(@"gif-decoded-awaiting-animation", @{
         @"duration": @(g2NaturalDuration),
         @"decodedBytes": @(decodedBytes),
+    });
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if ([[NSFileManager defaultManager] fileExistsAtPath:G2LoadSentinelPath]) {
+            G2ClearLoadSentinel();
+            G2WriteStatus(@"gif-load-stable-timeout", nil);
+        }
     });
     return YES;
 }
@@ -194,7 +203,6 @@ static void G2Reload(__unused CFNotificationCenterRef center,
                      __unused CFStringRef name,
                      __unused const void *object,
                      __unused CFDictionaryRef userInfo) {
-    // Reload preferences only. Never decode media from a Settings notification.
     [[G2PreferencesManager sharedInstance] reload];
     g2Frames = nil;
     g2NaturalDuration = 0;
@@ -223,6 +231,7 @@ static void G2Reload(__unused CFNotificationCenterRef center,
 
     NSArray *values = G2CGImageValues();
     if (!values.count) {
+        G2RejectActiveGIF(@"decoded frames did not produce usable CGImages");
         %orig;
         return;
     }
@@ -240,6 +249,11 @@ static void G2Reload(__unused CFNotificationCenterRef center,
     G2WriteStatus(@"custom-animation-started", @{
         @"duration": @(animation.duration),
         @"repeatCount": @(animation.repeatCount),
+    });
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        G2ClearLoadSentinel();
+        G2WriteStatus(@"custom-animation-stable", nil);
     });
 }
 
@@ -261,7 +275,6 @@ static void G2Reload(__unused CFNotificationCenterRef center,
         if (![NSProcessInfo.processInfo.processName isEqualToString:@"backboardd"]) return;
         G2EnsureMediaDirectory();
 
-        // Recover before hooks become active if the prior decode killed backboardd.
         if ([[NSFileManager defaultManager] fileExistsAtPath:G2LoadSentinelPath]) {
             G2RejectActiveGIF(@"recovered automatically after backboardd restart");
         }
