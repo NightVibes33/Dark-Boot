@@ -1,10 +1,10 @@
 Dark-Boot Production Rootless DEB Build
-run_id=30160706725
-run_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30160706725
-commit=66f26069964a553b79839b60e5df5a84910c93ed
+run_id=30160713151
+run_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30160713151
+commit=dc73c697bd6ee2d44c98187240279af4c350526c
 event=push
 outcome=failure
-completed_at_utc=2026-07-25T13:58:11Z
+completed_at_utc=2026-07-25T13:58:42Z
 
 --- build log tail ---
 [0;36m==> [1;39mCleaning…[m
@@ -37,7 +37,7 @@ completed_at_utc=2026-07-25T13:58:11Z
 dm.pl: building package `com.nightvibes33.darkboot:iphoneos-arm64' in `./packages/com.nightvibes33.darkboot_2.0.1_iphoneos-arm64.deb'
 Built packages/com.nightvibes33.darkboot_2.0.1_iphoneos-arm64.deb
  new Debian package, version 2.0.
- size 35920 bytes: control archive=839 bytes.
+ size 35890 bytes: control archive=840 bytes.
      443 bytes,    12 lines      control
      847 bytes,    26 lines   *  postinst             #!/bin/sh
      162 bytes,     7 lines   *  prerm                #!/bin/sh
