@@ -1,10 +1,10 @@
 Dark-Boot Production Rootless DEB Build
-run_id=30160681255
-run_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30160681255
-commit=783f90fe25d861cdd0415e81c88a2e170a51b28c
+run_id=30160706725
+run_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30160706725
+commit=66f26069964a553b79839b60e5df5a84910c93ed
 event=push
-outcome=success
-completed_at_utc=2026-07-25T13:57:24Z
+outcome=failure
+completed_at_utc=2026-07-25T13:58:11Z
 
 --- build log tail ---
 [0;36m==> [1;39mCleaning…[m
@@ -34,16 +34,16 @@ completed_at_utc=2026-07-25T13:57:24Z
 [1;31m> [1;3;39mMaking stage in prefs…[m
 [1;31m> [1;3;39mMaking stage for bundle DarkBootPrefs…[m
 [0;36m==> [1;36mNotice:[m Neither plutil, ply, or libplist-utils are installed, so XML plist files were not optimized.
-dm.pl: building package `com.nightvibes33.darkboot:iphoneos-arm64' in `./packages/com.nightvibes33.darkboot_2.0.0_iphoneos-arm64.deb'
-Built packages/com.nightvibes33.darkboot_2.0.0_iphoneos-arm64.deb
+dm.pl: building package `com.nightvibes33.darkboot:iphoneos-arm64' in `./packages/com.nightvibes33.darkboot_2.0.1_iphoneos-arm64.deb'
+Built packages/com.nightvibes33.darkboot_2.0.1_iphoneos-arm64.deb
  new Debian package, version 2.0.
- size 35926 bytes: control archive=873 bytes.
-     497 bytes,    12 lines      control
+ size 35920 bytes: control archive=839 bytes.
+     443 bytes,    12 lines      control
      847 bytes,    26 lines   *  postinst             #!/bin/sh
      162 bytes,     7 lines   *  prerm                #!/bin/sh
  Package: com.nightvibes33.darkboot
  Name: Dark Boot
- Description: Production-grade custom SpringBoard startup visual and audio engine with image, GIF, video, animation, safety, and Settings controls for rootless iOS 15 and 16.
+ Description: Custom SpringBoard startup visual and audio tweak with a working Settings pane for rootless iOS 15 and 16.
  Maintainer: NightVibes33
  Author: NightVibes33
  Section: Tweaks
@@ -51,21 +51,21 @@ Built packages/com.nightvibes33.darkboot_2.0.0_iphoneos-arm64.deb
  Conflicts: com.nightvibes33.darkboot-beta
  Replaces: com.nightvibes33.darkboot-beta
  Architecture: iphoneos-arm64
- Version: 2.0.0
+ Version: 2.0.1
  Installed-Size: 252
-drwxr-xr-x 0/root            0 2026-07-25 13:57 .
-drwxr-xr-x 0/root            0 2026-07-25 13:57 var
-drwxr-xr-x 0/root            0 2026-07-25 13:57 var/jb
-drwxr-xr-x 0/root            0 2026-07-25 13:57 var/jb/Library
-drwxr-xr-x 0/root            0 2026-07-25 13:57 var/jb/Library/MobileSubstrate
-drwxr-xr-x 0/root            0 2026-07-25 13:57 var/jb/Library/MobileSubstrate/DynamicLibraries
--rwxr-xr-x 0/root       110128 2026-07-25 13:57 var/jb/Library/MobileSubstrate/DynamicLibraries/DarkBoot.dylib
--rw-r--r-- 0/root          110 2026-07-25 13:57 var/jb/Library/MobileSubstrate/DynamicLibraries/DarkBoot.plist
-drwxr-xr-x 0/root            0 2026-07-25 13:57 var/jb/Library/PreferenceBundles
-drwxr-xr-x 0/root            0 2026-07-25 13:57 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle
--rwxr-xr-x 0/root        89648 2026-07-25 13:57 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/DarkBootPrefs
--rw-r--r-- 0/root          822 2026-07-25 13:56 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/Info.plist
--rw-r--r-- 0/root        12114 2026-07-25 13:56 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/Root.plist
-drwxr-xr-x 0/root            0 2026-07-25 13:56 var/jb/Library/PreferenceLoader
-drwxr-xr-x 0/root            0 2026-07-25 13:56 var/jb/Library/PreferenceLoader/Preferences
--rw-r--r-- 0/root          178 2026-07-25 13:56 var/jb/Library/PreferenceLoader/Preferences/DarkBoot.plist
+drwxr-xr-x 0/root            0 2026-07-25 13:58 .
+drwxr-xr-x 0/root            0 2026-07-25 13:58 var
+drwxr-xr-x 0/root            0 2026-07-25 13:58 var/jb
+drwxr-xr-x 0/root            0 2026-07-25 13:58 var/jb/Library
+drwxr-xr-x 0/root            0 2026-07-25 13:58 var/jb/Library/MobileSubstrate
+drwxr-xr-x 0/root            0 2026-07-25 13:58 var/jb/Library/MobileSubstrate/DynamicLibraries
+-rwxr-xr-x 0/root       110128 2026-07-25 13:58 var/jb/Library/MobileSubstrate/DynamicLibraries/DarkBoot.dylib
+-rw-r--r-- 0/root          110 2026-07-25 13:58 var/jb/Library/MobileSubstrate/DynamicLibraries/DarkBoot.plist
+drwxr-xr-x 0/root            0 2026-07-25 13:58 var/jb/Library/PreferenceBundles
+drwxr-xr-x 0/root            0 2026-07-25 13:58 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle
+-rwxr-xr-x 0/root        89648 2026-07-25 13:58 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/DarkBootPrefs
+-rw-r--r-- 0/root          822 2026-07-25 13:57 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/Info.plist
+-rw-r--r-- 0/root        12114 2026-07-25 13:57 var/jb/Library/PreferenceBundles/DarkBootPrefs.bundle/Root.plist
+drwxr-xr-x 0/root            0 2026-07-25 13:57 var/jb/Library/PreferenceLoader
+drwxr-xr-x 0/root            0 2026-07-25 13:57 var/jb/Library/PreferenceLoader/Preferences
+-rw-r--r-- 0/root          178 2026-07-25 13:57 var/jb/Library/PreferenceLoader/Preferences/DarkBoot.plist
