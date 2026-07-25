@@ -1,6 +1,5 @@
-#import <CepheiPrefs/HBRootListController.h>
 #import <Preferences/PSListController.h>
+#import <UIKit/UIKit.h>
 
-@interface gif2ani2RootListController : HBRootListController <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
-
+@interface Gif2AniRootListController : PSListController <UIDocumentPickerDelegate, UIColorPickerViewControllerDelegate>
 @end
