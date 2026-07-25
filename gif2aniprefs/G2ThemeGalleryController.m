@@ -1,3 +1,10 @@
+#import "G2ThemeGalleryController.h"
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
+#import <ImageIO/ImageIO.h>
+#import <QuartzCore/QuartzCore.h>
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 static NSArray<NSDictionary *> *G2OfflineBuiltInPacks(void);
 static BOOL G2StageGIFAtPath(NSString *sourcePath, NSDictionary *recommended, NSError **error);
 
