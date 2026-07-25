@@ -1,8 +1,8 @@
 Gif2Ani 3.0.0 Rootless Build
-run_id=30165179675
-commit=e690c5a251155feca2a3b080bfce6e1736084170
+run_id=30165193962
+commit=005d14199216b23420297f98e4bd3f666afbc7ae
 status=cancelled
-completed_at_utc=2026-07-25T16:13:33Z
+completed_at_utc=2026-07-25T16:14:10Z
 
 --- build log tail ---
 build.log missing
