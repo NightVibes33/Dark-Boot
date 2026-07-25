@@ -1,9 +1,10 @@
-#import "UIImage+animatedGIF.h"
 #import "G2PreferencesManager.h"
+#import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import <ImageIO/ImageIO.h>
 #import <objc/runtime.h>
 #import <unistd.h>
+#include <math.h>
 #include <sys/stat.h>
 
 static NSString * const G2MediaDirectory = @"/var/mobile/Library/Application Support/Gif2Ani";
@@ -14,6 +15,7 @@ static NSString * const G2LoadSentinelPath = @"/var/mobile/Library/Application S
 static NSString * const G2PreferencesPath = @"/var/mobile/Library/Preferences/com.nightvibes33.gif2ani.plist";
 static CFStringRef const G2ReloadNotification = CFSTR("com.nightvibes33.gif2ani/ReloadPrefs");
 
+static const NSUInteger G2MaximumSourceFrames = 240;
 static const NSUInteger G2MaximumDecodedFrames = 24;
 static const NSUInteger G2MaximumPixelDimension = 640;
 static const unsigned long long G2MaximumInputBytes = 25ULL * 1024ULL * 1024ULL;
@@ -40,6 +42,7 @@ static void G2WriteStatus(NSString *event, NSDictionary *extra) {
         @"gifExists": @([[NSFileManager defaultManager] fileExistsAtPath:G2ActiveGIFPath]),
         @"frameCount": @(g2Frames.count),
         @"safetyLimits": @{
+            @"maximumSourceFrames": @(G2MaximumSourceFrames),
             @"maximumDecodedFrames": @(G2MaximumDecodedFrames),
             @"maximumPixelDimension": @(G2MaximumPixelDimension),
             @"maximumInputBytes": @(G2MaximumInputBytes),
@@ -89,13 +92,16 @@ static NSDictionary *G2ValidateActiveGIF(void) {
 
     CGImageSourceRef source = CGImageSourceCreateWithURL((__bridge CFURLRef)[NSURL fileURLWithPath:G2ActiveGIFPath], NULL);
     if (!source) return nil;
+
     size_t sourceFrames = CGImageSourceGetCount(source);
     NSDictionary *properties = sourceFrames ? CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(source, 0, NULL)) : nil;
+    NSDictionary *gifProperties = properties[(NSString *)kCGImagePropertyGIFDictionary];
     NSUInteger width = [properties[(NSString *)kCGImagePropertyPixelWidth] unsignedIntegerValue];
     NSUInteger height = [properties[(NSString *)kCGImagePropertyPixelHeight] unsignedIntegerValue];
     CFRelease(source);
 
-    if (sourceFrames == 0 || width == 0 || height == 0) return nil;
+    if (!gifProperties || sourceFrames < 2 || sourceFrames > G2MaximumSourceFrames || width == 0 || height == 0) return nil;
+
     NSUInteger decodedFrames = MIN((NSUInteger)sourceFrames, G2MaximumDecodedFrames);
     double maxDimension = (double)MAX(width, height);
     double scale = MIN(1.0, (double)G2MaximumPixelDimension / MAX(1.0, maxDimension));
@@ -114,6 +120,101 @@ static NSDictionary *G2ValidateActiveGIF(void) {
         @"decodedHeight": @(decodedHeight),
         @"estimatedDecodedBytes": @(estimatedBytes),
     };
+}
+
+static NSTimeInterval G2FrameDelay(CGImageSourceRef source, size_t index) {
+    NSDictionary *properties = CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(source, index, NULL));
+    NSDictionary *gifProperties = properties[(NSString *)kCGImagePropertyGIFDictionary];
+    NSNumber *unclamped = gifProperties[(NSString *)kCGImagePropertyGIFUnclampedDelayTime];
+    NSNumber *clamped = gifProperties[(NSString *)kCGImagePropertyGIFDelayTime];
+    NSTimeInterval delay = (unclamped ?: clamped).doubleValue;
+    if (!isfinite(delay) || delay < 0.02) delay = 0.10;
+    return MIN(delay, 10.0);
+}
+
+static BOOL G2DecodeActiveGIF(NSDictionary *metadata,
+                              NSArray<UIImage *> **framesOut,
+                              NSTimeInterval *durationOut,
+                              unsigned long long *decodedBytesOut,
+                              NSString **failureReasonOut) {
+    NSURL *url = [NSURL fileURLWithPath:G2ActiveGIFPath];
+    NSDictionary *sourceOptions = @{(NSString *)kCGImageSourceShouldCache: @NO};
+    CGImageSourceRef source = CGImageSourceCreateWithURL((__bridge CFURLRef)url,
+                                                         (__bridge CFDictionaryRef)sourceOptions);
+    if (!source) {
+        if (failureReasonOut) *failureReasonOut = @"ImageIO could not open the active GIF";
+        return NO;
+    }
+
+    NSUInteger sourceFrames = CGImageSourceGetCount(source);
+    NSUInteger decodedFrames = [metadata[@"decodedFrames"] unsignedIntegerValue];
+    if (sourceFrames < 2 || sourceFrames > G2MaximumSourceFrames || decodedFrames == 0) {
+        CFRelease(source);
+        if (failureReasonOut) *failureReasonOut = @"source frame count was outside the safe limit";
+        return NO;
+    }
+
+    NSMutableArray<UIImage *> *frames = [NSMutableArray arrayWithCapacity:decodedFrames];
+    unsigned long long decodedBytes = 0;
+    NSTimeInterval duration = 0;
+
+    for (NSUInteger index = 0; index < sourceFrames; index++) {
+        duration += G2FrameDelay(source, index);
+    }
+
+    NSDictionary *thumbnailOptions = @{
+        (NSString *)kCGImageSourceCreateThumbnailFromImageAlways: @YES,
+        (NSString *)kCGImageSourceCreateThumbnailWithTransform: @YES,
+        (NSString *)kCGImageSourceThumbnailMaxPixelSize: @(G2MaximumPixelDimension),
+        (NSString *)kCGImageSourceShouldCacheImmediately: @YES,
+    };
+
+    for (NSUInteger outputIndex = 0; outputIndex < decodedFrames; outputIndex++) {
+        size_t sourceIndex = outputIndex;
+        if (sourceFrames > decodedFrames && decodedFrames > 1) {
+            sourceIndex = (size_t)llround(((double)outputIndex * (double)(sourceFrames - 1)) /
+                                          (double)(decodedFrames - 1));
+        }
+
+        CGImageRef image = CGImageSourceCreateThumbnailAtIndex(source,
+                                                               sourceIndex,
+                                                               (__bridge CFDictionaryRef)thumbnailOptions);
+        if (!image) {
+            CFRelease(source);
+            if (failureReasonOut) *failureReasonOut = @"ImageIO could not decode a bounded GIF frame";
+            return NO;
+        }
+
+        unsigned long long frameBytes = (unsigned long long)CGImageGetBytesPerRow(image) *
+                                        (unsigned long long)CGImageGetHeight(image);
+        if (frameBytes == 0 || decodedBytes > G2MaximumEstimatedDecodedBytes - frameBytes) {
+            CGImageRelease(image);
+            CFRelease(source);
+            if (failureReasonOut) *failureReasonOut = @"actual decoded memory exceeded the safe limit";
+            return NO;
+        }
+        decodedBytes += frameBytes;
+
+        UIImage *frame = [UIImage imageWithCGImage:image scale:1.0 orientation:UIImageOrientationUp];
+        CGImageRelease(image);
+        if (!frame) {
+            CFRelease(source);
+            if (failureReasonOut) *failureReasonOut = @"UIKit could not create a bounded animation frame";
+            return NO;
+        }
+        [frames addObject:frame];
+    }
+
+    CFRelease(source);
+    if (!frames.count || decodedBytes == 0) {
+        if (failureReasonOut) *failureReasonOut = @"no usable bounded frames were decoded";
+        return NO;
+    }
+
+    if (framesOut) *framesOut = [frames copy];
+    if (durationOut) *durationOut = MAX(0.05, duration);
+    if (decodedBytesOut) *decodedBytesOut = decodedBytes;
+    return YES;
 }
 
 static BOOL G2LoadGIF(void) {
@@ -137,7 +238,7 @@ static BOOL G2LoadGIF(void) {
 
     NSDictionary *metadata = G2ValidateActiveGIF();
     if (!metadata) {
-        G2RejectActiveGIF(@"GIF exceeded safe size, frame, dimension, or memory limits");
+        G2RejectActiveGIF(@"GIF exceeded safe type, size, frame, dimension, or memory limits");
         return NO;
     }
     g2MediaMetadata = metadata;
@@ -145,56 +246,38 @@ static BOOL G2LoadGIF(void) {
     G2EnsureMediaDirectory();
     [@"loading" writeToFile:G2LoadSentinelPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
 
-    UIImage *animation = nil;
+    NSArray<UIImage *> *frames = nil;
+    NSTimeInterval duration = 0;
+    unsigned long long decodedBytes = 0;
+    NSString *failureReason = nil;
+    BOOL decoded = NO;
     @try {
-        animation = [UIImage animatedImageWithAnimatedGIFURL:[NSURL fileURLWithPath:G2ActiveGIFPath]];
+        decoded = G2DecodeActiveGIF(metadata, &frames, &duration, &decodedBytes, &failureReason);
     } @catch (NSException *exception) {
+        failureReason = [NSString stringWithFormat:@"bounded decoder exception: %@", exception.name ?: @"unknown"];
         G2WriteStatus(@"decode-exception", @{ @"name": exception.name ?: @"unknown" });
     }
 
-    if (!animation) {
-        G2RejectActiveGIF(@"ImageIO could not decode the active GIF");
+    if (!decoded || !frames.count) {
+        G2RejectActiveGIF(failureReason ?: @"bounded ImageIO decoder failed");
         return NO;
     }
 
-    NSArray<UIImage *> *frames = animation.images;
-    if (!frames.count) frames = @[animation];
-    if (!frames.count || frames.count > G2MaximumDecodedFrames) {
-        G2RejectActiveGIF(@"decoded frame count was outside the safe limit");
-        return NO;
-    }
-
-    unsigned long long decodedBytes = 0;
-    for (UIImage *frame in frames) {
-        CGImageRef image = frame.CGImage;
-        if (!image) continue;
-        decodedBytes += (unsigned long long)CGImageGetBytesPerRow(image) * CGImageGetHeight(image);
-        if (decodedBytes > G2MaximumEstimatedDecodedBytes) break;
-    }
-    if (decodedBytes == 0 || decodedBytes > G2MaximumEstimatedDecodedBytes) {
-        G2RejectActiveGIF(@"actual decoded memory exceeded the safe limit");
-        return NO;
-    }
-
-    g2Frames = [frames copy];
-    g2NaturalDuration = MAX(0.05, animation.duration);
+    g2Frames = frames;
+    g2NaturalDuration = duration;
     G2WriteStatus(@"gif-decoded-awaiting-animation", @{
         @"duration": @(g2NaturalDuration),
         @"decodedBytes": @(decodedBytes),
-    });
-
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if ([[NSFileManager defaultManager] fileExistsAtPath:G2LoadSentinelPath]) {
-            G2ClearLoadSentinel();
-            G2WriteStatus(@"gif-load-stable-timeout", nil);
-        }
+        @"decoder": @"ImageIO-bounded-thumbnail",
     });
     return YES;
 }
 
 static NSArray *G2CGImageValues(void) {
     NSMutableArray *values = [NSMutableArray arrayWithCapacity:g2Frames.count];
-    for (UIImage *frame in g2Frames) if (frame.CGImage) [values addObject:(__bridge id)frame.CGImage];
+    for (UIImage *frame in g2Frames) {
+        if (frame.CGImage) [values addObject:(__bridge id)frame.CGImage];
+    }
     return values;
 }
 
@@ -230,8 +313,9 @@ static void G2Reload(__unused CFNotificationCenterRef center,
     }
 
     NSArray *values = G2CGImageValues();
-    if (!values.count) {
-        G2RejectActiveGIF(@"decoded frames did not produce usable CGImages");
+    CALayer *contentLayer = self.contentLayer;
+    if (!values.count || !contentLayer) {
+        G2RejectActiveGIF(@"decoded frames or BackBoard content layer were unavailable");
         %orig;
         return;
     }
@@ -245,10 +329,19 @@ static void G2Reload(__unused CFNotificationCenterRef center,
     animation.duration = duration < 0 ? g2NaturalDuration : MAX(0.05, duration);
     animation.removedOnCompletion = NO;
     animation.fillMode = kCAFillModeBoth;
-    [self.contentLayer addAnimation:animation forKey:@"com.nightvibes33.gif2ani.animation"];
+
+    @try {
+        [contentLayer addAnimation:animation forKey:@"com.nightvibes33.gif2ani.animation"];
+    } @catch (NSException *exception) {
+        G2RejectActiveGIF([NSString stringWithFormat:@"BackBoard animation exception: %@", exception.name ?: @"unknown"]);
+        %orig;
+        return;
+    }
+
     G2WriteStatus(@"custom-animation-started", @{
         @"duration": @(animation.duration),
         @"repeatCount": @(animation.repeatCount),
+        @"decoder": @"ImageIO-bounded-thumbnail",
     });
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
