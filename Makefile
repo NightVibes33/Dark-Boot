@@ -7,7 +7,7 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = DarkBoot
 DarkBoot_FILES = Tweak.xm
-DarkBoot_CFLAGS = -fobjc-arc -Wall -Wextra
+DarkBoot_CFLAGS = -fobjc-arc -Wall -Wextra -Wno-deprecated-declarations
 DarkBoot_FRAMEWORKS = UIKit AVFoundation AudioToolbox QuartzCore
 
 include $(THEOS_MAKE_PATH)/tweak.mk
