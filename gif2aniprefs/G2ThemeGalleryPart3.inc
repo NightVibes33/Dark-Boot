@@ -79,6 +79,9 @@ static BOOL G2StageGIFAtPath(NSString *sourcePath, NSDictionary *recommended, NS
     BOOL hadGIF = [manager fileExistsAtPath:G2PendingGIFPath];
     BOOL hadMetadata = [manager fileExistsAtPath:G2PendingMetadataPath];
     NSError *transactionError = nil;
+    NSDictionary *oldPrefs = nil;
+    NSDictionary *oldValues = nil;
+    NSDictionary *updates = nil;
     if (hadGIF && ![manager moveItemAtPath:G2PendingGIFPath toPath:backupGIF error:&transactionError]) goto rollback;
     if (hadMetadata && ![manager moveItemAtPath:G2PendingMetadataPath toPath:backupMetadata error:&transactionError]) goto rollback;
     if (![manager moveItemAtPath:temporaryGIF toPath:G2PendingGIFPath error:&transactionError]) goto rollback;
@@ -89,13 +92,13 @@ static BOOL G2StageGIFAtPath(NSString *sourcePath, NSDictionary *recommended, NS
     chmod(G2PendingGIFPath.fileSystemRepresentation, 0644);
     chmod(G2PendingMetadataPath.fileSystemRepresentation, 0644);
 
-    NSDictionary *oldPrefs = [NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] ?: @{};
-    NSDictionary *oldValues = @{
+    oldPrefs = [NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] ?: @{};
+    oldValues = @{
         @"pendingReady": oldPrefs[@"pendingReady"] ?: @NO,
         @"backgroundColor": oldPrefs[@"backgroundColor"] ?: @"#000000:1.000",
         @"imageTransformation": oldPrefs[@"imageTransformation"] ?: @"resizeAspect"
     };
-    NSDictionary *updates = @{
+    updates = @{
         @"pendingReady": @YES,
         @"backgroundColor": recommended[@"background"] ?: oldValues[@"backgroundColor"],
         @"imageTransformation": recommended[@"scaling"] ?: @"resizeAspect"

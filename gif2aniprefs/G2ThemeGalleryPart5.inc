@@ -146,7 +146,7 @@
             NSString *canonical = url.path.stringByStandardizingPath;
             if ([seen containsObject:canonical]) continue;
             [seen addObject:canonical];
-            NSArray *sorted = G2NaturallySortedImageFiles(canonical);
+            NSArray<NSString *> *sorted = G2NaturallySortedImageFiles(canonical);
             NSString *kind = (sorted.count == 1 && [sorted.firstObject.pathExtension.lowercaseString isEqualToString:@"gif"]) ? @"gif" : @"frames";
             NSString *path = [kind isEqualToString:@"gif"] ? sorted.firstObject : canonical;
             NSString *name = url.lastPathComponent;

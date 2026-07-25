@@ -155,7 +155,7 @@ static UIImage *G2ThumbnailFromDirectory(NSString *directory, CGFloat maximumDim
 }
 
 static NSArray<UIImage *> *G2FramesFromDirectory(NSString *directory, CGFloat maximumDimension) {
-    NSArray *files = G2NaturallySortedImageFiles(directory);
+    NSArray<NSString *> *files = G2NaturallySortedImageFiles(directory);
     if (files.count == 1 && [files.firstObject.pathExtension.lowercaseString isEqualToString:@"gif"]) {
         return G2FramesFromGIF(files.firstObject, maximumDimension);
     }
