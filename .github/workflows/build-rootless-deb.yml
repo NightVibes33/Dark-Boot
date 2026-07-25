@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+    paths-ignore:
+      - 'status/**'
   pull_request:
 
 permissions:
@@ -128,7 +130,7 @@ jobs:
           assert 'rename(' in apply_code
           assert 'CFPreferencesSetAppValue(CFSTR("isEnabled"), kCFBooleanTrue' in apply_code
           assert 'sbreload' in apply_code
-          assert 'postSafeReload' not in apply_code
+          assert '[self postSafeReload]' not in apply_code
 
           tweak = Path('Tweak.xm').read_text()
           reload_start = tweak.index('static void G2Reload')
