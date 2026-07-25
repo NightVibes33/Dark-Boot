@@ -1,23 +1,26 @@
 Dark-Boot Rootless DEB Build
-run_id=30159066231
-run_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30159066231
-commit=5b2a831ef02dcbe13813bea032b496762e955a47
+run_id=30159136179
+run_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30159136179
+commit=c1363f0fe436a2593209fabc7babd87709fd5995
 event=push
 outcome=failure
-completed_at_utc=2026-07-25T13:05:46Z
+completed_at_utc=2026-07-25T13:07:53Z
 
 --- build log tail ---
 [0;36m==> [1;39mCleaning…[m
 [1;31m> [1;3;39mMaking clean in prefs…[m
 [0;36m==> [1;39mCleaning…[m
 [1;31m> [1;3;39mMaking all for tweak DarkBoot…[m
-bash: line 1: /opt/theos/toolchain/linux/iphone/bin/clang: No such file or directory
-bash: line 1: /opt/theos/toolchain/linux/iphone/bin/clang: No such file or directory
-bash: line 1: /opt/theos/toolchain/linux/iphone/bin/clang: No such file or directory
 [0;31m==> [1;39mPreprocessing Tweak.xm…[m
 [0;32m==> [1;39mCompiling Tweak.xm (arm64)…[m
-bash: line 1: /opt/theos/toolchain/linux/iphone/bin/clang++: No such file or directory
-make[3]: *** [/opt/theos/makefiles/instance/rules.mk:417: /home/runner/work/Dark-Boot/Dark-Boot/.theos/obj/arm64/Tweak.xm.d8d77bab.o] Error 127
+[1mTweak.xm:170:62: [0m[0;1;31merror: [0m[1m'keyWindow' is deprecated: first deprecated in iOS 13.0 - Should not be used for applications that support multiple scenes as it returns a key window across all connected scenes [-Werror,-Wdeprecated-declarations][0m
+    self.previousKeyWindow = UIApplication.sharedApplication.keyWindow;
+[0;1;32m                                                             ^
+[0m[1m/opt/theos/sdks/iPhoneOS16.5.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIApplication.h:135:51: [0m[0;1;30mnote: [0m'keyWindow' has been explicitly marked deprecated here[0m
+@property(nullable, nonatomic,readonly) UIWindow *keyWindow API_DEPRECATED("Should not be used for applications that support multiple scenes as it returns a key window across all connected scenes", ios(2.0, 13.0));
+[0;1;32m                                                  ^
+[0m1 error generated.
+make[3]: *** [/opt/theos/makefiles/instance/rules.mk:417: /home/runner/work/Dark-Boot/Dark-Boot/.theos/obj/arm64/Tweak.xm.d8d77bab.o] Error 1
 rm /home/runner/work/Dark-Boot/Dark-Boot/.theos/obj/arm64/Tweak.xm.mm
 make[2]: *** [/opt/theos/makefiles/instance/library.mk:52: /home/runner/work/Dark-Boot/Dark-Boot/.theos/obj/arm64/DarkBoot.dylib] Error 2
 make[1]: *** [/opt/theos/makefiles/instance/library.mk:37: internal-library-all_] Error 2
