@@ -1,7 +1,7 @@
 Dark-Boot Rootless DEB Build
-run_id=30159001618
-run_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30159001618
+run_id=30159010155
+run_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30159010155
 commit=241e3c41c02b06307797735c5df6a6a47c327d5b
-event=push
+event=issues
 outcome=failure
-completed_at_utc=2026-07-25T13:03:30Z
+completed_at_utc=2026-07-25T13:03:47Z
