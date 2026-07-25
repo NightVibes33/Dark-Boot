@@ -318,7 +318,11 @@ static CGRect G2OverlayBounds(CALayer *container) {
                             CGRectGetWidth(g2PresentationBounds),
                             CGRectGetHeight(g2PresentationBounds));
     }
-    if (CGRectIsEmpty(bounds)) bounds = UIScreen.mainScreen.bounds;
+    if (CGRectIsEmpty(bounds)) {
+        CGFloat width = [g2MediaMetadata[@"decodedWidth"] doubleValue];
+        CGFloat height = [g2MediaMetadata[@"decodedHeight"] doubleValue];
+        bounds = CGRectMake(0, 0, MAX(1.0, width), MAX(1.0, height));
+    }
     bounds.origin = CGPointZero;
     return bounds;
 }
@@ -351,7 +355,7 @@ static BOOL G2InstallAnimationOnLayer(CALayer *appleLayer) {
     g2DedicatedAnimationLayer.opacity = 1.0;
     g2DedicatedAnimationLayer.hidden = NO;
     g2DedicatedAnimationLayer.masksToBounds = YES;
-    g2DedicatedAnimationLayer.contentsScale = UIScreen.mainScreen.scale;
+    g2DedicatedAnimationLayer.contentsScale = appleLayer.contentsScale > 0 ? appleLayer.contentsScale : 1.0;
 
     G2PreferencesManager *preferences = [G2PreferencesManager sharedInstance];
     g2DedicatedAnimationLayer.contentsGravity = preferences.imageTransformation;
