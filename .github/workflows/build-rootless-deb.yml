@@ -70,7 +70,7 @@ jobs:
           set -euo pipefail
           DEB="$(cat deb-path.txt)"
           test "$(dpkg-deb --field "$DEB" Package)" = "com.nightvibes33.gif2ani"
-          test "$(dpkg-deb --field "$DEB" Version)" = "3.0.1"
+          test "$(dpkg-deb --field "$DEB" Version)" = "3.1.0"
           test "$(dpkg-deb --field "$DEB" Architecture)" = "iphoneos-arm64"
           grep -q 'var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib' package-contents.txt
           grep -q 'var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.plist' package-contents.txt
@@ -84,6 +84,7 @@ jobs:
           strings package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'preferences-reloaded-without-media-decode'
           strings package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'load-in-progress'
           strings package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'Active.gif'
+          strings package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'tweak-loaded-no-media-decode'
           ! strings package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'Respring.gif'
           python3 - <<'PY'
           import plistlib
@@ -125,7 +126,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: Gif2Ani-3.0.1-rootless-deb
+          name: Gif2Ani-3.1.0-rootless-deb
           path: packages/*.deb
           if-no-files-found: error
           retention-days: 30
@@ -134,7 +135,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Gif2Ani-3.0.1-build-diagnostics
+          name: Gif2Ani-3.1.0-build-diagnostics
           path: |
             build.log
             package-contents.txt
@@ -152,7 +153,7 @@ jobs:
           git pull --rebase origin main
           mkdir -p status
           {
-            echo "Gif2Ani 3.0.1 Rootless Build"
+            echo "Gif2Ani 3.1.0 Rootless Build"
             echo "run_id=${GITHUB_RUN_ID}"
             echo "commit=${GITHUB_SHA}"
             echo "status=${JOB_STATUS}"
@@ -163,6 +164,6 @@ jobs:
           } > status/build-status.txt
           git add status/build-status.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Record Gif2Ani 3.0.1 build status [skip ci]"
+            git commit -m "Record Gif2Ani 3.1.0 build status [skip ci]"
             git push origin HEAD:main
           fi
