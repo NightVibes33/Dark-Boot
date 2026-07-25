@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+    <dict><key>cell</key><string>PSGroupCell</string><key>label</key><string>STARTUP OVERLAY</string><key>footerText</key><string>Dark-Boot appears when SpringBoard starts after boot or respring. It does not modify iBoot or Apple's sealed boot assets.</string></dict>
+    <dict><key>cell</key><string>PSSwitchCell</string><key>label</key><string>Enabled</string><key>defaults</key><string>com.nightvibes33.darkboot</string><key>key</key><string>Enabled</string><key>default</key><true/><key>PostNotification</key><string>com.nightvibes33.darkboot/reload</string></dict>
+    <dict><key>cell</key><string>PSSliderCell</string><key>label</key><string>Duration</string><key>defaults</key><string>com.nightvibes33.darkboot</string><key>key</key><string>Duration</string><key>default</key><real>4</real><key>min</key><real>1</real><key>max</key><real>15</real><key>showValue</key><true/></dict>
+    <dict><key>cell</key><string>PSSegmentCell</string><key>label</key><string>Image Sizing</string><key>defaults</key><string>com.nightvibes33.darkboot</string><key>key</key><string>ContentMode</string><key>default</key><string>fill</string><key>validTitles</key><array><string>Fit</string><string>Fill</string><string>Stretch</string></array><key>validValues</key><array><string>fit</string><string>fill</string><string>stretch</string></array></dict>
+    <dict><key>cell</key><string>PSSegmentCell</string><key>label</key><string>Animation</string><key>defaults</key><string>com.nightvibes33.darkboot</string><key>key</key><string>Animation</string><key>default</key><string>zoom</string><key>validTitles</key><array><string>Fade</string><string>Zoom</string><string>Pulse</string></array><key>validValues</key><array><string>fade</string><string>zoom</string><string>pulse</string></array></dict>
+    <dict><key>cell</key><string>PSSwitchCell</string><key>label</key><string>Tap to Dismiss</string><key>defaults</key><string>com.nightvibes33.darkboot</string><key>key</key><string>TapToDismiss</string><key>default</key><true/></dict>
+
+    <dict><key>cell</key><string>PSGroupCell</string><key>label</key><string>SOUND</string></dict>
+    <dict><key>cell</key><string>PSSwitchCell</string><key>label</key><string>Play Startup Sound</string><key>defaults</key><string>com.nightvibes33.darkboot</string><key>key</key><string>SoundEnabled</string><key>default</key><true/></dict>
+    <dict><key>cell</key><string>PSSwitchCell</string><key>label</key><string>Fallback Chime</string><key>defaults</key><string>com.nightvibes33.darkboot</string><key>key</key><string>FallbackChime</string><key>default</key><true/></dict>
+    <dict><key>cell</key><string>PSSliderCell</string><key>label</key><string>Volume</string><key>defaults</key><string>com.nightvibes33.darkboot</string><key>key</key><string>Volume</string><key>default</key><real>0.8</real><key>min</key><real>0</real><key>max</key><real>1</real><key>showValue</key><true/></dict>
+
+    <dict><key>cell</key><string>PSGroupCell</string><key>label</key><string>CUSTOM MEDIA</string><key>footerText</key><string>Images are safely converted to a memory-conscious 2048-pixel PNG. Audio is copied into your mobile user library.</string></dict>
+    <dict><key>cell</key><string>PSButtonCell</string><key>label</key><string>Import Boot Image</string><key>action</key><string>importImage</string></dict>
+    <dict><key>cell</key><string>PSButtonCell</string><key>label</key><string>Import Startup Sound</string><key>action</key><string>importSound</string></dict>
+    <dict><key>cell</key><string>PSButtonCell</string><key>label</key><string>Preview Now</string><key>action</key><string>preview</string></dict>
+    <dict><key>cell</key><string>PSButtonCell</string><key>label</key><string>Reset Imported Media</string><key>action</key><string>resetMedia</string><key>isDestructive</key><true/></dict>
+    <dict><key>cell</key><string>PSButtonCell</string><key>label</key><string>Respring</string><key>action</key><string>respring</string></dict>
+</array>
+</plist>

@@ -1,0 +1,8 @@
+{
+    entry = {
+        bundle = DarkBootPrefs;
+        cell = PSLinkCell;
+        detail = DBRootListController;
+        label = "Dark Boot";
+    };
+}

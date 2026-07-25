@@ -1,0 +1,9 @@
+Package: com.nightvibes33.darkboot
+Name: Dark Boot
+Version: 1.0.0
+Architecture: iphoneos-arm64
+Description: Custom SpringBoard startup image and sound for rootless iOS 15 and 16.
+Maintainer: NightVibes33
+Author: NightVibes33
+Section: Tweaks
+Depends: firmware (>= 15.0), mobilesubstrate, preferenceloader
