@@ -13,6 +13,7 @@ static NSString * const G2RejectedGIFPath = @"/var/mobile/Library/Application Su
 static NSString * const G2StatusPath = @"/var/mobile/Library/Application Support/Gif2Ani/runtime-status.plist";
 static NSString * const G2LoadSentinelPath = @"/var/mobile/Library/Application Support/Gif2Ani/load-in-progress";
 static NSString * const G2PreferencesPath = @"/var/mobile/Library/Preferences/com.nightvibes33.gif2ani.plist";
+static NSString * const G2AnimationKey = @"com.nightvibes33.gif2ani.animation";
 static CFStringRef const G2ReloadNotification = CFSTR("com.nightvibes33.gif2ani/ReloadPrefs");
 
 static const NSUInteger G2MaximumSourceFrames = 240;
@@ -24,6 +25,7 @@ static const unsigned long long G2MaximumEstimatedDecodedBytes = 48ULL * 1024ULL
 static NSArray<UIImage *> *g2Frames;
 static NSTimeInterval g2NaturalDuration;
 static NSDictionary *g2MediaMetadata;
+static BOOL g2AnimationPending;
 
 static void G2EnsureMediaDirectory(void) {
     [[NSFileManager defaultManager] createDirectoryAtPath:G2MediaDirectory
@@ -41,6 +43,7 @@ static void G2WriteStatus(NSString *event, NSDictionary *extra) {
         @"BKDisplayRenderOverlaySpinny": @(objc_getClass("BKDisplayRenderOverlaySpinny") != Nil),
         @"gifExists": @([[NSFileManager defaultManager] fileExistsAtPath:G2ActiveGIFPath]),
         @"frameCount": @(g2Frames.count),
+        @"animationPending": @(g2AnimationPending),
         @"safetyLimits": @{
             @"maximumSourceFrames": @(G2MaximumSourceFrames),
             @"maximumDecodedFrames": @(G2MaximumDecodedFrames),
@@ -81,6 +84,7 @@ static void G2RejectActiveGIF(NSString *reason) {
     g2Frames = nil;
     g2NaturalDuration = 0;
     g2MediaMetadata = nil;
+    g2AnimationPending = NO;
     G2WriteStatus(@"gif-auto-disabled", @{ @"reason": reason ?: @"unknown" });
 }
 
@@ -187,7 +191,8 @@ static BOOL G2DecodeActiveGIF(NSDictionary *metadata,
 
         unsigned long long frameBytes = (unsigned long long)CGImageGetBytesPerRow(image) *
                                         (unsigned long long)CGImageGetHeight(image);
-        if (frameBytes == 0 || decodedBytes > G2MaximumEstimatedDecodedBytes - frameBytes) {
+        if (frameBytes == 0 || frameBytes > G2MaximumEstimatedDecodedBytes ||
+            decodedBytes > G2MaximumEstimatedDecodedBytes - frameBytes) {
             CGImageRelease(image);
             CFRelease(source);
             if (failureReasonOut) *failureReasonOut = @"actual decoded memory exceeded the safe limit";
@@ -225,6 +230,7 @@ static BOOL G2LoadGIF(void) {
     g2Frames = nil;
     g2NaturalDuration = 0;
     g2MediaMetadata = nil;
+    g2AnimationPending = NO;
 
     if (![manager fileExistsAtPath:G2ActiveGIFPath]) {
         G2WriteStatus(@"no-active-gif", nil);
@@ -281,6 +287,49 @@ static NSArray *G2CGImageValues(void) {
     return values;
 }
 
+static BOOL G2InstallAnimationOnLayer(CALayer *layer) {
+    if (!layer || !g2Frames.count) return NO;
+    if ([layer animationForKey:G2AnimationKey]) {
+        g2AnimationPending = NO;
+        return YES;
+    }
+
+    NSArray *values = G2CGImageValues();
+    if (!values.count) return NO;
+
+    G2PreferencesManager *preferences = [G2PreferencesManager sharedInstance];
+    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"contents"];
+    animation.values = values;
+    animation.calculationMode = kCAAnimationDiscrete;
+    CGFloat loops = preferences.customLoop;
+    animation.repeatCount = loops < 0 ? HUGE_VALF : MAX(0.0, loops);
+    CGFloat duration = preferences.customDuration;
+    animation.duration = duration < 0 ? g2NaturalDuration : MAX(0.05, duration);
+    animation.removedOnCompletion = NO;
+    animation.fillMode = kCAFillModeBoth;
+
+    @try {
+        [layer addAnimation:animation forKey:G2AnimationKey];
+    } @catch (NSException *exception) {
+        G2RejectActiveGIF([NSString stringWithFormat:@"BackBoard animation exception: %@", exception.name ?: @"unknown"]);
+        return NO;
+    }
+
+    g2AnimationPending = NO;
+    G2WriteStatus(@"custom-animation-started", @{
+        @"duration": @(animation.duration),
+        @"repeatCount": @(animation.repeatCount),
+        @"decoder": @"ImageIO-bounded-thumbnail",
+        @"attachmentPoint": @"prepared-content-layer",
+    });
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        G2ClearLoadSentinel();
+        G2WriteStatus(@"custom-animation-stable", nil);
+    });
+    return YES;
+}
+
 static void G2Reload(__unused CFNotificationCenterRef center,
                      __unused void *observer,
                      __unused CFStringRef name,
@@ -290,6 +339,7 @@ static void G2Reload(__unused CFNotificationCenterRef center,
     g2Frames = nil;
     g2NaturalDuration = 0;
     g2MediaMetadata = nil;
+    g2AnimationPending = NO;
     G2WriteStatus(@"preferences-reloaded-without-media-decode", nil);
 }
 
@@ -312,41 +362,19 @@ static void G2Reload(__unused CFNotificationCenterRef center,
         return;
     }
 
-    NSArray *values = G2CGImageValues();
-    CALayer *contentLayer = self.contentLayer;
-    if (!values.count || !contentLayer) {
-        G2RejectActiveGIF(@"decoded frames or BackBoard content layer were unavailable");
-        %orig;
-        return;
-    }
+    g2AnimationPending = YES;
+    %orig;
 
-    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"contents"];
-    animation.values = values;
-    animation.calculationMode = kCAAnimationDiscrete;
-    CGFloat loops = preferences.customLoop;
-    animation.repeatCount = loops < 0 ? HUGE_VALF : MAX(0.0, loops);
-    CGFloat duration = preferences.customDuration;
-    animation.duration = duration < 0 ? g2NaturalDuration : MAX(0.05, duration);
-    animation.removedOnCompletion = NO;
-    animation.fillMode = kCAFillModeBoth;
+    CALayer *layer = self.contentLayer;
+    if (layer && G2InstallAnimationOnLayer(layer)) return;
 
-    @try {
-        [contentLayer addAnimation:animation forKey:@"com.nightvibes33.gif2ani.animation"];
-    } @catch (NSException *exception) {
-        G2RejectActiveGIF([NSString stringWithFormat:@"BackBoard animation exception: %@", exception.name ?: @"unknown"]);
-        %orig;
-        return;
-    }
-
-    G2WriteStatus(@"custom-animation-started", @{
-        @"duration": @(animation.duration),
-        @"repeatCount": @(animation.repeatCount),
-        @"decoder": @"ImageIO-bounded-thumbnail",
-    });
-
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        G2ClearLoadSentinel();
-        G2WriteStatus(@"custom-animation-stable", nil);
+    G2WriteStatus(@"custom-animation-awaiting-content-layer", nil);
+    __weak typeof(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (!g2AnimationPending) return;
+        CALayer *delayedLayer = weakSelf.contentLayer;
+        if (delayedLayer && G2InstallAnimationOnLayer(delayedLayer)) return;
+        G2RejectActiveGIF(@"BackBoard content layer never became available after Apple animation setup");
     });
 }
 
@@ -354,9 +382,12 @@ static void G2Reload(__unused CFNotificationCenterRef center,
     CALayer *layer = %orig;
     G2PreferencesManager *preferences = [G2PreferencesManager sharedInstance];
     if (!preferences.isEnabled || !g2Frames.count || !layer) return layer;
+
     layer.contentsGravity = preferences.imageTransformation;
     if ([self.display respondsToSelector:@selector(safeBounds)]) layer.bounds = [self.display safeBounds];
     layer.backgroundColor = preferences.backgroundColor.CGColor;
+    G2InstallAnimationOnLayer(layer);
+    (void)presentation;
     return layer;
 }
 
