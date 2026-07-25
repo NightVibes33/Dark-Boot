@@ -64,7 +64,7 @@ jobs:
           dpkg-deb -x "$DEB" package-root
           dpkg-deb -e "$DEB" package-control
 
-      - name: Validate package and safety behavior
+      - name: Validate package and crash-safety contract
         id: validate
         run: |
           set -euo pipefail
@@ -81,18 +81,14 @@ jobs:
           test -x package-control/prerm
           file package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'arm64'
           strings package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'BKDisplayRenderOverlaySpinny'
-          strings package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'preferences-reloaded-without-media-decode'
-          strings package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'load-in-progress'
-          strings package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'Active.gif'
-          strings package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'tweak-loaded-no-media-decode'
-          ! strings package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | grep -q 'Respring.gif'
+
           python3 - <<'PY'
           import plistlib
           from pathlib import Path
 
-          root_path = Path('package-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Root.plist')
-          root = plistlib.loads(root_path.read_bytes())
-          assert isinstance(root, dict)
+          root = plistlib.loads(
+              Path('package-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Root.plist').read_bytes()
+          )
           items = root.get('items')
           assert isinstance(items, list) and len(items) >= 12
           labels = {item.get('label') for item in items if isinstance(item, dict)}
@@ -110,16 +106,58 @@ jobs:
           enable = next(item for item in items if item.get('key') == 'isEnabled')
           assert enable.get('default') is False
           assert all('PostNotification' not in item for item in items if isinstance(item, dict))
-          apply = next(item for item in items if item.get('label') == 'Apply and Respring')
-          assert apply.get('action') == 'applyAndRespring'
+          apply_item = next(item for item in items if item.get('label') == 'Apply and Respring')
+          assert apply_item.get('action') == 'applyAndRespring'
 
-          binary = Path('package-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs').read_bytes()
-          for marker in (b'Pending.gif', b'Active.gif', b'GIF staged safely', b'backboardd was not notified'):
-              assert marker in binary, marker
+          controller = Path('gif2aniprefs/gif2ani2RootListController.m').read_text()
+          picker_start = controller.index('- (void)documentPicker:')
+          picker_end = controller.index('- (void)removeGIF', picker_start)
+          picker = controller[picker_start:picker_end]
+          assert 'G2PendingGIFPath' in picker
+          assert 'G2ActiveGIFPath' not in picker
+          assert 'postSafeReload' not in picker
+          assert 'backboardd was not notified' in picker
+          assert 'CFPreferencesSetAppValue(CFSTR("isEnabled"), kCFBooleanFalse' in picker
 
-          entry = plistlib.loads(Path('package-root/var/jb/Library/PreferenceLoader/Preferences/Gif2Ani.plist').read_bytes())
+          apply_start = controller.index('- (void)applyAndRespring')
+          apply_code = controller[apply_start:]
+          assert 'G2PendingGIFPath' in apply_code
+          assert 'G2ActiveGIFPath' in apply_code
+          assert 'rename(' in apply_code
+          assert '[self postSafeReload]' in apply_code
+
+          tweak = Path('Tweak.xm').read_text()
+          reload_start = tweak.index('static void G2Reload')
+          reload_end = tweak.index('@interface CADisplay', reload_start)
+          reload_code = tweak[reload_start:reload_end]
+          assert 'G2LoadGIF' not in reload_code
+          assert 'preferences-reloaded-without-media-decode' in reload_code
+
+          start_start = tweak.index('- (void)_startAnimating')
+          start_end = tweak.index('- (CALayer *)_prepareContentLayerForPresentation', start_start)
+          start_code = tweak[start_start:start_end]
+          assert 'G2LoadGIF' in start_code
+          assert '%orig' in start_code
+
+          ctor = tweak[tweak.index('%ctor'):]
+          assert 'G2LoadGIF' not in ctor
+          assert 'tweak-loaded-no-media-decode' in ctor
+          assert 'G2LoadSentinelPath' in ctor
+          assert 'G2RejectActiveGIF' in ctor
+          assert 'G2SetEnabledOnDisk(NO)' in tweak
+          assert 'G2MaximumDecodedFrames = 24' in tweak
+          assert 'G2MaximumPixelDimension = 640' in tweak
+          assert 'G2MaximumEstimatedDecodedBytes = 48ULL' in tweak
+          assert 'Respring.gif' not in tweak
+
+          prefs = Path('G2PreferencesManager.m').read_text()
+          assert 'return _values[@"isEnabled"] ? [_values[@"isEnabled"] boolValue] : NO;' in prefs
+
+          entry = plistlib.loads(
+              Path('package-root/var/jb/Library/PreferenceLoader/Preferences/Gif2Ani.plist').read_bytes()
+          )
           assert entry['entry']['bundle'] == 'Gif2AniPrefs'
-          print(f'Validated {len(items)} Settings specifiers and staged-import safeguards')
+          print('Validated staged selection, fail-closed defaults, lazy decode, and automatic quarantine')
           PY
 
       - name: Upload rootless DEB
