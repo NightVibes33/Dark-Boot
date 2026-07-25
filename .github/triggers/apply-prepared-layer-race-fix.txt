@@ -1,0 +1,3 @@
+apply=prepared-layer-race-fix
+requested_at=2026-07-25T16:55:00-05:00
+state=gif2ani-disabled-safe-test-only
