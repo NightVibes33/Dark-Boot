@@ -79,7 +79,7 @@ jobs:
         run: |
           set -euo pipefail
           make clean package FINALPACKAGE=1 2>&1 | tee build-340.log
-          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.4.0_iphoneos-arm64.deb' | head -n1)"
+          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.4.0_iphoneos-arm64.deb' -print -quit)"
           test -n "$DEB"
           echo "$DEB" > deb-path-340.txt
           test "$(dpkg-deb --field "$DEB" Package)" = "com.nightvibes33.gif2ani"
@@ -89,9 +89,10 @@ jobs:
           BUNDLE=package-root-340/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle
           test -f "$BUNDLE/Gif2AniPrefs"
           test -f "$BUNDLE/Root.plist"
-          strings "$BUNDLE/Gif2AniPrefs" | grep -q '54 Downloadable'
-          strings "$BUNDLE/Gif2AniPrefs" | grep -q 'Legacy Source Catalog'
-          strings "$BUNDLE/Gif2AniPrefs" | grep -q 'Stage This Animation'
+          strings "$BUNDLE/Gif2AniPrefs" > bundle-strings-340.txt
+          grep -Fq '54 Downloadable' bundle-strings-340.txt
+          grep -Fq 'Legacy Source Catalog' bundle-strings-340.txt
+          grep -Fq 'Stage This Animation' bundle-strings-340.txt
           dpkg-deb --contents "$DEB" | tee package-contents-340.txt
           sha256sum "$DEB" | tee deb-sha256-340.txt
 
