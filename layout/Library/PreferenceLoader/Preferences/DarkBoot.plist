@@ -3,6 +3,7 @@
         bundle = DarkBootPrefs;
         cell = PSLinkCell;
         detail = DBRootListController;
+        isController = 1;
         label = "Dark Boot";
     };
 }
