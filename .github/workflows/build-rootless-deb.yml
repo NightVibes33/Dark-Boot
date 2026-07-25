@@ -73,7 +73,7 @@ jobs:
           DEB="$(cat deb-path.txt)"
           TWEAK="package-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib"
           test "$(dpkg-deb --field "$DEB" Package)" = "com.nightvibes33.gif2ani"
-          test "$(dpkg-deb --field "$DEB" Version)" = "3.1.2"
+          test "$(dpkg-deb --field "$DEB" Version)" = "3.1.3"
           test "$(dpkg-deb --field "$DEB" Architecture)" = "iphoneos-arm64"
           grep -q 'var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib' package-contents.txt
           grep -q 'var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.plist' package-contents.txt
@@ -85,6 +85,7 @@ jobs:
           file "$TWEAK" | grep -q 'arm64'
           grep -a -q 'BKDisplayRenderOverlaySpinny' "$TWEAK"
           grep -a -q 'ImageIO-bounded-thumbnail' "$TWEAK"
+          grep -a -q 'prepared-content-layer' "$TWEAK"
 
           python3 - <<'PY'
           import plistlib
@@ -149,8 +150,25 @@ jobs:
           start_end = tweak.index('- (CALayer *)_prepareContentLayerForPresentation', start_start)
           start_code = tweak[start_start:start_end]
           assert 'G2LoadGIF' in start_code
-          assert '%orig' in start_code
-          assert '@try' in start_code
+          assert 'g2AnimationPending = YES' in start_code
+          assert '%orig;' in start_code
+          assert start_code.index('g2AnimationPending = YES') < start_code.index('%orig;')
+          assert 'custom-animation-awaiting-content-layer' in start_code
+          assert 'content layer never became available' in start_code
+
+          prepare_start = tweak.index('- (CALayer *)_prepareContentLayerForPresentation')
+          prepare_end = tweak.index('%end', prepare_start)
+          prepare_code = tweak[prepare_start:prepare_end]
+          assert 'CALayer *layer = %orig;' in prepare_code
+          assert 'G2InstallAnimationOnLayer(layer)' in prepare_code
+
+          install_start = tweak.index('static BOOL G2InstallAnimationOnLayer')
+          install_end = tweak.index('static void G2Reload', install_start)
+          install_code = tweak[install_start:install_end]
+          assert 'animationForKey:G2AnimationKey' in install_code
+          assert '[layer addAnimation:animation forKey:G2AnimationKey]' in install_code
+          assert 'prepared-content-layer' in install_code
+          assert '@try' in install_code
 
           ctor = tweak[tweak.index('%ctor'):]
           assert 'G2LoadGIF' not in ctor
@@ -175,14 +193,14 @@ jobs:
               Path('package-root/var/jb/Library/PreferenceLoader/Preferences/Gif2Ani.plist').read_bytes()
           )
           assert entry['entry']['bundle'] == 'Gif2AniPrefs'
-          print('Validated inert background import, bounded pre-allocation decoding, fail-closed defaults, lazy decode, and automatic quarantine')
+          print('Validated inert import, bounded decoding, Apple-first layer preparation, delayed attachment, and fail-closed timeout')
           PY
 
       - name: Upload rootless DEB
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: Gif2Ani-3.1.2-rootless-deb
+          name: Gif2Ani-3.1.3-rootless-deb
           path: packages/*.deb
           if-no-files-found: error
           retention-days: 30
@@ -191,7 +209,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Gif2Ani-3.1.2-build-diagnostics
+          name: Gif2Ani-3.1.3-build-diagnostics
           path: |
             build.log
             package-contents.txt
@@ -209,7 +227,7 @@ jobs:
           git pull --rebase origin main
           mkdir -p status
           {
-            echo "Gif2Ani 3.1.2 Rootless Build"
+            echo "Gif2Ani 3.1.3 Rootless Build"
             echo "run_id=${GITHUB_RUN_ID}"
             echo "commit=${GITHUB_SHA}"
             echo "status=${JOB_STATUS}"
@@ -220,6 +238,6 @@ jobs:
           } > status/build-status.txt
           git add status/build-status.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Record Gif2Ani 3.1.2 build status [skip ci]"
+            git commit -m "Record Gif2Ani 3.1.3 build status [skip ci]"
             git push origin HEAD:main
           fi
