@@ -1,8 +1,8 @@
 Gif2Ani 3.4.0 Gallery Build
-run_id=30179988381
-commit=7f4db74101fae5da6dbd2b930413c4d6e9be3ab7
+run_id=30180067347
+commit=e6d00474ce8f0963b877d71eb1d768c354df600e
 status=failure
-completed_at_utc=2026-07-25T23:46:57Z
+completed_at_utc=2026-07-25T23:49:46Z
 
 
 --- package contents ---
@@ -13,8 +13,8 @@ completed_at_utc=2026-07-25T23:46:57Z
 [0;36m==> [1;39mCleaning…[m
 [1;31m> [1;3;39mMaking all for tweak Gif2Ani…[m
 [0;31m==> [1;39mPreprocessing Tweak.xm…[m
-[0;32m==> [1;39mCompiling G2PreferencesManager.m (arm64)…[m
 [0;32m==> [1;39mCompiling UIImage+animatedGIF.m (arm64)…[m
+[0;32m==> [1;39mCompiling G2PreferencesManager.m (arm64)…[m
 [0;32m==> [1;39mCompiling Tweak.xm (arm64)…[m
 [0;33m==> [1;39mLinking tweak Gif2Ani (arm64)…[m
 [0;34m==> [1;39mGenerating debug symbols for Gif2Ani…[m
