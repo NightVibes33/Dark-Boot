@@ -1,0 +1,77 @@
+name: Apply Gif2Ani Prepared Layer Race Fix
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/triggers/apply-prepared-layer-race-fix.txt
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Tweak.xm
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path=Path('Tweak.xm')
+          text=path.read_text()
+          replacements=[
+              (
+                  'static NSDictionary *g2MediaMetadata;\nstatic BOOL g2AnimationPending;\n',
+                  'static NSDictionary *g2MediaMetadata;\nstatic BOOL g2AnimationPending;\nstatic CALayer *g2PreparedContentLayer;\n'
+              ),
+              (
+                  '    g2MediaMetadata = nil;\n    g2AnimationPending = NO;\n    G2WriteStatus(@"gif-auto-disabled", @{ @"reason": reason ?: @"unknown" });\n',
+                  '    g2MediaMetadata = nil;\n    g2AnimationPending = NO;\n    g2PreparedContentLayer = nil;\n    G2WriteStatus(@"gif-auto-disabled", @{ @"reason": reason ?: @"unknown" });\n'
+              ),
+              (
+                  '    G2PreferencesManager *preferences = [G2PreferencesManager sharedInstance];\n    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"contents"];\n',
+                  '    G2PreferencesManager *preferences = [G2PreferencesManager sharedInstance];\n    layer.contentsGravity = preferences.imageTransformation;\n    layer.backgroundColor = preferences.backgroundColor.CGColor;\n    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"contents"];\n'
+              ),
+              (
+                  '        G2ClearLoadSentinel();\n        G2WriteStatus(@"custom-animation-stable", nil);\n',
+                  '        G2ClearLoadSentinel();\n        G2WriteStatus(@"custom-animation-stable", nil);\n        g2PreparedContentLayer = nil;\n'
+              ),
+              (
+                  '    g2MediaMetadata = nil;\n    g2AnimationPending = NO;\n    G2WriteStatus(@"preferences-reloaded-without-media-decode", nil);\n',
+                  '    g2MediaMetadata = nil;\n    g2AnimationPending = NO;\n    g2PreparedContentLayer = nil;\n    G2WriteStatus(@"preferences-reloaded-without-media-decode", nil);\n'
+              ),
+              (
+                  '    CALayer *layer = self.contentLayer;\n',
+                  '    CALayer *layer = self.contentLayer ?: g2PreparedContentLayer;\n'
+              ),
+              (
+                  '        CALayer *delayedLayer = weakSelf.contentLayer;\n',
+                  '        CALayer *delayedLayer = weakSelf.contentLayer ?: g2PreparedContentLayer;\n'
+              ),
+              (
+                  '    CALayer *layer = %orig;\n    G2PreferencesManager *preferences = [G2PreferencesManager sharedInstance];\n',
+                  '    CALayer *layer = %orig;\n    if (layer) g2PreparedContentLayer = layer;\n    G2PreferencesManager *preferences = [G2PreferencesManager sharedInstance];\n'
+              ),
+          ]
+          for old,new in replacements:
+              count=text.count(old)
+              if count != 1:
+                  raise SystemExit(f'expected exactly one match, got {count}: {old[:80]!r}')
+              text=text.replace(old,new,1)
+          path.write_text(text)
+          PY
+          git diff --check
+          git diff -- Tweak.xm
+      - name: Commit fix
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Tweak.xm
+          if ! git diff --cached --quiet; then
+            git commit -m "Fix BackBoard prepared layer race in Gif2Ani 3.1.3"
+            git push origin HEAD:main
+          fi
