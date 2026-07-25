@@ -8,30 +8,35 @@
   <array>
     <dict>
       <key>cell</key><string>PSGroupCell</string>
-      <key>label</key><string>SAFE RESPRING ANIMATION</string>
-      <key>footerText</key><string>Selecting a GIF only stages and validates it. Nothing is decoded until you explicitly tap Apply and Respring. Apply always enables the staged animation; Remove disables it.</string>
+      <key>label</key><string>GIF2ANI 3.2</string>
+      <key>footerText</key><string>Select only stages and validates a GIF. Apply saves every option to the real preferences file, verifies the result, and then restarts BackBoard.</string>
+    </dict>
+    <dict>
+      <key>cell</key><string>PSButtonCell</string>
+      <key>label</key><string>Current Status and Diagnostics</string>
+      <key>action</key><string>showStatus</string>
     </dict>
 
     <dict>
       <key>cell</key><string>PSGroupCell</string>
-      <key>label</key><string>ANIMATION</string>
-      <key>footerText</key><string>Safety limits for the 2 GB iPad: 25 MB input, 24 decoded frames, 640 px maximum dimension, and about 48 MB decoded memory.</string>
+      <key>label</key><string>ANIMATION FILE</string>
+      <key>footerText</key><string>Safety limits for this 2 GB iPad: 25 MB input, 240 source frames, 24 decoded frames, 640 px maximum decoded dimension, and 48 MB estimated decoded memory.</string>
     </dict>
     <dict>
-      <key>cell</key><string>PSLinkCell</string>
+      <key>cell</key><string>PSButtonCell</string>
       <key>label</key><string>Select and Stage GIF</string>
       <key>action</key><string>selectGIF</string>
     </dict>
     <dict>
-      <key>cell</key><string>PSLinkCell</string>
+      <key>cell</key><string>PSButtonCell</string>
       <key>label</key><string>Remove Staged and Active GIF</string>
-      <key>action</key><string>removeGIF</string>
+      <key>action</key><string>confirmRemoveGIF</string>
     </dict>
 
     <dict>
       <key>cell</key><string>PSGroupCell</string>
       <key>label</key><string>LAYOUT</string>
-      <key>footerText</key><string>Layout changes are saved but are not sent live to backboardd. They take effect on the next Apply and Respring.</string>
+      <key>footerText</key><string>Fit preserves the whole GIF. Fill crops to cover the display. Stretch changes its aspect ratio. Center keeps the decoded pixel size. Changes take effect on the next Apply and Respring.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSLinkListCell</string>
@@ -46,7 +51,7 @@
       <array><string>resizeAspect</string><string>resizeAspectFill</string><string>resize</string><string>center</string></array>
     </dict>
     <dict>
-      <key>cell</key><string>PSLinkCell</string>
+      <key>cell</key><string>PSButtonCell</string>
       <key>label</key><string>Background Color</string>
       <key>action</key><string>chooseBackgroundColor</string>
     </dict>
@@ -54,32 +59,64 @@
     <dict>
       <key>cell</key><string>PSGroupCell</string>
       <key>label</key><string>PLAYBACK</string>
-      <key>footerText</key><string>Use -1 for the GIF's original loop behavior or duration. Changes apply only after an explicit respring.</string>
+      <key>footerText</key><string>Loop Forever matches the current runtime behavior for -1. Play Once uses zero repeats. Original GIF Timing preserves the frame delays stored in the GIF.</string>
     </dict>
     <dict>
-      <key>cell</key><string>PSSliderCell</string>
-      <key>label</key><string>Loop Count</string>
+      <key>cell</key><string>PSLinkListCell</string>
+      <key>label</key><string>Repeat Mode</string>
+      <key>detail</key><string>PSListItemsController</string>
       <key>defaults</key><string>com.nightvibes33.gif2ani</string>
       <key>key</key><string>customLoop</string>
       <key>default</key><real>-1</real>
-      <key>min</key><real>-1</real>
-      <key>max</key><real>10</real>
-      <key>showValue</key><true/>
+      <key>validTitles</key>
+      <array>
+        <string>Loop Forever</string>
+        <string>Play Once</string>
+        <string>Repeat Once</string>
+        <string>Repeat 2 Times</string>
+        <string>Repeat 3 Times</string>
+        <string>Repeat 5 Times</string>
+        <string>Repeat 10 Times</string>
+      </array>
+      <key>validValues</key>
+      <array>
+        <real>-1</real><real>0</real><real>1</real><real>2</real><real>3</real><real>5</real><real>10</real>
+      </array>
     </dict>
     <dict>
-      <key>cell</key><string>PSSliderCell</string>
-      <key>label</key><string>Duration (Seconds)</string>
+      <key>cell</key><string>PSLinkListCell</string>
+      <key>label</key><string>Total Animation Duration</string>
+      <key>detail</key><string>PSListItemsController</string>
       <key>defaults</key><string>com.nightvibes33.gif2ani</string>
       <key>key</key><string>customDuration</string>
       <key>default</key><real>-1</real>
-      <key>min</key><real>-1</real>
-      <key>max</key><real>60</real>
-      <key>showValue</key><true/>
+      <key>validTitles</key>
+      <array>
+        <string>Original GIF Timing</string>
+        <string>0.5 Seconds</string>
+        <string>1 Second</string>
+        <string>2 Seconds</string>
+        <string>3 Seconds</string>
+        <string>5 Seconds</string>
+        <string>10 Seconds</string>
+        <string>15 Seconds</string>
+        <string>30 Seconds</string>
+        <string>60 Seconds</string>
+      </array>
+      <key>validValues</key>
+      <array>
+        <real>-1</real><real>0.5</real><real>1</real><real>2</real><real>3</real><real>5</real><real>10</real><real>15</real><real>30</real><real>60</real>
+      </array>
+    </dict>
+    <dict>
+      <key>cell</key><string>PSButtonCell</string>
+      <key>label</key><string>Reset Layout and Playback</string>
+      <key>action</key><string>resetVisualAndPlaybackSettings</string>
     </dict>
 
     <dict>
       <key>cell</key><string>PSGroupCell</string>
-      <key>footerText</key><string>Apply atomically promotes the staged GIF, verifies that isEnabled is true in the real preferences file, and restarts BackBoard so the animation callback actually runs. If loading fails, the GIF is automatically quarantined.</string>
+      <key>footerText</key><string>Apply revalidates the staged or active GIF, normalizes every setting, keeps a rollback copy while promoting a new GIF, verifies isEnabled on disk, clears stale safety files, and restarts BackBoard. A failed runtime load is automatically quarantined.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSButtonCell</string>
