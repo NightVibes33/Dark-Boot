@@ -1,6 +1,6 @@
 Gif2Ani 3.3.0 Gallery Build
-run_id=30177270978
-commit=f6e4339dad54c0be1856adaa6560c665b6d46f47
+run_id=30177352787
+commit=0727e185b4b25d6f55086069b3f5b3356cd1d419
 status=failure
 
 
