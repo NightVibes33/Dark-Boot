@@ -26,19 +26,22 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            build-essential clang lld make git curl rsync perl python3 \
-            fakeroot dpkg-dev zip unzip xz-utils ca-certificates
+            bash curl sudo build-essential fakeroot rsync perl zip git libxml2 \
+            dpkg-dev unzip xz-utils ca-certificates
 
-      - name: Install Theos and iOS SDKs
+      - name: Install Theos, iOS toolchain, and SDKs
+        env:
+          THEOS: /opt/theos
+          CI: "1"
+          SHELL: /bin/bash
         run: |
           set -euo pipefail
-          sudo rm -rf /opt/theos /tmp/theos-sdks
+          sudo rm -rf /opt/theos
           sudo mkdir -p /opt
           sudo chown "$USER:$USER" /opt
-          git clone --recursive --depth 1 https://github.com/theos/theos.git /opt/theos
-          git clone --depth 1 https://github.com/theos/sdks.git /tmp/theos-sdks
-          mkdir -p /opt/theos/sdks
-          find /tmp/theos-sdks -maxdepth 1 -type d -name '*.sdk' -exec cp -a {} /opt/theos/sdks/ \;
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          test -x /opt/theos/toolchain/linux/iphone/bin/clang
+          test -x /opt/theos/toolchain/linux/iphone/bin/clang++
           test -n "$(find /opt/theos/sdks -maxdepth 1 -type d -name '*.sdk' -print -quit)"
 
       - name: Build and inspect rootless package
