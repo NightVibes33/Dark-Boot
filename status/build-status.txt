@@ -1,8 +1,8 @@
 Gif2Ani 3.0.0 Rootless Build
-run_id=30165294832
-commit=6bed003c242f62c6d821bb99d3f4903de9530296
+run_id=30165315516
+commit=f7392015a00cd031007011cdd883f84ebb93284e
 status=cancelled
-completed_at_utc=2026-07-25T16:17:17Z
+completed_at_utc=2026-07-25T16:18:13Z
 
 --- build log tail ---
 [0;36m==> [1;39mCleaning…[m
@@ -10,8 +10,8 @@ completed_at_utc=2026-07-25T16:17:17Z
 [0;36m==> [1;39mCleaning…[m
 [1;31m> [1;3;39mMaking all for tweak Gif2Ani…[m
 [0;31m==> [1;39mPreprocessing Tweak.xm…[m
-[0;32m==> [1;39mCompiling G2PreferencesManager.m (arm64)…[m
 [0;32m==> [1;39mCompiling UIImage+animatedGIF.m (arm64)…[m
+[0;32m==> [1;39mCompiling G2PreferencesManager.m (arm64)…[m
 [0;32m==> [1;39mCompiling Tweak.xm (arm64)…[m
 [0;33m==> [1;39mLinking tweak Gif2Ani (arm64)…[m
 [0;34m==> [1;39mGenerating debug symbols for Gif2Ani…[m
@@ -30,3 +30,20 @@ completed_at_utc=2026-07-25T16:17:17Z
 [1;31m> [1;3;39mMaking stage for bundle Gif2AniPrefs…[m
 [0;36m==> [1;36mNotice:[m Neither plutil, ply, or libplist-utils are installed, so XML plist files were not optimized.
 dm.pl: building package `com.nightvibes33.gif2ani:iphoneos-arm64' in `./packages/com.nightvibes33.gif2ani_3.0.0_iphoneos-arm64.deb'
+ new Debian package, version 2.0.
+ size 19878 bytes: control archive=574 bytes.
+     478 bytes,    12 lines      control
+     297 bytes,     7 lines   *  postinst             #!/bin/sh
+      60 bytes,     3 lines   *  prerm                #!/bin/sh
+ Package: com.nightvibes33.gif2ani
+ Name: Gif2Ani Rootless
+ Depends: firmware (>= 15.0), mobilesubstrate
+ Conflicts: com.nightvibes33.darkboot, com.wizage.gif2ani2, com.wizages.gif2ani
+ Replaces: com.nightvibes33.darkboot
+ Description: Real custom GIF animations on the BackBoard respring screen, ported for rootless iOS 15 and 16.
+ Maintainer: NightVibes33
+ Author: wizages, rootless port by NightVibes33
+ Section: Tweaks
+ Architecture: iphoneos-arm64
+ Version: 3.0.0
+ Installed-Size: 212
