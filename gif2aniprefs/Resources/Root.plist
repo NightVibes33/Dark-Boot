@@ -9,14 +9,7 @@
     <dict>
       <key>cell</key><string>PSGroupCell</string>
       <key>label</key><string>SAFE RESPRING ANIMATION</string>
-      <key>footerText</key><string>Selecting a GIF only stages and validates it. backboardd is not notified and nothing is decoded until you explicitly tap Apply and Respring.</string>
-    </dict>
-    <dict>
-      <key>cell</key><string>PSSwitchCell</string>
-      <key>label</key><string>Enable After Apply</string>
-      <key>defaults</key><string>com.nightvibes33.gif2ani</string>
-      <key>key</key><string>isEnabled</string>
-      <key>default</key><false/>
+      <key>footerText</key><string>Selecting a GIF only stages and validates it. Nothing is decoded until you explicitly tap Apply and Respring. Apply always enables the staged animation; Remove disables it.</string>
     </dict>
 
     <dict>
@@ -86,7 +79,7 @@
 
     <dict>
       <key>cell</key><string>PSGroupCell</string>
-      <key>footerText</key><string>Apply atomically promotes the staged GIF to the active slot, enables the tweak, and resprings. If backboardd fails during loading, the active GIF is automatically rejected on the next launch.</string>
+      <key>footerText</key><string>Apply atomically promotes the staged GIF, verifies that isEnabled is true in the real preferences file, and restarts BackBoard so the animation callback actually runs. If loading fails, the GIF is automatically quarantined.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSButtonCell</string>
