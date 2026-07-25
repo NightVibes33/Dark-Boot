@@ -1,4 +1,0 @@
-Dark-Boot 2.0.1 Settings pane fix
-status=awaiting-validated-build
-root_plist_format=dict-with-items
-required_controls=validated-by-ci

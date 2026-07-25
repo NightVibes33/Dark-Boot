@@ -1,7 +1,0 @@
-#!/bin/sh
-set -eu
-
-killall -9 Preferences 2>/dev/null || true
-rm -f "/var/mobile/Library/Application Support/DarkBoot/session-active" 2>/dev/null || true
-
-exit 0
