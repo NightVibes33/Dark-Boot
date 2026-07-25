@@ -1,11 +1,32 @@
 Gif2Ani 3.4.0 Gallery Build
-run_id=30180067347
-commit=e6d00474ce8f0963b877d71eb1d768c354df600e
-status=failure
-completed_at_utc=2026-07-25T23:49:46Z
+run_id=30180161646
+commit=e1d055eda3067dea83f25d42cd481b795e0fc434
+status=success
+completed_at_utc=2026-07-25T23:52:49Z
 
+87e60f2b0d2e91196d3a2e44c89e178adf042f5e88a0cd4a8be1ae0f8b4b93a6  packages/com.nightvibes33.gif2ani_3.4.0_iphoneos-arm64.deb
+
+--- packaged binaries ---
+package-root-340/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs: Mach-O 64-bit arm64 dynamically linked shared library, flags:<NOUNDEFS|DYLDLINK|TWOLEVEL|NO_REEXPORTED_DYLIBS>
+package-root-340/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib:     Mach-O 64-bit arm64 dynamically linked shared library, flags:<NOUNDEFS|DYLDLINK|TWOLEVEL|NO_REEXPORTED_DYLIBS>
 
 --- package contents ---
+drwxr-xr-x 0/root            0 2026-07-25 23:52 .
+drwxr-xr-x 0/root            0 2026-07-25 23:52 var
+drwxr-xr-x 0/root            0 2026-07-25 23:52 var/jb
+drwxr-xr-x 0/root            0 2026-07-25 23:52 var/jb/Library
+drwxr-xr-x 0/root            0 2026-07-25 23:52 var/jb/Library/MobileSubstrate
+drwxr-xr-x 0/root            0 2026-07-25 23:52 var/jb/Library/MobileSubstrate/DynamicLibraries
+-rwxr-xr-x 0/root        90128 2026-07-25 23:52 var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib
+-rw-r--r-- 0/root          313 2026-07-25 23:52 var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.plist
+drwxr-xr-x 0/root            0 2026-07-25 23:52 var/jb/Library/PreferenceBundles
+drwxr-xr-x 0/root            0 2026-07-25 23:52 var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle
+-rwxr-xr-x 0/root       212256 2026-07-25 23:52 var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
+-rw-r--r-- 0/root          699 2026-07-25 23:52 var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Info.plist
+-rw-r--r-- 0/root         6100 2026-07-25 23:52 var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Root.plist
+drwxr-xr-x 0/root            0 2026-07-25 23:52 var/jb/Library/PreferenceLoader
+drwxr-xr-x 0/root            0 2026-07-25 23:52 var/jb/Library/PreferenceLoader/Preferences
+-rw-r--r-- 0/root          513 2026-07-25 23:52 var/jb/Library/PreferenceLoader/Preferences/Gif2Ani.plist
 
 --- build log tail ---
 [0;36m==> [1;39mCleaning…[m
@@ -13,8 +34,8 @@ completed_at_utc=2026-07-25T23:49:46Z
 [0;36m==> [1;39mCleaning…[m
 [1;31m> [1;3;39mMaking all for tweak Gif2Ani…[m
 [0;31m==> [1;39mPreprocessing Tweak.xm…[m
-[0;32m==> [1;39mCompiling UIImage+animatedGIF.m (arm64)…[m
 [0;32m==> [1;39mCompiling G2PreferencesManager.m (arm64)…[m
+[0;32m==> [1;39mCompiling UIImage+animatedGIF.m (arm64)…[m
 [0;32m==> [1;39mCompiling Tweak.xm (arm64)…[m
 [0;33m==> [1;39mLinking tweak Gif2Ani (arm64)…[m
 [0;34m==> [1;39mGenerating debug symbols for Gif2Ani…[m
