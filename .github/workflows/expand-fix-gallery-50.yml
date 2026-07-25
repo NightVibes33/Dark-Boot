@@ -1,0 +1,110 @@
+name: Expand and Fix Gif2Ani 50 Plus Gallery
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - triggers/expand-fix-gallery-50.txt
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Expand catalog and fix Objective-C typing
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p1 = Path('gif2aniprefs/G2ThemeGalleryPart1.inc')
+          text = p1.read_text()
+          anchor = '''        @{\"name\":@\"Alone\", @\"package\":@\"io.github.virenmohindra.alone\"},'''
+          replacement = '''        @{\"name\":@\"A Wave\", @\"package\":@\"io.github.virenmohindra.a-wave\", @\"source\":@\"Viren's Repo\", @\"format\":@\"Springy\"},
+        @{\"name\":@\"Alone\", @\"package\":@\"io.github.virenmohindra.alone\", @\"source\":@\"Viren's Repo\", @\"format\":@\"Springy\"},
+        @{\"name\":@\"Amalgamation\", @\"package\":@\"io.github.virenmohindra.amalgamation\", @\"source\":@\"Viren's Repo\", @\"format\":@\"Springy\"},'''
+          if 'io.github.virenmohindra.a-wave' not in text:
+              if anchor not in text:
+                  raise SystemExit('legacy catalog anchor missing')
+              text = text.replace(anchor, replacement, 1)
+
+          end_anchor = '''        @{\"name\":@\"Yin And Yang\", @\"package\":@\"io.github.virenmohindra.yin-and-yang\"}'''
+          end_replacement = '''        @{\"name\":@\"Colorful Stars In Space\", @\"package\":@\"io.github.virenmohindra.colorful-stars-in-space\", @\"source\":@\"Viren's Repo\", @\"format\":@\"Springy\"},
+        @{\"name\":@\"GameCube Logo\", @\"package\":@\"io.github.virenmohindra.gamecube-logo\", @\"source\":@\"Viren's Repo\", @\"format\":@\"Springy\"},
+        @{\"name\":@\"Spinning Rings\", @\"package\":@\"io.github.virenmohindra.spinning-rings\", @\"source\":@\"Viren's Repo\", @\"format\":@\"Springy\"},
+        @{\"name\":@\"Stranger Things\", @\"package\":@\"io.github.virenmohindra.stranger-things\", @\"source\":@\"Viren's Repo\", @\"format\":@\"Springy\"},
+        @{\"name\":@\"Twisting Cubes\", @\"package\":@\"io.github.virenmohindra.twisting-cubes\", @\"source\":@\"Viren's Repo\", @\"format\":@\"Springy\"},
+        @{\"name\":@\"Percentage Animation\", @\"package\":@\"com.yourepo.samgisaninja.percentageanimationforspringy\", @\"source\":@\"Samg_is_a_Ninja's Repo\", @\"format\":@\"Springy\"},
+        @{\"name\":@\"Tech Compass\", @\"package\":@\"com.thecomputerwhisperer.techcompass\", @\"source\":@\"TheComputerWhisperer's Repo\", @\"format\":@\"Springy\"},
+        @{\"name\":@\"Windows XP Pro Loading\", @\"package\":@\"com.thecomputerwhisperer.winxpstartup\", @\"source\":@\"TheComputerWhisperer's Repo\", @\"format\":@\"Springy\"},
+        @{\"name\":@\"Brooklyn Apple Logos\", @\"package\":@\"com.project.brooklyn\", @\"source\":@\"Basepack\", @\"format\":@\"SnowBoard Respring\"},
+        @{\"name\":@\"Yin And Yang\", @\"package\":@\"io.github.virenmohindra.yin-and-yang\", @\"source\":@\"Viren's Repo\", @\"format\":@\"Springy\"}'''
+          if 'com.project.brooklyn' not in text:
+              if end_anchor not in text:
+                  raise SystemExit('legacy catalog end anchor missing')
+              text = text.replace(end_anchor, end_replacement, 1)
+          p1.write_text(text)
+
+          p2 = Path('gif2aniprefs/G2ThemeGalleryPart2.inc')
+          text = p2.read_text()
+          old = '''    if (files.count == 1 && [files.firstObject.pathExtension.lowercaseString isEqualToString:@\"gif\"]) {
+        return G2FramesFromGIF(files.firstObject, maximumDimension);
+    }'''
+          new = '''    NSString *firstFile = files.firstObject;
+    if (files.count == 1 && [firstFile.pathExtension.lowercaseString isEqualToString:@\"gif\"]) {
+        return G2FramesFromGIF(firstFile, maximumDimension);
+    }'''
+          if old in text:
+              text = text.replace(old, new, 1)
+          elif 'NSString *firstFile = files.firstObject;' not in text:
+              raise SystemExit('part2 firstObject block missing')
+          p2.write_text(text)
+
+          p5 = Path('gif2aniprefs/G2ThemeGalleryPart5.inc')
+          text = p5.read_text()
+          old = '''            NSString *kind = (sorted.count == 1 && [sorted.firstObject.pathExtension.lowercaseString isEqualToString:@\"gif\"]) ? @\"gif\" : @\"frames\";
+            NSString *path = [kind isEqualToString:@\"gif\"] ? sorted.firstObject : canonical;'''
+          new = '''            NSString *firstSortedFile = sorted.firstObject;
+            NSString *kind = (sorted.count == 1 && [firstSortedFile.pathExtension.lowercaseString isEqualToString:@\"gif\"]) ? @\"gif\" : @\"frames\";
+            NSString *path = [kind isEqualToString:@\"gif\"] ? firstSortedFile : canonical;'''
+          if old in text:
+              text = text.replace(old, new, 1)
+          elif 'NSString *firstSortedFile = sorted.firstObject;' not in text:
+              raise SystemExit('part5 firstObject block missing')
+          text = text.replace('''        legacy[@\"subtitle\"] = [NSString stringWithFormat:@\"Legacy package: %@\", legacy[@\"package\"]];''', '''        legacy[@\"subtitle\"] = [NSString stringWithFormat:@\"%@ • %@ • %@\", legacy[@\"format\"] ?: @\"Springy\", legacy[@\"source\"] ?: @\"Legacy free pack\", legacy[@\"package\"]];''')
+          p5.write_text(text)
+
+          workflow = Path('.github/workflows/build-gif2ani-330-gallery.yml')
+          if workflow.exists():
+              w = workflow.read_text().replace("assert legacy.count('@\"name\":') >= 35", "assert legacy.count('@\"name\":') >= 46")
+              workflow.write_text(w)
+
+          combined = ''.join(Path(f'gif2aniprefs/G2ThemeGalleryPart{i}.inc').read_text() for i in range(1,7))
+          legacy = combined[combined.index('G2LegacyCatalog'):combined.index('static UIColor *G2RGB')]
+          legacy_count = legacy.count('@\"name\":')
+          builtin = combined[combined.index('G2BuiltInPacks'):combined.index('G2LegacyCatalog')]
+          builtin_count = builtin.count('@\"identifier\":')
+          assert legacy_count >= 46, legacy_count
+          assert builtin_count == 12, builtin_count
+          assert legacy_count + builtin_count >= 58
+          assert 'NSString *firstFile = files.firstObject;' in combined
+          assert 'NSString *firstSortedFile = sorted.firstObject;' in combined
+          print(f'builtin={builtin_count} legacy={legacy_count} total={builtin_count+legacy_count}')
+          PY
+
+      - name: Commit expansion
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add gif2aniprefs/G2ThemeGalleryPart1.inc gif2aniprefs/G2ThemeGalleryPart2.inc gif2aniprefs/G2ThemeGalleryPart5.inc .github/workflows/build-gif2ani-330-gallery.yml
+          git commit -m "Expand Gif2Ani gallery past 50 themes and fix compiler typing" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
