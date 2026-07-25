@@ -19,27 +19,40 @@ static UIImage *G2AnimatedImageFromSource(CGImageSourceRef source) {
     size_t sourceCount = CGImageSourceGetCount(source);
     if (sourceCount == 0) return nil;
 
-    const size_t maximumDecodedFrames = 180;
+    // backboardd is a critical process and this iPad only has 2 GB of RAM.
+    // Keep the decoded animation below roughly 50 MB instead of allowing
+    // hundreds of 2048-pixel frames to be retained at once.
+    const size_t maximumDecodedFrames = 30;
+    const size_t maximumPixelSize = 640;
+    const size_t maximumDecodedBytes = 56ULL * 1024ULL * 1024ULL;
     size_t step = MAX((size_t)1, (size_t)ceil((double)sourceCount / (double)maximumDecodedFrames));
     NSMutableArray<UIImage *> *frames = [NSMutableArray arrayWithCapacity:MIN(sourceCount, maximumDecodedFrames)];
     NSTimeInterval totalDuration = 0;
+    size_t decodedBytes = 0;
 
     NSDictionary *thumbnailOptions = @{
         (NSString *)kCGImageSourceCreateThumbnailFromImageAlways: @YES,
         (NSString *)kCGImageSourceCreateThumbnailWithTransform: @YES,
-        (NSString *)kCGImageSourceThumbnailMaxPixelSize: @2048,
+        (NSString *)kCGImageSourceThumbnailMaxPixelSize: @(maximumPixelSize),
         (NSString *)kCGImageSourceShouldCacheImmediately: @YES,
     };
 
     for (size_t index = 0; index < sourceCount; index += step) {
         @autoreleasepool {
             CGImageRef imageRef = CGImageSourceCreateThumbnailAtIndex(source, index, (__bridge CFDictionaryRef)thumbnailOptions);
-            if (!imageRef) imageRef = CGImageSourceCreateImageAtIndex(source, index, NULL);
             if (!imageRef) continue;
-            UIImage *frame = [UIImage imageWithCGImage:imageRef scale:UIScreen.mainScreen.scale orientation:UIImageOrientationUp];
+
+            size_t frameBytes = CGImageGetBytesPerRow(imageRef) * CGImageGetHeight(imageRef);
+            if (frameBytes == 0 || decodedBytes + frameBytes > maximumDecodedBytes) {
+                CGImageRelease(imageRef);
+                break;
+            }
+
+            UIImage *frame = [UIImage imageWithCGImage:imageRef scale:1.0 orientation:UIImageOrientationUp];
             CGImageRelease(imageRef);
             if (frame) {
                 [frames addObject:frame];
+                decodedBytes += frameBytes;
                 totalDuration += G2FrameDelay(source, index) * step;
             }
         }
@@ -51,7 +64,7 @@ static UIImage *G2AnimatedImageFromSource(CGImageSourceRef source) {
 }
 
 + (UIImage *)animatedImageWithAnimatedGIFData:(NSData *)data {
-    if (!data.length) return nil;
+    if (!data.length || data.length > 20ULL * 1024ULL * 1024ULL) return nil;
     CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
     UIImage *image = G2AnimatedImageFromSource(source);
     if (source) CFRelease(source);
@@ -60,6 +73,9 @@ static UIImage *G2AnimatedImageFromSource(CGImageSourceRef source) {
 
 + (UIImage *)animatedImageWithAnimatedGIFURL:(NSURL *)url {
     if (!url.isFileURL) return nil;
+    NSNumber *fileSize = nil;
+    [url getResourceValue:&fileSize forKey:NSURLFileSizeKey error:nil];
+    if (fileSize.unsignedLongLongValue > 20ULL * 1024ULL * 1024ULL) return nil;
     CGImageSourceRef source = CGImageSourceCreateWithURL((__bridge CFURLRef)url, NULL);
     UIImage *image = G2AnimatedImageFromSource(source);
     if (source) CFRelease(source);
