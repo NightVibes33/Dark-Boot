@@ -5,12 +5,17 @@ on:
   push:
     branches: [main]
   pull_request:
+  issues:
+    types: [opened]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
+    if: >-
+      github.event_name != 'issues' ||
+      (github.actor == 'NightVibes33' && github.event.issue.title == '[Dark-Boot Build]')
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
@@ -31,7 +36,8 @@ jobs:
           git clone --recursive --depth 1 https://github.com/theos/theos.git /opt/theos
           git clone --depth 1 https://github.com/theos/sdks.git /opt/theos/sdks
 
-      - name: Build rootless package
+      - name: Build and inspect rootless package
+        id: build
         env:
           THEOS: /opt/theos
         run: |
@@ -46,9 +52,35 @@ jobs:
           grep -q 'DarkBootPrefs.bundle' package-contents.txt
 
       - name: Upload DEB
+        if: steps.build.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: Dark-Boot-rootless-deb
           path: packages/*.deb
           if-no-files-found: error
           retention-days: 30
+
+      - name: Publish build status
+        if: always()
+        env:
+          BUILD_OUTCOME: ${{ steps.build.outcome }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          mkdir -p status
+          cat > status/build-status.txt <<EOF
+          Dark-Boot Rootless DEB Build
+          run_id=${GITHUB_RUN_ID}
+          run_url=https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
+          commit=${GITHUB_SHA}
+          event=${GITHUB_EVENT_NAME}
+          outcome=${BUILD_OUTCOME}
+          completed_at_utc=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
+          EOF
+          git add status/build-status.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Record Dark-Boot build status [skip ci]"
+            git push origin HEAD:main
+          fi
