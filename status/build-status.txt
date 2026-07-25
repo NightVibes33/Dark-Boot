@@ -1,8 +1,8 @@
-Gif2Ani 3.0.0 Rootless Build
-run_id=30165349229
-commit=f6b1b176e5d46b28314eb1b7cd45c8581bd55c64
-status=cancelled
-completed_at_utc=2026-07-25T16:19:07Z
+Gif2Ani 3.0.1 Rootless Build
+run_id=30165377922
+commit=ebc158dd89e3aec9b13566ccf5bf0a2ad6658d0e
+status=failure
+completed_at_utc=2026-07-25T16:19:53Z
 
 --- build log tail ---
 [0;36m==> [1;39mCleaning…[m
@@ -30,3 +30,20 @@ completed_at_utc=2026-07-25T16:19:07Z
 [1;31m> [1;3;39mMaking stage for bundle Gif2AniPrefs…[m
 [0;36m==> [1;36mNotice:[m Neither plutil, ply, or libplist-utils are installed, so XML plist files were not optimized.
 dm.pl: building package `com.nightvibes33.gif2ani:iphoneos-arm64' in `./packages/com.nightvibes33.gif2ani_3.0.1_iphoneos-arm64.deb'
+ new Debian package, version 2.0.
+ size 19934 bytes: control archive=608 bytes.
+     522 bytes,    12 lines      control
+     297 bytes,     7 lines   *  postinst             #!/bin/sh
+      60 bytes,     3 lines   *  prerm                #!/bin/sh
+ Package: com.nightvibes33.gif2ani
+ Name: Gif2Ani Rootless
+ Depends: firmware (>= 15.0), mobilesubstrate
+ Conflicts: com.nightvibes33.darkboot, com.wizage.gif2ani2, com.wizages.gif2ani
+ Replaces: com.nightvibes33.darkboot
+ Description: Crash-safe custom GIF animations for the BackBoard respring screen on rootless iOS 15 and 16. GIF selection is staged until explicit apply.
+ Maintainer: NightVibes33
+ Author: wizages, rootless port by NightVibes33
+ Section: Tweaks
+ Architecture: iphoneos-arm64
+ Version: 3.0.1
+ Installed-Size: 212
