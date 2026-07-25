@@ -1,0 +1,70 @@
+name: Fix Gif2Ani 3.3.0 Gallery Compile
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - triggers/fix-gif2ani-330-gallery-compile.txt
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix Objective-C gallery compile errors
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p2 = Path('gif2aniprefs/G2ThemeGalleryPart2.inc')
+          t2 = p2.read_text()
+          old = '    NSArray *files = G2NaturallySortedImageFiles(directory);\n'
+          new = '    NSArray<NSString *> *files = G2NaturallySortedImageFiles(directory);\n'
+          if old not in t2:
+              raise SystemExit('part2 typed files target missing')
+          p2.write_text(t2.replace(old, new, 1))
+
+          p5 = Path('gif2aniprefs/G2ThemeGalleryPart5.inc')
+          t5 = p5.read_text()
+          old = '            NSArray *sorted = G2NaturallySortedImageFiles(canonical);\n'
+          new = '            NSArray<NSString *> *sorted = G2NaturallySortedImageFiles(canonical);\n'
+          if old not in t5:
+              raise SystemExit('part5 typed sorted target missing')
+          p5.write_text(t5.replace(old, new, 1))
+
+          p3 = Path('gif2aniprefs/G2ThemeGalleryPart3.inc')
+          t3 = p3.read_text()
+          marker = '    NSError *transactionError = nil;\n'
+          insertion = marker + '    NSDictionary *oldPrefs = nil;\n    NSDictionary *oldValues = nil;\n    NSDictionary *updates = nil;\n'
+          if marker not in t3:
+              raise SystemExit('part3 transaction marker missing')
+          t3 = t3.replace(marker, insertion, 1)
+          replacements = {
+              '    NSDictionary *oldPrefs = [NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] ?: @{};\n':
+                  '    oldPrefs = [NSDictionary dictionaryWithContentsOfFile:G2PreferencesPath] ?: @{};\n',
+              '    NSDictionary *oldValues = @{\n': '    oldValues = @{\n',
+              '    NSDictionary *updates = @{\n': '    updates = @{\n',
+          }
+          for old, new in replacements.items():
+              if old not in t3:
+                  raise SystemExit(f'part3 replacement missing: {old!r}')
+              t3 = t3.replace(old, new, 1)
+          p3.write_text(t3)
+          PY
+          grep -q 'NSArray<NSString \*> \*files' gif2aniprefs/G2ThemeGalleryPart2.inc
+          grep -q 'NSArray<NSString \*> \*sorted' gif2aniprefs/G2ThemeGalleryPart5.inc
+          grep -q 'NSDictionary \*oldPrefs = nil' gif2aniprefs/G2ThemeGalleryPart3.inc
+          printf 'build=%s\nsource=gallery-compile-fixed\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > triggers/build-gif2ani-330-gallery.txt
+      - name: Commit fixes and trigger build
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add gif2aniprefs/G2ThemeGalleryPart2.inc gif2aniprefs/G2ThemeGalleryPart3.inc gif2aniprefs/G2ThemeGalleryPart5.inc triggers/build-gif2ani-330-gallery.txt
+          git commit -m "Fix Gif2Ani 3.3 gallery compilation"
+          git push origin HEAD:main
