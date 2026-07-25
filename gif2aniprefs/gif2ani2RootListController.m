@@ -113,8 +113,8 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
 }
 
 - (void)postSafeReload {
-    // The tweak's Darwin callback only reloads preferences and clears cached
-    // frames. It never decodes media, so this cannot reproduce the old crash.
+    // This notification is used only when disabling/removing an active GIF.
+    // The tweak callback reloads preferences and clears cached frames; it never decodes media.
     CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), G2ReloadNotification, NULL, NULL, YES);
 }
 
@@ -240,7 +240,8 @@ static NSDictionary *G2ValidateGIFData(NSData *data, NSError **error) {
         CFPreferencesAppSynchronize((__bridge CFStringRef)G2PreferencesDomain);
     }
 
-    [self postSafeReload];
+    // Do not notify the currently running BackBoard process. The explicit
+    // respring below starts a fresh process that reads the promoted GIF once.
     const char *candidates[] = {"/var/jb/usr/bin/sbreload", "/usr/bin/sbreload"};
     for (NSUInteger index = 0; index < 2; index++) {
         if ([[NSFileManager defaultManager] isExecutableFileAtPath:@(candidates[index])]) {
