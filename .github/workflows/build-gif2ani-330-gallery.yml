@@ -40,26 +40,30 @@ jobs:
           test "$(awk '/^Version:/{print $2}' control)" = "3.3.0"
           test -f gif2aniprefs/G2ThemeGalleryController.m
           test -f gif2aniprefs/G2ThemeGalleryController.h
+          test "$(find gif2aniprefs -maxdepth 1 -type f -name 'G2ThemeGalleryPart*.inc' | wc -l)" = "6"
           grep -q 'G2ThemeGalleryController.m' gif2aniprefs/Makefile
           grep -q 'G2ThemeGalleryController' gif2aniprefs/Resources/Root.plist
           grep -q 'Browse and Preview Animations' gif2aniprefs/Resources/Root.plist
-          grep -q 'G2BuiltInPacks' gif2aniprefs/G2ThemeGalleryController.m
-          grep -q 'G2LegacyCatalog' gif2aniprefs/G2ThemeGalleryController.m
-          grep -q 'UIDocumentPickerViewController' gif2aniprefs/G2ThemeGalleryController.m
-          grep -q 'dpkg-deb' gif2aniprefs/G2ThemeGalleryController.m
-          grep -q 'unzip' gif2aniprefs/G2ThemeGalleryController.m
-          grep -q 'Springy' gif2aniprefs/G2ThemeGalleryController.m
-          grep -q 'SnowBoard' gif2aniprefs/G2ThemeGalleryController.m
-          grep -q 'Stage This Animation' gif2aniprefs/G2ThemeGalleryController.m
           python3 - <<'PY'
           from pathlib import Path
-          text=Path('gif2aniprefs/G2ThemeGalleryController.m').read_text()
+          wrapper=Path('gif2aniprefs/G2ThemeGalleryController.m').read_text()
+          for i in range(1,7):
+              assert f'#include "G2ThemeGalleryPart{i}.inc"' in wrapper
+          parts=[Path(f'gif2aniprefs/G2ThemeGalleryPart{i}.inc') for i in range(1,7)]
+          text=''.join(p.read_text() for p in parts)
           built=text[text.index('G2BuiltInPacks'):text.index('G2LegacyCatalog')]
           assert built.count('@"identifier":') == 12, built.count('@"identifier":')
           legacy=text[text.index('G2LegacyCatalog'):text.index('static UIColor *G2RGB')]
           assert legacy.count('@"name":') >= 35, legacy.count('@"name":')
-          assert 'CGImageDestinationCreateWithURL' in text
-          assert 'G2ValidateGIFData' in text
+          required=[
+              'CGImageDestinationCreateWithURL','G2ValidateGIFData','G2PreflightArchive',
+              'G2ValidateExtractedTree','G2WriteGalleryPreferences','QOS_CLASS_UTILITY',
+              'Preparing bounded preview','UIDocumentPickerViewController','dpkg-deb',
+              'unzip','Springy','SnowBoard','Stage This Animation',
+              'Import GIF, ZIP, DEB, or Frame Folder'
+          ]
+          missing=[x for x in required if x not in text]
+          assert not missing, missing
           print('gallery_source_contract=success')
           PY
 
@@ -84,6 +88,7 @@ jobs:
           strings "$BUNDLE/Gif2AniPrefs" | grep -q 'Rotating Cube'
           strings "$BUNDLE/Gif2AniPrefs" | grep -q 'Stage This Animation'
           strings "$BUNDLE/Gif2AniPrefs" | grep -q 'Import GIF, ZIP, DEB, or Frame Folder'
+          strings "$BUNDLE/Gif2AniPrefs" | grep -q 'G2PreflightArchive'
           grep -q 'G2ThemeGalleryController' "$BUNDLE/Root.plist"
           dpkg-deb --contents "$DEB" | tee package-contents-330.txt
           sha256sum "$DEB" | tee deb-sha256-330.txt
