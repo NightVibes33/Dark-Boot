@@ -1,0 +1,76 @@
+name: Finalize Gif2Ani 3.4 Method Routing
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - triggers/finalize-gif2ani-340-method-routing.txt
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Replace category overrides with deterministic swizzling
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          preview = Path('gif2aniprefs/G2RemoteThemePreviewOverride.inc')
+          text = preview.read_text()
+          if '#import <objc/runtime.h>' not in text:
+              text = '#import <objc/runtime.h>\n\n' + text
+          text = text.replace('- (void)loadPreview {', '- (void)g2_remoteLoadPreview {', 1)
+          text = text.replace('- (void)stageAnimation {', '- (void)g2_remoteStageAnimation {', 1)
+          marker = '@implementation G2ThemePreviewController (G2RemoteThemeDownload)\n'
+          loader = '''@implementation G2ThemePreviewController (G2RemoteThemeDownload)\n\n+ (void)load {\n    static dispatch_once_t onceToken;\n    dispatch_once(&onceToken, ^{\n        Class cls = objc_getClass("G2ThemePreviewController");\n        Method originalPreview = class_getInstanceMethod(cls, @selector(loadPreview));\n        Method remotePreview = class_getInstanceMethod(cls, @selector(g2_remoteLoadPreview));\n        Method originalStage = class_getInstanceMethod(cls, @selector(stageAnimation));\n        Method remoteStage = class_getInstanceMethod(cls, @selector(g2_remoteStageAnimation));\n        NSCAssert(originalPreview && remotePreview && originalStage && remoteStage, @"Gif2Ani remote preview method routing is incomplete");\n        method_exchangeImplementations(originalPreview, remotePreview);\n        method_exchangeImplementations(originalStage, remoteStage);\n    });\n}\n'''
+          if '+ (void)load {' not in text:
+              if marker not in text:
+                  raise SystemExit('preview implementation marker missing')
+              text = text.replace(marker, loader, 1)
+          preview.write_text(text)
+
+          polish = Path('gif2aniprefs/G2RemoteGalleryPolish.inc')
+          text = polish.read_text()
+          text = text.replace('- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {',
+                              '- (NSString *)g2_tableView:(UITableView *)tableView remoteTitleForHeaderInSection:(NSInteger)section {', 1)
+          text = text.replace('- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {',
+                              '- (NSString *)g2_tableView:(UITableView *)tableView remoteTitleForFooterInSection:(NSInteger)section {', 1)
+          marker = '@implementation G2ThemeGalleryController (G2DownloadableCatalogPolish)\n'
+          loader = '''@implementation G2ThemeGalleryController (G2DownloadableCatalogPolish)\n\n+ (void)load {\n    static dispatch_once_t onceToken;\n    dispatch_once(&onceToken, ^{\n        Class cls = objc_getClass("G2ThemeGalleryController");\n        Method originalHeader = class_getInstanceMethod(cls, @selector(tableView:titleForHeaderInSection:));\n        Method remoteHeader = class_getInstanceMethod(cls, @selector(g2_tableView:remoteTitleForHeaderInSection:));\n        Method originalFooter = class_getInstanceMethod(cls, @selector(tableView:titleForFooterInSection:));\n        Method remoteFooter = class_getInstanceMethod(cls, @selector(g2_tableView:remoteTitleForFooterInSection:));\n        NSCAssert(originalHeader && remoteHeader && originalFooter && remoteFooter, @"Gif2Ani gallery title method routing is incomplete");\n        method_exchangeImplementations(originalHeader, remoteHeader);\n        method_exchangeImplementations(originalFooter, remoteFooter);\n    });\n}\n'''
+          if '+ (void)load {' not in text:
+              if marker not in text:
+                  raise SystemExit('gallery polish implementation marker missing')
+              text = text.replace(marker, loader, 1)
+          polish.write_text(text)
+
+          wrapper = Path('gif2aniprefs/G2ThemeGalleryController.m').read_text()
+          combined = preview.read_text() + polish.read_text()
+          assert '- (void)loadPreview {' not in preview.read_text()
+          assert '- (void)stageAnimation {' not in preview.read_text()
+          assert 'method_exchangeImplementations(originalPreview, remotePreview)' in combined
+          assert 'method_exchangeImplementations(originalStage, remoteStage)' in combined
+          assert 'method_exchangeImplementations(originalHeader, remoteHeader)' in combined
+          assert 'method_exchangeImplementations(originalFooter, remoteFooter)' in combined
+          assert '#include "G2RemoteThemePreviewOverride.inc"' in wrapper
+          assert '#include "G2RemoteGalleryPolish.inc"' in wrapper
+          print('deterministic_method_routing=success')
+          PY
+
+      - name: Commit routing fix
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add gif2aniprefs/G2RemoteThemePreviewOverride.inc gif2aniprefs/G2RemoteGalleryPolish.inc
+          git commit -m "Use deterministic method routing for Gif2Ani 3.4 gallery" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
