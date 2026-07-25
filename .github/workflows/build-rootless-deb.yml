@@ -7,7 +7,7 @@ on:
   pull_request:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: gif2ani-rootless-${{ github.ref }}
@@ -43,11 +43,18 @@ jobs:
           test -n "$(find /opt/theos/sdks -maxdepth 1 -type d -name '*.sdk' -print -quit)"
 
       - name: Build rootless package
+        id: compile
         env:
           THEOS: /opt/theos
         run: |
-          set -euo pipefail
+          set -uo pipefail
+          : > build.log
+          set +e
           make clean package FINALPACKAGE=1 2>&1 | tee build.log
+          result=${PIPESTATUS[0]}
+          set -e
+          if [ "$result" -ne 0 ]; then exit "$result"; fi
+          set -euo pipefail
           DEB="$(find packages -maxdepth 1 -type f -name '*.deb' | head -n 1)"
           test -n "$DEB"
           echo "$DEB" > deb-path.txt
@@ -58,6 +65,7 @@ jobs:
           dpkg-deb -e "$DEB" package-control
 
       - name: Validate package and Settings
+        id: validate
         run: |
           set -euo pipefail
           DEB="$(cat deb-path.txt)"
@@ -90,6 +98,7 @@ jobs:
           PY
 
       - name: Upload rootless DEB
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: Gif2Ani-3.0.0-rootless-deb
@@ -107,3 +116,29 @@ jobs:
             package-contents.txt
           if-no-files-found: ignore
           retention-days: 7
+
+      - name: Publish build status
+        if: always() && github.event_name == 'push'
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          mkdir -p status
+          {
+            echo "Gif2Ani 3.0.0 Rootless Build"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "commit=${GITHUB_SHA}"
+            echo "status=${JOB_STATUS}"
+            echo "completed_at_utc=$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+            echo
+            echo "--- build log tail ---"
+            if [ -f build.log ]; then tail -n 300 build.log; else echo "build.log missing"; fi
+          } > status/build-status.txt
+          git add status/build-status.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Record Gif2Ani rootless build status [skip ci]"
+            git push origin HEAD:main
+          fi
