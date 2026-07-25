@@ -1,4 +1,5 @@
 #include "G2ThemeGalleryPart1.inc"
+#include "G2ThemeGalleryPart1Tail.inc"
 #include "G2ThemeGalleryPart2.inc"
 #include "G2ThemeGalleryPart3.inc"
 #include "G2ThemeGalleryPart4.inc"
