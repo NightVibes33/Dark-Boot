@@ -47,7 +47,9 @@ static UIColor *G2ColorFromHex(NSString *value) {
     _values = [disk isKindOfClass:NSDictionary.class] ? [disk copy] : @{};
 }
 
-- (BOOL)isEnabled { return _values[@"isEnabled"] ? [_values[@"isEnabled"] boolValue] : YES; }
+// Fail closed. A newly installed package must never activate inside backboardd
+// until the user explicitly presses Apply and Respring.
+- (BOOL)isEnabled { return _values[@"isEnabled"] ? [_values[@"isEnabled"] boolValue] : NO; }
 - (NSString *)imageTransformation {
     NSString *value = _values[@"imageTransformation"];
     NSSet *allowed = [NSSet setWithArray:@[kCAGravityResizeAspect, kCAGravityResizeAspectFill, kCAGravityResize, kCAGravityCenter]];
