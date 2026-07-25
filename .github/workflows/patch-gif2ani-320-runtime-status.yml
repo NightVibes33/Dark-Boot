@@ -1,0 +1,66 @@
+name: Patch Gif2Ani 3.2 Runtime Status
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/triggers/patch-gif2ani-320-runtime-status.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-320-runtime-status
+  cancel-in-progress: true
+
+jobs:
+  patch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Preserve applied playback values in stable status
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('Tweak.xm')
+          lines=p.read_text().splitlines()
+          if any('@"contentsGravity": g2DedicatedAnimationLayer.contentsGravity' in line for line in lines):
+              print('runtime-status-already-patched')
+              raise SystemExit(0)
+          start=next(i for i,line in enumerate(lines) if 'G2WriteStatus(@"custom-animation-stable"' in line)
+          target=next(i for i in range(start, min(start+25,len(lines))) if '@"appleLoaderHidden": @(appleLoaderHidden),' in lines[i])
+          indent=lines[target][:len(lines[target])-len(lines[target].lstrip())]
+          additions=[
+              indent+'@"duration": @(animation.duration),',
+              indent+'@"repeatCount": @(animation.repeatCount),',
+              indent+'@"contentsGravity": g2DedicatedAnimationLayer.contentsGravity ?: @"unknown",',
+          ]
+          lines[target+1:target+1]=additions
+          p.write_text('\n'.join(lines)+'\n')
+          PY
+      - name: Validate patch
+        run: |
+          set -euo pipefail
+          test "$(awk '/^Version:/{print $2}' control)" = "3.2.0"
+          grep -q '@"duration": @(animation.duration)' Tweak.xm
+          grep -q '@"repeatCount": @(animation.repeatCount)' Tweak.xm
+          grep -q '@"contentsGravity": g2DedicatedAnimationLayer.contentsGravity' Tweak.xm
+      - name: Commit patch
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Tweak.xm
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Persist applied Gif2Ani settings in runtime status'
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 3
+          done
+          exit 1
