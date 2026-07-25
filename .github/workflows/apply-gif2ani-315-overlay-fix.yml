@@ -1,0 +1,233 @@
+name: Apply Gif2Ani 3.1.5 Dedicated Overlay Fix
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/triggers/apply-gif2ani-315-overlay-fix.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-315-overlay-fix
+  cancel-in-progress: true
+
+jobs:
+  patch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Replace Apple loader layer with dedicated GIF overlay
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('Tweak.xm')
+          text = path.read_text()
+
+          old_decl = 'static CALayer *g2PreparedContentLayer;\n'
+          new_decl = '''static CALayer *g2PreparedContentLayer;
+          static CALayer *g2DedicatedAnimationLayer;
+          static CGRect g2PresentationBounds;
+          '''
+          assert old_decl in text
+          text = text.replace(old_decl, new_decl, 1)
+
+          start = text.index('static BOOL G2InstallAnimationOnLayer(CALayer *layer) {')
+          end = text.index('\nstatic void G2Reload', start)
+          replacement = r'''static CALayer *G2BestAnimationContainer(CALayer *appleLayer) {
+              if (!appleLayer) return nil;
+
+              CALayer *best = appleLayer.superlayer ?: appleLayer;
+              CGFloat targetArea = CGRectGetWidth(g2PresentationBounds) * CGRectGetHeight(g2PresentationBounds);
+              CALayer *cursor = best;
+              for (NSUInteger depth = 0; cursor && depth < 8; depth++, cursor = cursor.superlayer) {
+                  best = cursor;
+                  CGFloat area = CGRectGetWidth(cursor.bounds) * CGRectGetHeight(cursor.bounds);
+                  if (targetArea > 0 && area >= targetArea * 0.75) break;
+              }
+              return best;
+          }
+
+          static CGRect G2OverlayBounds(CALayer *container) {
+              CGRect bounds = container ? container.bounds : CGRectZero;
+              CGFloat containerArea = CGRectGetWidth(bounds) * CGRectGetHeight(bounds);
+              CGFloat displayArea = CGRectGetWidth(g2PresentationBounds) * CGRectGetHeight(g2PresentationBounds);
+
+              if (displayArea > 0 && containerArea < displayArea * 0.75) {
+                  bounds = CGRectMake(0, 0,
+                                      CGRectGetWidth(g2PresentationBounds),
+                                      CGRectGetHeight(g2PresentationBounds));
+              }
+              if (CGRectIsEmpty(bounds)) bounds = UIScreen.mainScreen.bounds;
+              bounds.origin = CGPointZero;
+              return bounds;
+          }
+
+          static BOOL G2InstallAnimationOnLayer(CALayer *appleLayer) {
+              if (!appleLayer || !g2Frames.count) return NO;
+
+              NSArray *values = G2CGImageValues();
+              if (!values.count) return NO;
+
+              CALayer *container = G2BestAnimationContainer(appleLayer);
+              if (!container) return NO;
+
+              if (!g2DedicatedAnimationLayer || g2DedicatedAnimationLayer.superlayer != container) {
+                  [g2DedicatedAnimationLayer removeFromSuperlayer];
+                  g2DedicatedAnimationLayer = [CALayer layer];
+                  g2DedicatedAnimationLayer.name = @"com.nightvibes33.gif2ani.dedicated-overlay";
+                  g2DedicatedAnimationLayer.zPosition = 100000.0;
+                  [container addSublayer:g2DedicatedAnimationLayer];
+              }
+
+              CGRect overlayBounds = G2OverlayBounds(container);
+              g2DedicatedAnimationLayer.bounds = overlayBounds;
+              CGRect containerBounds = container.bounds;
+              CGPoint center = CGPointMake(CGRectGetMidX(containerBounds), CGRectGetMidY(containerBounds));
+              if (CGRectIsEmpty(containerBounds)) {
+                  center = CGPointMake(CGRectGetMidX(overlayBounds), CGRectGetMidY(overlayBounds));
+              }
+              g2DedicatedAnimationLayer.position = center;
+              g2DedicatedAnimationLayer.opacity = 1.0;
+              g2DedicatedAnimationLayer.hidden = NO;
+              g2DedicatedAnimationLayer.masksToBounds = YES;
+              g2DedicatedAnimationLayer.contentsScale = UIScreen.mainScreen.scale;
+
+              G2PreferencesManager *preferences = [G2PreferencesManager sharedInstance];
+              g2DedicatedAnimationLayer.contentsGravity = preferences.imageTransformation;
+              g2DedicatedAnimationLayer.backgroundColor = preferences.backgroundColor.CGColor;
+              g2DedicatedAnimationLayer.contents = values.firstObject;
+
+              BOOL appleLoaderHidden = container != appleLayer;
+              if (appleLoaderHidden) appleLayer.opacity = 0.0;
+
+              if ([g2DedicatedAnimationLayer animationForKey:G2AnimationKey]) {
+                  g2AnimationPending = NO;
+                  return YES;
+              }
+
+              CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"contents"];
+              animation.values = values;
+              animation.calculationMode = kCAAnimationDiscrete;
+              CGFloat loops = preferences.customLoop;
+              animation.repeatCount = loops < 0 ? HUGE_VALF : MAX(0.0, loops);
+              CGFloat duration = preferences.customDuration;
+              animation.duration = duration < 0 ? g2NaturalDuration : MAX(0.05, duration);
+              animation.removedOnCompletion = NO;
+              animation.fillMode = kCAFillModeBoth;
+
+              @try {
+                  [g2DedicatedAnimationLayer addAnimation:animation forKey:G2AnimationKey];
+              } @catch (NSException *exception) {
+                  G2RejectActiveGIF([NSString stringWithFormat:@"BackBoard animation exception: %@", exception.name ?: @"unknown"]);
+                  return NO;
+              }
+
+              g2AnimationPending = NO;
+              G2WriteStatus(@"custom-animation-started", @{
+                  @"duration": @(animation.duration),
+                  @"repeatCount": @(animation.repeatCount),
+                  @"decoder": @"ImageIO-bounded-thumbnail",
+                  @"attachmentPoint": @"dedicated-overlay-layer",
+                  @"overlayWidth": @(CGRectGetWidth(overlayBounds)),
+                  @"overlayHeight": @(CGRectGetHeight(overlayBounds)),
+                  @"appleLoaderHidden": @(appleLoaderHidden),
+              });
+
+              dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                  G2ClearLoadSentinel();
+                  G2WriteStatus(@"custom-animation-stable", @{
+                      @"attachmentPoint": @"dedicated-overlay-layer",
+                      @"overlayWidth": @(CGRectGetWidth(g2DedicatedAnimationLayer.bounds)),
+                      @"overlayHeight": @(CGRectGetHeight(g2DedicatedAnimationLayer.bounds)),
+                      @"appleLoaderHidden": @(appleLoaderHidden),
+                  });
+                  g2PreparedContentLayer = nil;
+              });
+              return YES;
+          }
+          '''
+          text = text[:start] + replacement + text[end:]
+
+          old_reset = '''    g2AnimationPending = NO;
+              g2PreparedContentLayer = nil;
+          '''
+          new_reset = '''    g2AnimationPending = NO;
+              g2PreparedContentLayer = nil;
+              [g2DedicatedAnimationLayer removeFromSuperlayer];
+              g2DedicatedAnimationLayer = nil;
+              g2PresentationBounds = CGRectZero;
+          '''
+          assert text.count(old_reset) >= 2
+          text = text.replace(old_reset, new_reset)
+
+          old_start = '''    g2AnimationPending = YES;
+              %orig;
+
+              CALayer *layer = self.contentLayer ?: g2PreparedContentLayer;
+          '''
+          new_start = '''    g2AnimationPending = YES;
+              %orig;
+
+              if ([self.display respondsToSelector:@selector(safeBounds)]) {
+                  g2PresentationBounds = [self.display safeBounds];
+              }
+              CALayer *layer = self.contentLayer ?: g2PreparedContentLayer;
+          '''
+          assert old_start in text
+          text = text.replace(old_start, new_start, 1)
+
+          old_prepare = '''    layer.contentsGravity = preferences.imageTransformation;
+              if ([self.display respondsToSelector:@selector(safeBounds)]) layer.bounds = [self.display safeBounds];
+              layer.backgroundColor = preferences.backgroundColor.CGColor;
+              G2InstallAnimationOnLayer(layer);
+          '''
+          new_prepare = '''    if ([self.display respondsToSelector:@selector(safeBounds)]) {
+                  g2PresentationBounds = [self.display safeBounds];
+              }
+              G2InstallAnimationOnLayer(layer);
+          '''
+          assert old_prepare in text
+          text = text.replace(old_prepare, new_prepare, 1)
+
+          path.write_text(text)
+
+          control = Path('control')
+          c = control.read_text()
+          assert 'Version: 3.1.4' in c
+          c = c.replace('Version: 3.1.4', 'Version: 3.1.5', 1)
+          c = c.replace('prepared-layer animation attachment', 'dedicated full-screen overlay attachment')
+          control.write_text(c)
+          PY
+
+      - name: Validate overlay contract
+        run: |
+          set -euo pipefail
+          grep -q 'Version: 3.1.5' control
+          grep -q 'g2DedicatedAnimationLayer' Tweak.xm
+          grep -q 'dedicated-overlay-layer' Tweak.xm
+          grep -q 'appleLayer.opacity = 0.0' Tweak.xm
+          grep -q 'g2DedicatedAnimationLayer.contents = values.firstObject' Tweak.xm
+          ! grep -q 'layer.bounds = \[self.display safeBounds\]' Tweak.xm
+
+      - name: Commit source fix
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Tweak.xm control
+          git commit -m 'Fix giant loader with dedicated Gif2Ani overlay'
+          for attempt in 1 2 3; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 3
+          done
+          exit 1
