@@ -1,0 +1,54 @@
+Gif2Ani Open Respring Theme Library
+source_commit=c507a391f193c2bb362ff77fc1c1673c0da2dcae
+verified_springy_pack_count=48
+source_license=MIT
+download_policy=original host plus SHA-256 and package identity verification
+
+01. A Wave | io.github.virenmohindra.a-wave | 2971666 bytes | 93525b61259e64cc0a42ff2393935c337cfbb35d0116fd5af6c48178ec89566e
+02. Alone | io.github.virenmohindra.alone | 2427982 bytes | 226c158022947c6d430726e24300277293cb9841da69e98950fb48947dcc43d1
+03. Bipolar Balls | io.github.virenmohindra.bipolar-balls | 12971146 bytes | ea11c646296cfaf272fb6f2082ea299da2d9bde1e04c40f5333f8b91ae77e9b4
+04. Black Hole | io.github.virenmohindra.black-hole | 22081110 bytes | 5aa1956c3be2c4f022bad9d595f95d933c6bf20733a252b827697f33e64c9e16
+05. Boo | io.github.virenmohindra.boo | 4679192 bytes | a9ff2a73348e570c7362d853533c949458772fea71a4abd11d8eea8a36293d87
+06. Bubbles | io.github.virenmohindra.bubbles | 4775942 bytes | 89dc75d9f9b39150c15f0031f238ad6c145bc307effaacd890b61a549560d677
+07. Colorful Stars In Space | io.github.virenmohindra.colorful-stars-in-space | 2098926 bytes | 52d4475f04b3e01d4718db630a22853ac563157e645b1f4dc7d25aab7cd72e04
+08. Columns | io.github.virenmohindra.columns | 3588428 bytes | 6168269071b56227806d1a6be8ed5e2683309b1c79cc7451164e038c492236dd
+09. Complicated | io.github.virenmohindra.complicated | 6293850 bytes | d1688e8a7eca355ca5d825450c5b43273710e4249d8aad6c7cd57119fe780078
+10. Echo | io.github.virenmohindra.echo | 5357912 bytes | a55e1cfd23f4421f251b8d9b572c4b92fc3b0c5d575d899825db6bc461154598
+11. Fall Leaves | io.github.virenmohindra.fall-leaves | 2904484 bytes | fbcdf8c373f1240c0224f1dd02f5cab00fc3e938af2d7350efaec3da966607aa
+12. Flower | io.github.virenmohindra.flower | 3313438 bytes | 428dfc9e73ad09cbfc37ffca3079f922368b0922a3a5c7929d4663097ca42b2f
+13. Fluid | io.github.virenmohindra.fluid | 883832 bytes | 90ee46f893a2b720e116f6ba793eb457bfdd4e45993ae4d07a9484b6f0f3b7d2
+14. Fragments | io.github.virenmohindra.fragments | 8658140 bytes | ea554cd8604e0746516e6ff58c14b86b816d1d301f47b1826abdba75a80d72b4
+15. Funny Computer | io.github.virenmohindra.funny-computer | 7708912 bytes | b5379dbc81113b788dbc91c7ab86c161e8c2cbf7c3f59bdcd62856384e9387ed
+16. Gameboy Advance | io.github.virenmohindra.gameboy-advance | 3313038 bytes | 6cb23ec7a5087de45fc2ce1be01b8bd1e14ae5ca0c5cc72cb6c11e4b0bae6a18
+17. Gamecube Logo | io.github.virenmohindra.gamecube-logo | 1418168 bytes | 7c569d87b9dc3b0ab85e93adb141e357cb218cf5ca068e0ba9ec61551f4f1cc6
+18. Hello Again | io.github.virenmohindra.hello-again | 14487054 bytes | bb6505d022a2234f315fae0fb876cad36f775fc8a13bf59de27d5e6b2e80e238
+19. Hypnotoad | io.github.virenmohindra.hypnotoad | 25036082 bytes | 0063649fb458208270a6c6c457ce349b5f2bff7034b007355abdab5ac93746ef
+20. Lines | io.github.virenmohindra.lines | 3904316 bytes | b1eec7182ec3809fd7bb22239ec130b6f640b0149530420947e72b7170b93615
+21. Mograph | io.github.virenmohindra.mograph | 4300166 bytes | 24605d54f1a91ec163fc9aad68cc8465c014f9f4828e1ec28dd0ea601f5ada4a
+22. Only Human | io.github.virenmohindra.only-human | 6522934 bytes | 26c3cd436ec6f748c1d956b99f5b1048f6343e8633a4fa41042123484240bb7c
+23. Pepe Matrix | io.github.virenmohindra.pepe-matrix | 2938872 bytes | c24786a12980b162c51ae726b5ae6032a8311a145e728aa42421444140c98ee2
+24. Pizza | io.github.virenmohindra.pizza | 1343942 bytes | cf89e99886cfc6e567222ae7241ba30d244d0db1356558c9c0d1172b50570b32
+25. Pizza Hi | io.github.virenmohindra.pizza-hi | 2713888 bytes | 45abdb46309c408b209248d3f377039ba36f158ed43c9c4bde65f512a85b0862
+26. Pokemon | io.github.virenmohindra.pokemon | 4229932 bytes | 4ba4460a43e09a4e93039bdabab883f99beac928382125d10e1eb83c2f9a4f13
+27. Pulse | io.github.virenmohindra.pulse | 1168182 bytes | 70bac1bc39b9b9e3b92c5b03b32c5e0e3530a4ea220594c645d02b3e9ff9c6ca
+28. Rainbow 8 | io.github.virenmohindra.rainbow-8 | 313540 bytes | 272e0315606711bb63a7fcba544fd11aac07cb7473e2d912c2bbdc29d0e34e31
+29. Rainy | io.github.virenmohindra.rainy | 5127646 bytes | 6e1b82f6805524627f93ea695a17f8cf8249f895a458f6d005136ec5d6143e86
+30. Rolling Circles | io.github.virenmohindra.rolling-circles | 4297702 bytes | 4dfc9f5f0ef47ac622cbdc3c6d4abeb6150c5e28313a37271b2871509dc25134
+31. Routine | io.github.virenmohindra.routine | 5599302 bytes | d6653b6b9dd615b7e285c7920d42518040a6dcb292b0fdb9ce166762a1939e2f
+32. Sonic Running | io.github.virenmohindra.sonic-running | 264870 bytes | e099101ca35b7e827e21cc32ae1b47fe5322cf053390427f80c9798957cef472
+33. Soup | io.github.virenmohindra.soup | 2531792 bytes | 5f468621e705b4a3e7a1fee792733a8b08524324d8f2a13ed715c2e5255d202f
+34. Spikey | io.github.virenmohindra.spikey | 6630608 bytes | 2abb8cc8f538cf926eacea9dcc77415abff537842dd7912ff32fba036faa31eb
+35. Sploosh | io.github.virenmohindra.sploosh | 2311362 bytes | 0370876debddf3f35f581f46589e16a9820b50f9987fa72b66a5e45d92b146cc
+36. Stay In Lane | io.github.virenmohindra.stay-in-lane | 4858468 bytes | 45256616acfaed07eb8dd9b24d2f688ed1fb5edfbf9ea2c0808c89c57b1de37e
+37. Stranger Things | io.github.virenmohindra.stranger-things | 3568518 bytes | 37793745f2f9214cd35ca8c1f27a2974d1a4c4262941bb03e9d0e4f4bd2fed03
+38. Super Mario | io.github.virenmohindra.super-mario | 3506820 bytes | 9d2deb4cbaa164444ff8919213c3c92847431a56070e89e03c3dc523fa60c6ab
+39. Swimmer | io.github.virenmohindra.swimmer | 1573504 bytes | 00717e2df111de2420bf6110526146d3035b5f45f53dce7491f6c7fadb564424
+40. Swish | io.github.virenmohindra.swish | 988034 bytes | 9222d95626886b0b1c81e06077f3d25a0a2e57e46302d19d088a45206439b8b5
+41. Tesseract | io.github.virenmohindra.tesseract | 3522024 bytes | 020828c3db79c55c8b838869734062b610ec78811a6a294316166aa86f8d2cf3
+42. Three Waves | io.github.virenmohindra.three-waves | 4415714 bytes | 57e88f9cf9357c4b192b57690fb0c8448e4ca6e4e1f81ea8c55332283f9a7526
+43. Time And Money | io.github.virenmohindra.time-and-money | 1404558 bytes | d4945e239377a86aa75c34eb8483052a7d469138a27abee1d69fe59b30d0cab5
+44. Twisting Cubes | io.github.virenmohindra.twisting-cubes | 24403780 bytes | 5a521054710cde2e621aa271c522cfe8aa5fbfeaa19e79662b7134771c4e328d
+45. Upload | io.github.virenmohindra.upload | 979518 bytes | d5ab701ea35402affc0482c6421c8fd2a22da378b845df66fad47c83bdc8ccc4
+46. Waiting | io.github.virenmohindra.waiting | 5712876 bytes | b65f5e3251d155a0e15bdc7abcb1bb8450d3efad7c088cd10f21bf7a819e2ad4
+47. World Swap | io.github.virenmohindra.world-swap | 2503382 bytes | 8ae2c0718edae87be4db3070abebc0b2c76352455906dd21c605aefe08fa1923
+48. Yin And Yang | io.github.virenmohindra.yin-and-yang | 1372814 bytes | c43b7634d624aad4375043bf631d870f8384d506c325e78bb3bb77b9ee06d6ad
