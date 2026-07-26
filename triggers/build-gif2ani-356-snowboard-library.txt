@@ -1,3 +1,3 @@
-triggered_at_utc=2026-07-26T16:18:00Z
-attempt=3
-purpose=build the verified SnowBoard respring gallery from deterministic published package metadata; download every original DEB directly, verify its published SHA-256, package identity, version, architecture, safe archive paths, and real .theme artwork, split multi-theme packages into individual downloadable cards, remove historical import prompts, and preserve mobile-owned caches
+triggered_at_utc=2026-07-26T16:46:00Z
+attempt=4
+purpose=force a clean Gif2Ani 3.5.6 build with the verified 7-package 160-theme SnowBoard catalog, corrected Objective-C backslash validation, no historical import prompt, and mobile-owned download caches
