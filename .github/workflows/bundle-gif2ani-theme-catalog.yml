@@ -1,0 +1,61 @@
+name: Bundle Gif2Ani CC0 Theme Catalog
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/bundle-gif2ani-theme-catalog.yml
+      - triggers/bundle-gif2ani-theme-catalog.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-theme-catalog-bundle
+  cancel-in-progress: true
+
+jobs:
+  bundle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch and verify immutable 54-theme manifest
+        run: |
+          set -euo pipefail
+          mkdir -p gif2aniprefs/Resources
+          curl -fsSL --retry 4 --retry-delay 2 \
+            'https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/manifest.json' \
+            -o gif2aniprefs/Resources/ThemeCatalog.json
+          python3 - <<'PY'
+          import json, re
+          from pathlib import Path
+          path = Path('gif2aniprefs/Resources/ThemeCatalog.json')
+          data = json.loads(path.read_text())
+          assert data['version'] == 1
+          assert data['count'] == len(data['themes']) == 54
+          assert len({item['id'] for item in data['themes']}) == 54
+          for item in data['themes']:
+              assert re.fullmatch(r'[a-z0-9-]+', item['id'])
+              assert item['file'] == item['id'] + '.gif'
+              assert re.fullmatch(r'[0-9a-f]{64}', item['sha256'])
+              assert 0 < int(item['bytes']) <= 25 * 1024 * 1024
+              assert item['sourceFrames'] == 24
+              assert item['width'] == 360 and item['height'] == 360
+              assert item['license'] == 'CC0-1.0'
+          print('verified_cc0_theme_manifest=54')
+          PY
+
+      - name: Commit bundled manifest
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add gif2aniprefs/Resources/ThemeCatalog.json
+          git commit -m 'Bundle immutable 54-theme Gif2Ani catalog [skip ci]' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
