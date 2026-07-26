@@ -1,33 +1,263 @@
 Gif2Ani SnowBoard Source Probe
-run_id=30210657615
-source_commit=65ee39b255776df97a85a1cc3fe9f684c3c2e259
-status=failure
-completed_at_utc=2026-07-26T16:33:04Z
-candidate_page_count=17
-verified_package_001=com.shadows.respringmix|subthemes=15|bytes=3535964|sha256=6b17a65ada7fc8b3b54a0f79eab69929015d603d775f703d98a5b4d04e753cb3
+run_id=30210766502
+source_commit=2cd2a95be1003c87ccb0117492759539130b0953
+status=success
+completed_at_utc=2026-07-26T16:35:53Z
+candidate_page_count=24
+verified_package_001=beta.hende.megapack|subthemes=6|bytes=1424138|sha256=b166ad2873f459bcb1c6a7ef52ddc481b243b73f1da36d2f34f0529dbfc38a50
+verified_package_002=com.bluspark.pixeliosrespringpack1|subthemes=19|bytes=39406|sha256=019b842090b48a494b2c0aa2e2dfd2836c856bff1feaf1369b4f653c0b6e7b92
+verified_package_003=com.shadows.respringmix|subthemes=15|bytes=3535964|sha256=6b17a65ada7fc8b3b54a0f79eab69929015d603d775f703d98a5b4d04e753cb3
+verified_package_004=com.thwlfu.cakrespring|subthemes=1|bytes=134520|sha256=5f631f11600fba9f9fa95ee6e6b525ba504d0756841b5f9d3f36626a62af77dc
+candidate_005=rejected|com.shadows.checkra1nRespring|package mismatch com.shadows.checkra1nrespring != com.shadows.checkra1nRespring
+verified_package_005=com.rkycyku.allin1.respring|subthemes=105|bytes=16732232|sha256=9f26a524f7b8bf3740c38e305704202cca6590a803cdb3597cbc3822bf11b3e1
+candidate_007=rejected|com.redenticdev.respringpack|could not fetch https://redentic.dev/debs/com.redenticdev.respringpack_1.2.0_iphoneos-arm.deb: <urlopen error [Errno -2] Name or service not known>
+candidate_008=rejected|com.redenticdev.swrespringpack|could not fetch https://redentic.dev/debs/com.redenticdev.swrespringpack_1.1.0_iphoneos-arm.deb: <urlopen error [Errno -2] Name or service not known>
+candidate_009=rejected|com.project.brooklyn|could not fetch https://repo.basepack.co/download/com.project.brooklyn.deb: HTTP Error 404: Not Found
+candidate_010=rejected|com.twickd.rilind-kycyku.all-in-one-respring-pack|could not fetch https://repo.twickd.com/files/com.twickd.rilind-kycyku.all-in-one-respring-pack/versions/8f34db0578bfb0db13468753d2c1e3c8.deb: HTTP Error 401: Unauthorized
+candidate_011=rejected|com.yourepo.easytoast.hollowapplerespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.hollowapplerespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_012=rejected|com.yourepo.easytoast.daithidenoglarespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.daithidenoglarespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_013=rejected|com.yourepo.easytoast.cincinnatirespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.cincinnatirespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_014=rejected|com.yourepo.easytoast.lopezrespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.lopezrespringlogo_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_015=rejected|com.yourepo.easytoast.rlogorespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.rlogorespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_016=rejected|com.yourepo.easytoast.tsmrespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.tsmrespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+verified_package_006=respring.hende.razerlogo|subthemes=4|bytes=272830|sha256=15d743dc83098f4cd9f2b12fc692caf437be2bbf96b875a5e65382a83d2f13f1
+verified_package_007=respring.hende.megapack|subthemes=10|bytes=3265988|sha256=ec511a2f5cb2aaf1f41811b74b45c3caa685e8d156dda022a8c1cb1113fa21da
+candidate_019=rejected|com.yourepo.soda-ldz.doughnuts|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.doughnuts_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_020=rejected|com.yourepo.soda-ldz.respringfxxk|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringfxxk_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_021=rejected|com.yourepo.soda-ldz.respringpack|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringpack_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_022=rejected|com.yourepo.soda-ldz.respringrespringpack2|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringrespringpack2_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_023=rejected|com.yourepo.soda-ldz.respringrespringpack3|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringrespringpack3_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_024=rejected|com.yourepo.soda-ldz.spacerespring|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.spacerespring_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+snowboard_verified_package_count=7
+snowboard_verified_theme_count=160
+snowboard_rejected_count=17
 --- audit tail ---
+Gif2Ani Verified SnowBoard Respring Catalog
+candidate_page_count=24
+verified_package_count=7
+verified_theme_count=160
+rejected_or_unavailable_count=17
+all_included_packages_free=true
+all_included_downloads_https=true
+all_included_sha256_verified=true
+all_included_package_ids_verified=true
+all_included_theme_paths_verified=true
+
+--- packages ---
+001. beta.hende.megapack | Mega pack beta | 0.3 | subthemes=6 | bytes=1424138 | sha256=b166ad2873f459bcb1c6a7ef52ddc481b243b73f1da36d2f34f0529dbfc38a50 | url=https://hende101.github.io/repo/debs/Megapackbeta.deb | effective=https://hende101.github.io/repo/debs/Megapackbeta.deb
+002. com.bluspark.pixeliosrespringpack1 | Pixelios Respring Pack 1 | 1.0 | subthemes=19 | bytes=39406 | sha256=019b842090b48a494b2c0aa2e2dfd2836c856bff1feaf1369b4f653c0b6e7b92 | url=https://repo.packix.com/debs/com.bluspark.pixeliosrespringpack1_1.0.deb | effective=https://repo.packix.com/debs/com.bluspark.pixeliosrespringpack1_1.0.deb
+003. com.rkycyku.allin1.respring | All in one Respring Pack | 1.4 | subthemes=105 | bytes=16732232 | sha256=9f26a524f7b8bf3740c38e305704202cca6590a803cdb3597cbc3822bf11b3e1 | url=https://repo.packix.com/debs/com.rkycyku.allin1.respring_1.4.deb | effective=https://repo.packix.com/debs/com.rkycyku.allin1.respring_1.4.deb
+004. com.shadows.respringmix | Respring Mix | 1.0 | subthemes=15 | bytes=3535964 | sha256=6b17a65ada7fc8b3b54a0f79eab69929015d603d775f703d98a5b4d04e753cb3 | url=https://repo.packix.com/debs/com.shadows.respringmix_1.0.deb | effective=https://repo.packix.com/debs/com.shadows.respringmix_1.0.deb
+005. com.thwlfu.cakrespring | Lite CheckRa1nRespring | 1.1 | subthemes=1 | bytes=134520 | sha256=5f631f11600fba9f9fa95ee6e6b525ba504d0756841b5f9d3f36626a62af77dc | url=https://repo.packix.com/debs/com.thwlfu.cakrespring_1.1.deb | effective=https://repo.packix.com/debs/com.thwlfu.cakrespring_1.1.deb
+006. respring.hende.megapack | Modern Respring Pack | 2.0 | subthemes=10 | bytes=3265988 | sha256=ec511a2f5cb2aaf1f41811b74b45c3caa685e8d156dda022a8c1cb1113fa21da | url=https://repo.packix.com/debs/respring.hende.megapack_2.0.deb | effective=https://repo.packix.com/debs/respring.hende.megapack_2.0.deb
+007. respring.hende.razerlogo | Razer Logo Respring Pack | 1.0 | subthemes=4 | bytes=272830 | sha256=15d743dc83098f4cd9f2b12fc692caf437be2bbf96b875a5e65382a83d2f13f1 | url=https://repo.packix.com/debs/respring.hende.razerlogo_1.0.deb | effective=https://repo.packix.com/debs/respring.hende.razerlogo_1.0.deb
+
+--- themes ---
+001. 01 - Anemone (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.01-anemone-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/01 - Anemone (Pack 1).theme | media=6 | kind=animated
+002. 02 - BlusparkDev (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.02-blusparkdev-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/02 - BlusparkDev (Pack 1).theme | media=5 | kind=animated
+003. 03 - Filza (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.03-filza-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/03 - Filza (Pack 1).theme | media=5 | kind=animated
+004. 04 - Respring STILL (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.04-respring-still-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/04 - Respring STILL (Pack 1).theme | media=5 | kind=animated
+005. 05 - Respring ANIMATED (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.05-respring-animated-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/05 - Respring ANIMATED (Pack 1).theme | media=17 | kind=animated
+006. 06 - Unc0ver (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.06-unc0ver-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/06 - Unc0ver (Pack 1).theme | media=5 | kind=animated
+007. 07 - Unc0ver Dark (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.07-unc0ver-dark-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/07 - Unc0ver Dark (Pack 1).theme | media=5 | kind=animated
+008. 08 - Nepeta (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.08-nepeta-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/08 - Nepeta (Pack 1).theme | media=5 | kind=animated
+009. 09 - Nepeta’s Tree (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.09-nepeta-s-tree-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/09 - Nepeta’s Tree (Pack 1).theme | media=5 | kind=animated
+010. 1 Spinning Polygon | snowboard.beta-hende-megapack.1-spinning-polygon | package=beta.hende.megapack | path=Library/Themes/1 Spinning Polygon.theme | media=24 | kind=animated
+011. 10 - Electra (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.10-electra-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/10 - Electra (Pack 1).theme | media=5 | kind=animated
+012. 11 - Snowboard (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.11-snowboard-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/11 - Snowboard (Pack 1).theme | media=5 | kind=animated
+013. 12 - Delta (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.12-delta-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/12 - Delta (Pack 1).theme | media=5 | kind=animated
+014. 13 - Crash Reporter Face (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.13-crash-reporter-face-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/13 - Crash Reporter Face (Pack 1).theme | media=5 | kind=animated
+015. 14 - Crash Reporter Warning (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.14-crash-reporter-warning-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/14 - Crash Reporter Warning (Pack 1).theme | media=5 | kind=animated
+016. 15 - Reprovision (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.15-reprovision-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/15 - Reprovision (Pack 1).theme | media=5 | kind=animated
+017. 16 - Tweakbox Original (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.16-tweakbox-original-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/16 - Tweakbox Original (Pack 1).theme | media=5 | kind=animated
+018. 17 - Tweakbox Blue (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.17-tweakbox-blue-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/17 - Tweakbox Blue (Pack 1).theme | media=5 | kind=animated
+019. 18 - Tweakbox Red (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.18-tweakbox-red-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/18 - Tweakbox Red (Pack 1).theme | media=5 | kind=animated
+020. 19 - Packix (Pack 1) | snowboard.com-bluspark-pixeliosrespringpack1.19-packix-pack-1 | package=com.bluspark.pixeliosrespringpack1 | path=Library/Themes/19 - Packix (Pack 1).theme | media=5 | kind=animated
+021. 2 Running Skull | snowboard.beta-hende-megapack.2-running-skull | package=beta.hende.megapack | path=Library/Themes/2 Running Skull.theme | media=25 | kind=animated
+022. 3 Spinning Cubes | snowboard.beta-hende-megapack.3-spinning-cubes | package=beta.hende.megapack | path=Library/Themes/3 Spinning Cubes.theme | media=24 | kind=animated
+023. 4 Cubes | snowboard.beta-hende-megapack.4-cubes | package=beta.hende.megapack | path=Library/Themes/4 Cubes.theme | media=25 | kind=animated
+024. 5 Dots | snowboard.beta-hende-megapack.5-dots | package=beta.hende.megapack | path=Library/Themes/5 Dots.theme | media=25 | kind=animated
+025. 7up | snowboard.com-rkycyku-allin1-respring.7up | package=com.rkycyku.allin1.respring | path=Library/Themes/7up.theme | media=3 | kind=animated
+026. 9 Hand Tap | snowboard.beta-hende-megapack.9-hand-tap | package=beta.hende.megapack | path=Library/Themes/9 Hand Tap.theme | media=24 | kind=animated
+027. Adidas | snowboard.com-rkycyku-allin1-respring.adidas | package=com.rkycyku.allin1.respring | path=Library/Themes/Adidas.theme | media=3 | kind=animated
+028. Ajax | snowboard.com-rkycyku-allin1-respring.ajax | package=com.rkycyku.allin1.respring | path=Library/Themes/Ajax.theme | media=3 | kind=animated
+029. Albania Flag | snowboard.com-rkycyku-allin1-respring.albania-flag | package=com.rkycyku.allin1.respring | path=Library/Themes/Albania Flag.theme | media=3 | kind=animated
+030. Alfa Romeo | snowboard.com-rkycyku-allin1-respring.alfa-romeo | package=com.rkycyku.allin1.respring | path=Library/Themes/Alfa Romeo.theme | media=3 | kind=animated
+031. Alice in Wonderland | snowboard.com-rkycyku-allin1-respring.alice-in-wonderland | package=com.rkycyku.allin1.respring | path=Library/Themes/Alice in Wonderland.theme | media=3 | kind=animated
+032. Amazon | snowboard.com-rkycyku-allin1-respring.amazon | package=com.rkycyku.allin1.respring | path=Library/Themes/Amazon.theme | media=3 | kind=animated
+033. Apex Legends | snowboard.com-rkycyku-allin1-respring.apex-legends | package=com.rkycyku.allin1.respring | path=Library/Themes/Apex Legends.theme | media=3 | kind=animated
+034. Apple 1977 | snowboard.com-shadows-respringmix.apple-1977 | package=com.shadows.respringmix | path=Library/Themes/Apple 1977.theme | media=24 | kind=animated
+035. Apple Classic | snowboard.com-shadows-respringmix.apple-classic | package=com.shadows.respringmix | path=Library/Themes/Apple Classic.theme | media=24 | kind=animated
+036. Apple Moon | snowboard.com-shadows-respringmix.apple-moon | package=com.shadows.respringmix | path=Library/Themes/Apple Moon.theme | media=24 | kind=animated
+037. Apple New 1977 | snowboard.com-shadows-respringmix.apple-new-1977 | package=com.shadows.respringmix | path=Library/Themes/Apple New 1977.theme | media=24 | kind=animated
+038. Atletico Madrid | snowboard.com-rkycyku-allin1-respring.atletico-madrid | package=com.rkycyku.allin1.respring | path=Library/Themes/Atletico Madrid.theme | media=3 | kind=animated
+039. Audi | snowboard.com-rkycyku-allin1-respring.audi | package=com.rkycyku.allin1.respring | path=Library/Themes/Audi.theme | media=3 | kind=animated
+040. Barcelona | snowboard.com-rkycyku-allin1-respring.barcelona | package=com.rkycyku.allin1.respring | path=Library/Themes/Barcelona.theme | media=3 | kind=animated
+041. Benfica | snowboard.com-rkycyku-allin1-respring.benfica | package=com.rkycyku.allin1.respring | path=Library/Themes/Benfica.theme | media=3 | kind=animated
+042. Bently | snowboard.com-rkycyku-allin1-respring.bently | package=com.rkycyku.allin1.respring | path=Library/Themes/Bently.theme | media=3 | kind=animated
+043. BiH Flag | snowboard.com-rkycyku-allin1-respring.bih-flag | package=com.rkycyku.allin1.respring | path=Library/Themes/BiH Flag.theme | media=3 | kind=animated
+044. BMW | snowboard.com-rkycyku-allin1-respring.bmw | package=com.rkycyku.allin1.respring | path=Library/Themes/BMW.theme | media=3 | kind=animated
+045. Borussia Mönchengladbach | snowboard.com-rkycyku-allin1-respring.borussia-mo-nchengladbach | package=com.rkycyku.allin1.respring | path=Library/Themes/Borussia Mönchengladbach.theme | media=3 | kind=animated
+046. Bugatti | snowboard.com-rkycyku-allin1-respring.bugatti | package=com.rkycyku.allin1.respring | path=Library/Themes/Bugatti.theme | media=3 | kind=animated
+047. Bulgaria Flag | snowboard.com-rkycyku-allin1-respring.bulgaria-flag | package=com.rkycyku.allin1.respring | path=Library/Themes/Bulgaria Flag.theme | media=3 | kind=animated
+048. C | snowboard.com-rkycyku-allin1-respring.c-3 | package=com.rkycyku.allin1.respring | path=Library/Themes/C.theme | media=3 | kind=animated
+049. C# | snowboard.com-rkycyku-allin1-respring.c | package=com.rkycyku.allin1.respring | path=Library/Themes/C#.theme | media=3 | kind=animated
+050. C++ | snowboard.com-rkycyku-allin1-respring.c-2 | package=com.rkycyku.allin1.respring | path=Library/Themes/C++.theme | media=3 | kind=animated
+051. Charmander | snowboard.com-shadows-respringmix.charmander | package=com.shadows.respringmix | path=Library/Themes/Charmander.theme | media=24 | kind=animated
+052. Checkra1n | snowboard.com-rkycyku-allin1-respring.checkra1n | package=com.rkycyku.allin1.respring | path=Library/Themes/Checkra1n.theme | media=3 | kind=animated
+053. CheckRa1n | snowboard.com-thwlfu-cakrespring.checkra1n | package=com.thwlfu.cakrespring | path=Library/Themes/CheckRa1n.theme | media=26 | kind=animated
+054. Circles | snowboard.com-shadows-respringmix.circles | package=com.shadows.respringmix | path=Library/Themes/Circles.theme | media=24 | kind=animated
+055. Coca Cola | snowboard.com-rkycyku-allin1-respring.coca-cola | package=com.rkycyku.allin1.respring | path=Library/Themes/Coca Cola.theme | media=3 | kind=animated
+056. COD 4 | snowboard.com-rkycyku-allin1-respring.cod-4 | package=com.rkycyku.allin1.respring | path=Library/Themes/COD 4.theme | media=3 | kind=animated
+057. Croatia Flag | snowboard.com-rkycyku-allin1-respring.croatia-flag | package=com.rkycyku.allin1.respring | path=Library/Themes/Croatia Flag.theme | media=3 | kind=animated
+058. Css | snowboard.com-rkycyku-allin1-respring.css | package=com.rkycyku.allin1.respring | path=Library/Themes/Css.theme | media=3 | kind=animated
+059. Cubes | snowboard.respring-hende-megapack.cubes | package=respring.hende.megapack | path=Library/Themes/Cubes.theme | media=24 | kind=animated
+060. Cubes Stacking | snowboard.respring-hende-megapack.cubes-stacking | package=respring.hende.megapack | path=Library/Themes/Cubes Stacking.theme | media=24 | kind=animated
+061. Dots | snowboard.respring-hende-megapack.dots | package=respring.hende.megapack | path=Library/Themes/Dots.theme | media=24 | kind=animated
+062. Eevee Evolves | snowboard.com-shadows-respringmix.eevee-evolves | package=com.shadows.respringmix | path=Library/Themes/Eevee Evolves.theme | media=24 | kind=animated
+063. England Flag | snowboard.com-rkycyku-allin1-respring.england-flag | package=com.rkycyku.allin1.respring | path=Library/Themes/England Flag.theme | media=3 | kind=animated
+064. Facebook | snowboard.com-rkycyku-allin1-respring.facebook | package=com.rkycyku.allin1.respring | path=Library/Themes/Facebook.theme | media=3 | kind=animated
+065. Fanta | snowboard.com-rkycyku-allin1-respring.fanta | package=com.rkycyku.allin1.respring | path=Library/Themes/Fanta.theme | media=3 | kind=animated
+066. Ferrari | snowboard.com-rkycyku-allin1-respring.ferrari | package=com.rkycyku.allin1.respring | path=Library/Themes/Ferrari.theme | media=3 | kind=animated
+067. Ford | snowboard.com-rkycyku-allin1-respring.ford | package=com.rkycyku.allin1.respring | path=Library/Themes/Ford.theme | media=3 | kind=animated
+068. Fortnite | snowboard.com-rkycyku-allin1-respring.fortnite | package=com.rkycyku.allin1.respring | path=Library/Themes/Fortnite.theme | media=3 | kind=animated
+069. FSK | snowboard.com-rkycyku-allin1-respring.fsk | package=com.rkycyku.allin1.respring | path=Library/Themes/FSK.theme | media=3 | kind=animated
+070. Germany Flag | snowboard.com-rkycyku-allin1-respring.germany-flag | package=com.rkycyku.allin1.respring | path=Library/Themes/Germany Flag.theme | media=3 | kind=animated
+071. Google | snowboard.com-rkycyku-allin1-respring.google | package=com.rkycyku.allin1.respring | path=Library/Themes/Google.theme | media=3 | kind=animated
+072. Greece Flag | snowboard.com-rkycyku-allin1-respring.greece-flag | package=com.rkycyku.allin1.respring | path=Library/Themes/Greece Flag.theme | media=3 | kind=animated
+073. Hand Tap | snowboard.respring-hende-megapack.hand-tap | package=respring.hende.megapack | path=Library/Themes/Hand Tap.theme | media=24 | kind=animated
+074. Heart symbol | snowboard.com-rkycyku-allin1-respring.heart-symbol | package=com.rkycyku.allin1.respring | path=Library/Themes/Heart symbol.theme | media=3 | kind=animated
+075. Heineken | snowboard.com-rkycyku-allin1-respring.heineken | package=com.rkycyku.allin1.respring | path=Library/Themes/Heineken.theme | media=3 | kind=animated
+076. Honda | snowboard.com-rkycyku-allin1-respring.honda | package=com.rkycyku.allin1.respring | path=Library/Themes/Honda.theme | media=3 | kind=animated
+077. Html | snowboard.com-rkycyku-allin1-respring.html | package=com.rkycyku.allin1.respring | path=Library/Themes/Html.theme | media=3 | kind=animated
+078. Instagram | snowboard.com-rkycyku-allin1-respring.instagram | package=com.rkycyku.allin1.respring | path=Library/Themes/Instagram.theme | media=3 | kind=animated
+079. iPhone | snowboard.com-rkycyku-allin1-respring.iphone | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone.theme | media=3 | kind=animated
+080. iPhone 11 | snowboard.com-rkycyku-allin1-respring.iphone-11 | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone 11.theme | media=3 | kind=animated
+081. iPhone 11 Pro | snowboard.com-rkycyku-allin1-respring.iphone-11-pro | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone 11 Pro.theme | media=3 | kind=animated
+082. iPhone 3G | snowboard.com-rkycyku-allin1-respring.iphone-3g | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone 3G.theme | media=3 | kind=animated
+083. iPhone 3GS | snowboard.com-rkycyku-allin1-respring.iphone-3gs | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone 3GS.theme | media=3 | kind=animated
+084. iPhone 4 | snowboard.com-rkycyku-allin1-respring.iphone-4 | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone 4.theme | media=3 | kind=animated
+085. iPhone 4S | snowboard.com-rkycyku-allin1-respring.iphone-4s | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone 4S.theme | media=3 | kind=animated
+086. iPhone 5 | snowboard.com-rkycyku-allin1-respring.iphone-5 | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone 5.theme | media=3 | kind=animated
+087. iPhone 5C | snowboard.com-rkycyku-allin1-respring.iphone-5c | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone 5C.theme | media=3 | kind=animated
+088. iPhone 5S | snowboard.com-rkycyku-allin1-respring.iphone-5s | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone 5S.theme | media=3 | kind=animated
+089. iPhone 6 | snowboard.com-rkycyku-allin1-respring.iphone-6 | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone 6.theme | media=3 | kind=animated
+090. iPhone 6S | snowboard.com-rkycyku-allin1-respring.iphone-6s | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone 6S.theme | media=3 | kind=animated
+091. iPhone 7 | snowboard.com-rkycyku-allin1-respring.iphone-7 | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone 7.theme | media=3 | kind=animated
+092. iPhone 8 | snowboard.com-rkycyku-allin1-respring.iphone-8 | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone 8.theme | media=3 | kind=animated
+093. iPhone SE | snowboard.com-rkycyku-allin1-respring.iphone-se | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone SE.theme | media=3 | kind=animated
+094. iPhone X | snowboard.com-rkycyku-allin1-respring.iphone-x | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone X.theme | media=3 | kind=animated
+095. iPhone XR | snowboard.com-rkycyku-allin1-respring.iphone-xr | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone XR.theme | media=3 | kind=animated
+096. iPhone XS | snowboard.com-rkycyku-allin1-respring.iphone-xs | package=com.rkycyku.allin1.respring | path=Library/Themes/iPhone XS.theme | media=3 | kind=animated
+097. IPKO | snowboard.com-rkycyku-allin1-respring.ipko | package=com.rkycyku.allin1.respring | path=Library/Themes/IPKO.theme | media=3 | kind=animated
+098. Italy Flag | snowboard.com-rkycyku-allin1-respring.italy-flag | package=com.rkycyku.allin1.respring | path=Library/Themes/Italy Flag.theme | media=3 | kind=animated
+099. Jack Daniel’s | snowboard.com-rkycyku-allin1-respring.jack-daniel-s | package=com.rkycyku.allin1.respring | path=Library/Themes/Jack Daniel’s.theme | media=3 | kind=animated
+100. Java | snowboard.com-rkycyku-allin1-respring.java | package=com.rkycyku.allin1.respring | path=Library/Themes/Java.theme | media=3 | kind=animated
+101. Klasa Hanifes HD | snowboard.com-rkycyku-allin1-respring.klasa-hanifes-hd | package=com.rkycyku.allin1.respring | path=Library/Themes/Klasa Hanifes HD.theme | media=3 | kind=animated
+102. Kosovo Flag | snowboard.com-rkycyku-allin1-respring.kosovo-flag | package=com.rkycyku.allin1.respring | path=Library/Themes/Kosovo Flag.theme | media=3 | kind=animated
+103. Kotlin | snowboard.com-rkycyku-allin1-respring.kotlin | package=com.rkycyku.allin1.respring | path=Library/Themes/Kotlin.theme | media=3 | kind=animated
+104. Land Rover | snowboard.com-rkycyku-allin1-respring.land-rover | package=com.rkycyku.allin1.respring | path=Library/Themes/Land Rover.theme | media=3 | kind=animated
+105. Liverpool | snowboard.com-rkycyku-allin1-respring.liverpool | package=com.rkycyku.allin1.respring | path=Library/Themes/Liverpool.theme | media=3 | kind=animated
+106. Lotus | snowboard.com-rkycyku-allin1-respring.lotus | package=com.rkycyku.allin1.respring | path=Library/Themes/Lotus.theme | media=3 | kind=animated
+107. Manchester City | snowboard.com-rkycyku-allin1-respring.manchester-city | package=com.rkycyku.allin1.respring | path=Library/Themes/Manchester City.theme | media=3 | kind=animated
+108. Manchester United | snowboard.com-rkycyku-allin1-respring.manchester-united | package=com.rkycyku.allin1.respring | path=Library/Themes/Manchester United.theme | media=3 | kind=animated
+109. Maserati | snowboard.com-rkycyku-allin1-respring.maserati | package=com.rkycyku.allin1.respring | path=Library/Themes/Maserati.theme | media=3 | kind=animated
+110. Mercedes-Benz | snowboard.com-rkycyku-allin1-respring.mercedes-benz | package=com.rkycyku.allin1.respring | path=Library/Themes/Mercedes-Benz.theme | media=3 | kind=animated
+111. Merging Dots | snowboard.respring-hende-megapack.merging-dots | package=respring.hende.megapack | path=Library/Themes/Merging Dots.theme | media=24 | kind=animated
+112. Mickey Mouse | snowboard.com-rkycyku-allin1-respring.mickey-mouse | package=com.rkycyku.allin1.respring | path=Library/Themes/Mickey Mouse.theme | media=3 | kind=animated
+113. Microsoft | snowboard.com-rkycyku-allin1-respring.microsoft | package=com.rkycyku.allin1.respring | path=Library/Themes/Microsoft.theme | media=3 | kind=animated
+114. Milan | snowboard.com-rkycyku-allin1-respring.milan | package=com.rkycyku.allin1.respring | path=Library/Themes/Milan.theme | media=3 | kind=animated
+115. Montenegro Flag | snowboard.com-rkycyku-allin1-respring.montenegro-flag | package=com.rkycyku.allin1.respring | path=Library/Themes/Montenegro Flag.theme | media=3 | kind=animated
+116. Morphing Blob | snowboard.respring-hende-megapack.morphing-blob | package=respring.hende.megapack | path=Library/Themes/Morphing Blob.theme | media=24 | kind=animated
+117. Nescafe | snowboard.com-rkycyku-allin1-respring.nescafe | package=com.rkycyku.allin1.respring | path=Library/Themes/Nescafe.theme | media=3 | kind=animated
+118. Nike | snowboard.com-rkycyku-allin1-respring.nike | package=com.rkycyku.allin1.respring | path=Library/Themes/Nike.theme | media=3 | kind=animated
+119. North Macedonia Flag | snowboard.com-rkycyku-allin1-respring.north-macedonia-flag | package=com.rkycyku.allin1.respring | path=Library/Themes/North Macedonia Flag.theme | media=3 | kind=animated
+120. Pepsi | snowboard.com-rkycyku-allin1-respring.pepsi | package=com.rkycyku.allin1.respring | path=Library/Themes/Pepsi.theme | media=3 | kind=animated
+121. Pikachu | snowboard.com-shadows-respringmix.pikachu | package=com.shadows.respringmix | path=Library/Themes/Pikachu.theme | media=24 | kind=animated
+122. Pikachu Run | snowboard.com-shadows-respringmix.pikachu-run | package=com.shadows.respringmix | path=Library/Themes/Pikachu Run.theme | media=24 | kind=animated
+123. Portugal soccer team | snowboard.com-rkycyku-allin1-respring.portugal-soccer-team | package=com.rkycyku.allin1.respring | path=Library/Themes/Portugal soccer team.theme | media=3 | kind=animated
+124. PUBG | snowboard.com-rkycyku-allin1-respring.pubg | package=com.rkycyku.allin1.respring | path=Library/Themes/PUBG.theme | media=3 | kind=animated
+125. Puma | snowboard.com-rkycyku-allin1-respring.puma | package=com.rkycyku.allin1.respring | path=Library/Themes/Puma.theme | media=3 | kind=animated
+126. Python | snowboard.com-rkycyku-allin1-respring.python | package=com.rkycyku.allin1.respring | path=Library/Themes/Python.theme | media=3 | kind=animated
+127. Razer Logo & Glow | snowboard.respring-hende-razerlogo.razer-logo-glow | package=respring.hende.razerlogo | path=Library/Themes/Razer Logo & Glow.theme | media=24 | kind=animated
+128. Razer Logo & Text | snowboard.respring-hende-razerlogo.razer-logo-text | package=respring.hende.razerlogo | path=Library/Themes/Razer Logo & Text.theme | media=24 | kind=animated
+129. Razer Logo Black & Green | snowboard.respring-hende-razerlogo.razer-logo-black-green | package=respring.hende.razerlogo | path=Library/Themes/Razer Logo Black & Green.theme | media=24 | kind=animated
+130. Razer Logo Chroma | snowboard.respring-hende-razerlogo.razer-logo-chroma | package=respring.hende.razerlogo | path=Library/Themes/Razer Logo Chroma.theme | media=24 | kind=animated
+131. Real Madrid | snowboard.com-rkycyku-allin1-respring.real-madrid | package=com.rkycyku.allin1.respring | path=Library/Themes/Real Madrid.theme | media=3 | kind=animated
+132. ReLoad | snowboard.com-shadows-respringmix.reload | package=com.shadows.respringmix | path=Library/Themes/ReLoad.theme | media=24 | kind=animated
+133. Rolls-Royce | snowboard.com-rkycyku-allin1-respring.rolls-royce | package=com.rkycyku.allin1.respring | path=Library/Themes/Rolls-Royce.theme | media=3 | kind=animated
+134. Romania Flag | snowboard.com-rkycyku-allin1-respring.romania-flag | package=com.rkycyku.allin1.respring | path=Library/Themes/Romania Flag.theme | media=3 | kind=animated
+135. Ruby | snowboard.com-rkycyku-allin1-respring.ruby | package=com.rkycyku.allin1.respring | path=Library/Themes/Ruby.theme | media=3 | kind=animated
+136. Running Skull | snowboard.respring-hende-megapack.running-skull | package=respring.hende.megapack | path=Library/Themes/Running Skull.theme | media=24 | kind=animated
+137. Samsung | snowboard.com-rkycyku-allin1-respring.samsung | package=com.rkycyku.allin1.respring | path=Library/Themes/Samsung.theme | media=3 | kind=animated
+138. Serbia Flag | snowboard.com-rkycyku-allin1-respring.serbia-flag | package=com.rkycyku.allin1.respring | path=Library/Themes/Serbia Flag.theme | media=3 | kind=animated
+139. Shojo | snowboard.com-shadows-respringmix.shojo | package=com.shadows.respringmix | path=Library/Themes/Shojo.theme | media=24 | kind=animated
+140. Slovenia Flag | snowboard.com-rkycyku-allin1-respring.slovenia-flag | package=com.rkycyku.allin1.respring | path=Library/Themes/Slovenia Flag.theme | media=3 | kind=animated
+141. Snapchat | snowboard.com-rkycyku-allin1-respring.snapchat | package=com.rkycyku.allin1.respring | path=Library/Themes/Snapchat.theme | media=3 | kind=animated
+142. Snoopy | snowboard.com-rkycyku-allin1-respring.snoopy | package=com.rkycyku.allin1.respring | path=Library/Themes/Snoopy.theme | media=3 | kind=animated
+143. Spinning Cubes | snowboard.respring-hende-megapack.spinning-cubes | package=respring.hende.megapack | path=Library/Themes/Spinning Cubes.theme | media=24 | kind=animated
+144. Spinning Polygon | snowboard.respring-hende-megapack.spinning-polygon | package=respring.hende.megapack | path=Library/Themes/Spinning Polygon.theme | media=24 | kind=animated
+145. Supermarketi Besa | snowboard.com-rkycyku-allin1-respring.supermarketi-besa | package=com.rkycyku.allin1.respring | path=Library/Themes/Supermarketi Besa.theme | media=3 | kind=animated
+146. Suzuki | snowboard.com-rkycyku-allin1-respring.suzuki | package=com.rkycyku.allin1.respring | path=Library/Themes/Suzuki.theme | media=3 | kind=animated
+147. Tesla | snowboard.com-rkycyku-allin1-respring.tesla | package=com.rkycyku.allin1.respring | path=Library/Themes/Tesla.theme | media=3 | kind=animated
+148. The Rolling Stones | snowboard.com-shadows-respringmix.the-rolling-stones | package=com.shadows.respringmix | path=Library/Themes/The Rolling Stones.theme | media=24 | kind=animated
+149. Totoro | snowboard.com-shadows-respringmix.totoro | package=com.shadows.respringmix | path=Library/Themes/Totoro.theme | media=24 | kind=animated
+150. Toyota | snowboard.com-rkycyku-allin1-respring.toyota | package=com.rkycyku.allin1.respring | path=Library/Themes/Toyota.theme | media=3 | kind=animated
+151. Trabzonspor | snowboard.com-rkycyku-allin1-respring.trabzonspor | package=com.rkycyku.allin1.respring | path=Library/Themes/Trabzonspor.theme | media=3 | kind=animated
+152. Triangles | snowboard.respring-hende-megapack.triangles | package=respring.hende.megapack | path=Library/Themes/Triangles.theme | media=24 | kind=animated
+153. Turkey Flag | snowboard.com-rkycyku-allin1-respring.turkey-flag | package=com.rkycyku.allin1.respring | path=Library/Themes/Turkey Flag.theme | media=3 | kind=animated
+154. UÇK | snowboard.com-rkycyku-allin1-respring.uc-k | package=com.rkycyku.allin1.respring | path=Library/Themes/UÇK.theme | media=3 | kind=animated
+155. USA Flag | snowboard.com-rkycyku-allin1-respring.usa-flag | package=com.rkycyku.allin1.respring | path=Library/Themes/USA Flag.theme | media=3 | kind=animated
+156. Vala | snowboard.com-rkycyku-allin1-respring.vala | package=com.rkycyku.allin1.respring | path=Library/Themes/Vala.theme | media=3 | kind=animated
+157. Vetëvendosje | snowboard.com-rkycyku-allin1-respring.vete-vendosje | package=com.rkycyku.allin1.respring | path=Library/Themes/Vetëvendosje.theme | media=3 | kind=animated
+158. Volkswagen | snowboard.com-rkycyku-allin1-respring.volkswagen | package=com.rkycyku.allin1.respring | path=Library/Themes/Volkswagen.theme | media=3 | kind=animated
+159. Waiting | snowboard.com-shadows-respringmix.waiting | package=com.shadows.respringmix | path=Library/Themes/Waiting.theme | media=24 | kind=animated
+160. World | snowboard.com-shadows-respringmix.world | package=com.shadows.respringmix | path=Library/Themes/World.theme | media=24 | kind=animated
+
+--- rejected/unavailable ---
+https://www.ios-repo-updates.com/repository/iospackix/package/com.shadows.checkra1nrespring/|package mismatch com.shadows.checkra1nrespring != com.shadows.checkra1nRespring
+https://www.ios-repo-updates.com/repository/redentic-s-repo/package/com.redenticdev.respringpack/|could not fetch https://redentic.dev/debs/com.redenticdev.respringpack_1.2.0_iphoneos-arm.deb: <urlopen error [Errno -2] Name or service not known>
+https://www.ios-repo-updates.com/repository/redentic-s-repo/package/com.redenticdev.swrespringpack/|could not fetch https://redentic.dev/debs/com.redenticdev.swrespringpack_1.1.0_iphoneos-arm.deb: <urlopen error [Errno -2] Name or service not known>
+https://www.ios-repo-updates.com/repository/basepack/package/com.project.brooklyn/|could not fetch https://repo.basepack.co/download/com.project.brooklyn.deb: HTTP Error 404: Not Found
+https://www.ios-repo-updates.com/repository/twickd/package/com.twickd.rilind-kycyku.all-in-one-respring-pack/|could not fetch https://repo.twickd.com/files/com.twickd.rilind-kycyku.all-in-one-respring-pack/versions/8f34db0578bfb0db13468753d2c1e3c8.deb: HTTP Error 401: Unauthorized
+https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.easytoast.hollowapplerespringlogo/|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.hollowapplerespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.easytoast.daithidenoglarespringlogo/|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.daithidenoglarespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.easytoast.cincinnatirespringlogo/|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.cincinnatirespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.easytoast.lopezrespringlogo/|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.lopezrespringlogo_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.easytoast.rlogorespringlogo/|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.rlogorespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.easytoast.tsmrespringlogo/|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.tsmrespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.soda-ldz.doughnuts/|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.doughnuts_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.soda-ldz.respringfxxk/|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringfxxk_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.soda-ldz.respringpack/|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringpack_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.soda-ldz.respringrespringpack2/|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringrespringpack2_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.soda-ldz.respringrespringpack3/|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringrespringpack3_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.soda-ldz.spacerespring/|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.spacerespring_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
 --- log tail ---
-candidate_page_count=17
-verified_package_001=com.shadows.respringmix|subthemes=15|bytes=3535964|sha256=6b17a65ada7fc8b3b54a0f79eab69929015d603d775f703d98a5b4d04e753cb3
-candidate_002=rejected|com.redenticdev.respringpack|could not fetch https://redentic.dev/debs/com.redenticdev.respringpack_1.2.0_iphoneos-arm.deb: <urlopen error [Errno -2] Name or service not known>
-candidate_003=rejected|com.redenticdev.swrespringpack|could not fetch https://redentic.dev/debs/com.redenticdev.swrespringpack_1.1.0_iphoneos-arm.deb: <urlopen error [Errno -2] Name or service not known>
-candidate_004=rejected|com.project.brooklyn|could not fetch https://repo.basepack.co/download/com.project.brooklyn.deb: HTTP Error 404: Not Found
-candidate_005=rejected|com.yourepo.easytoast.cincinnatirespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.cincinnatirespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
-candidate_006=rejected|com.twickd.rilind-kycyku.all-in-one-respring-pack|could not fetch https://repo.twickd.com/files/com.twickd.rilind-kycyku.all-in-one-respring-pack/versions/8f34db0578bfb0db13468753d2c1e3c8.deb: HTTP Error 401: Unauthorized
-candidate_007=rejected|com.yourepo.easytoast.hollowapplerespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.hollowapplerespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
-candidate_008=rejected|com.yourepo.easytoast.daithidenoglarespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.daithidenoglarespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
-candidate_009=rejected|com.yourepo.easytoast.lopezrespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.lopezrespringlogo_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
-candidate_010=rejected|com.yourepo.easytoast.rlogorespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.rlogorespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
-candidate_011=rejected|com.yourepo.easytoast.tsmrespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.tsmrespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
-candidate_012=rejected|com.yourepo.soda-ldz.respringfxxk|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringfxxk_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
-candidate_013=rejected|com.yourepo.soda-ldz.doughnuts|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.doughnuts_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
-candidate_014=rejected|com.yourepo.soda-ldz.respringpack|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringpack_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
-candidate_015=rejected|com.yourepo.soda-ldz.respringrespringpack2|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringrespringpack2_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
-candidate_016=rejected|com.yourepo.soda-ldz.respringrespringpack3|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringrespringpack3_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
-candidate_017=rejected|com.yourepo.soda-ldz.spacerespring|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.spacerespring_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
-Traceback (most recent call last):
-  File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/build_snowboard_catalog_seeded.py", line 201, in <module>
-    main()
-  File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/build_snowboard_catalog_seeded.py", line 151, in main
-    raise RuntimeError(f"verified SnowBoard inventory is too small: {len(packages)} packages / {len(records)} themes")
-RuntimeError: verified SnowBoard inventory is too small: 1 packages / 15 themes
+candidate_page_count=24
+verified_package_001=beta.hende.megapack|subthemes=6|bytes=1424138|sha256=b166ad2873f459bcb1c6a7ef52ddc481b243b73f1da36d2f34f0529dbfc38a50
+verified_package_002=com.bluspark.pixeliosrespringpack1|subthemes=19|bytes=39406|sha256=019b842090b48a494b2c0aa2e2dfd2836c856bff1feaf1369b4f653c0b6e7b92
+verified_package_003=com.shadows.respringmix|subthemes=15|bytes=3535964|sha256=6b17a65ada7fc8b3b54a0f79eab69929015d603d775f703d98a5b4d04e753cb3
+verified_package_004=com.thwlfu.cakrespring|subthemes=1|bytes=134520|sha256=5f631f11600fba9f9fa95ee6e6b525ba504d0756841b5f9d3f36626a62af77dc
+candidate_005=rejected|com.shadows.checkra1nRespring|package mismatch com.shadows.checkra1nrespring != com.shadows.checkra1nRespring
+verified_package_005=com.rkycyku.allin1.respring|subthemes=105|bytes=16732232|sha256=9f26a524f7b8bf3740c38e305704202cca6590a803cdb3597cbc3822bf11b3e1
+candidate_007=rejected|com.redenticdev.respringpack|could not fetch https://redentic.dev/debs/com.redenticdev.respringpack_1.2.0_iphoneos-arm.deb: <urlopen error [Errno -2] Name or service not known>
+candidate_008=rejected|com.redenticdev.swrespringpack|could not fetch https://redentic.dev/debs/com.redenticdev.swrespringpack_1.1.0_iphoneos-arm.deb: <urlopen error [Errno -2] Name or service not known>
+candidate_009=rejected|com.project.brooklyn|could not fetch https://repo.basepack.co/download/com.project.brooklyn.deb: HTTP Error 404: Not Found
+candidate_010=rejected|com.twickd.rilind-kycyku.all-in-one-respring-pack|could not fetch https://repo.twickd.com/files/com.twickd.rilind-kycyku.all-in-one-respring-pack/versions/8f34db0578bfb0db13468753d2c1e3c8.deb: HTTP Error 401: Unauthorized
+candidate_011=rejected|com.yourepo.easytoast.hollowapplerespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.hollowapplerespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_012=rejected|com.yourepo.easytoast.daithidenoglarespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.daithidenoglarespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_013=rejected|com.yourepo.easytoast.cincinnatirespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.cincinnatirespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_014=rejected|com.yourepo.easytoast.lopezrespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.lopezrespringlogo_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_015=rejected|com.yourepo.easytoast.rlogorespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.rlogorespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_016=rejected|com.yourepo.easytoast.tsmrespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.tsmrespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+verified_package_006=respring.hende.razerlogo|subthemes=4|bytes=272830|sha256=15d743dc83098f4cd9f2b12fc692caf437be2bbf96b875a5e65382a83d2f13f1
+verified_package_007=respring.hende.megapack|subthemes=10|bytes=3265988|sha256=ec511a2f5cb2aaf1f41811b74b45c3caa685e8d156dda022a8c1cb1113fa21da
+candidate_019=rejected|com.yourepo.soda-ldz.doughnuts|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.doughnuts_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_020=rejected|com.yourepo.soda-ldz.respringfxxk|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringfxxk_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_021=rejected|com.yourepo.soda-ldz.respringpack|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringpack_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_022=rejected|com.yourepo.soda-ldz.respringrespringpack2|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringrespringpack2_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_023=rejected|com.yourepo.soda-ldz.respringrespringpack3|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringrespringpack3_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_024=rejected|com.yourepo.soda-ldz.spacerespring|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.spacerespring_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+snowboard_verified_package_count=7
+snowboard_verified_theme_count=160
+snowboard_rejected_count=17
