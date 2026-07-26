@@ -13,6 +13,8 @@ static NSArray<NSDictionary *> *G2PreferredOpenThemeCatalog(void);
 static NSDictionary *G2OpenThemeCachedInfo(NSDictionary *pack);
 static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack);
 static BOOL G2OpenThemeURLIsAllowed(NSURL *url, BOOL indexURL);
+static NSData *G2CurlDownloadData(NSURL *url, BOOL openTheme, unsigned long long maximumBytes, NSError **error);
+static UIImage *G2BundledThemePreview(NSDictionary *pack);
 
 @interface G2ThemeGalleryController (G2OpenThemeLibraryRefresh)
 - (void)refreshOpenThemeLibrary;
