@@ -1,2 +1,2 @@
-requested_at_utc=2026-07-26T16:58:00Z
-purpose=refresh final Gif2Ani 3.5.6 completion after corrected 160-theme build
+requested_at_utc=2026-07-26T16:59:00Z
+purpose=poll final run for commit 62ba3a05 after legacy unused-function Werror fix
