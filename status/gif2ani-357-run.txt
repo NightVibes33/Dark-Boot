@@ -1,0 +1,20 @@
+Gif2Ani 3.5.7 Build Reporter
+report_run=30212158692
+id=30212137981
+head_sha=72d31a6642ee8656fb79906fbc9d85f7c758a1f3
+status=in_progress
+conclusion=None
+event=push
+created_at=2026-07-26T17:13:56Z
+updated_at=2026-07-26T17:14:16Z
+html_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30212137981
+job=89820084714|build|in_progress|None
+step=1|Set up job|completed|success
+step=2|Run actions/checkout@v4|completed|success
+step=3|Install dependencies and Theos|in_progress|None
+step=4|Apply shared Springy and SnowBoard verifier fix|pending|None
+step=5|Validate embedded catalogs|pending|None
+step=6|Compile and verify rootless package|pending|None
+step=7|Upload package evidence|pending|None
+step=8|Publish package and status|pending|None
+step=16|Post Run actions/checkout@v4|pending|None
