@@ -63,7 +63,7 @@ static NSArray<NSDictionary *> *G2PreferredOpenThemeCatalog(void) {
 @implementation Gif2AniRootListController (G2ThemeGalleryNavigation)
 
 - (void)openAnimationGallery {
-    G2ThemeGalleryController *gallery = [[G2ThemeGalleryController alloc] initForContentSize:self.view.bounds.size];
+    G2ThemeGalleryController *gallery = [[G2ThemeGalleryController alloc] initWithStyle:UITableViewStyleInsetGrouped];
     gallery.modalPresentationStyle = UIModalPresentationFullScreen;
     if (self.navigationController) {
         [self.navigationController pushViewController:gallery animated:YES];
