@@ -1,4 +1,5 @@
 #import "G2ThemeGalleryController.h"
+#import "gif2ani2RootListController.h"
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 #import <ImageIO/ImageIO.h>
 #import <QuartzCore/QuartzCore.h>
@@ -46,26 +47,46 @@ static BOOL G2OpenThemeURLIsAllowed(NSURL *url, BOOL indexURL);
 
 static NSArray<NSDictionary *> *G2PreferredOpenThemeCatalog(void) {
     NSArray<NSDictionary *> *bundled = G2BundledOpenThemeCatalog();
-    NSArray<NSDictionary *> *cached = G2LoadCachedOpenThemeCatalog();
-    if (bundled.count < 48) return cached ?: @[];
-    if (!cached.count) return bundled;
+    // The bundled snapshot is independently verified and must be usable even
+    // when an older on-device catalog.plist is malformed or stale.
+    if (bundled.count >= 48) return bundled;
 
-    NSMutableArray<NSDictionary *> *combined = [bundled mutableCopy];
-    NSMutableSet<NSString *> *knownPackages = [NSMutableSet setWithCapacity:bundled.count];
-    for (NSDictionary *pack in bundled) {
-        NSString *package = pack[@"package"];
-        if (package.length) [knownPackages addObject:package];
-    }
-    for (NSDictionary *pack in cached) {
-        NSString *package = pack[@"package"];
-        if (!package.length || [knownPackages containsObject:package]) continue;
-        [knownPackages addObject:package];
-        [combined addObject:pack];
-    }
-    return combined;
+    NSArray<NSDictionary *> *cached = G2LoadCachedOpenThemeCatalog();
+    return cached ?: @[];
 }
 
 #include "G2ThemeStageOverride.inc"
 #include "G2OpenThemeLibrary.inc"
 #include "G2RemoteThemePreviewOverride.inc"
 #include "G2RemoteGalleryPolish.inc"
+
+@implementation G2ThemeGalleryController (G2PreferencesCompatibility)
+
+// PreferenceLoader normally expects PSViewController subclasses for a
+// PSLinkCell detail class. Keep these compatibility entry points so an older
+// cached Root.plist cannot crash while the new button-action plist is loading.
+- (instancetype)initForContentSize:(CGSize)contentSize {
+    (void)contentSize;
+    return [self initWithStyle:UITableViewStyleInsetGrouped];
+}
+
+- (void)setSpecifier:(id)specifier { (void)specifier; }
+- (void)setRootController:(id)controller { (void)controller; }
+- (void)setParentController:(id)controller { (void)controller; }
+
+@end
+
+@implementation Gif2AniRootListController (G2ThemeGalleryNavigation)
+
+- (void)openAnimationGallery {
+    G2ThemeGalleryController *gallery = [[G2ThemeGalleryController alloc] initWithStyle:UITableViewStyleInsetGrouped];
+    gallery.modalPresentationStyle = UIModalPresentationFullScreen;
+    if (self.navigationController) {
+        [self.navigationController pushViewController:gallery animated:YES];
+    } else {
+        UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:gallery];
+        [self presentViewController:navigation animated:YES completion:nil];
+    }
+}
+
+@end
