@@ -1,2 +1,2 @@
-requested_at_utc=2026-07-26T16:55:00Z
-purpose=poll final run for commit 88fb93a9 after post-generation Objective-C escape repair
+requested_at_utc=2026-07-26T16:56:00Z
+purpose=refresh latest final workflow after corrected run for commit 88fb93a9 registered
