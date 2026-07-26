@@ -1,0 +1,21 @@
+Gif2Ani 3.5.6 Active Build Reporter
+id=30210861423
+head_sha=c752bbf9db61ccf49a8d5b3fc9c9e9937eacc4b9
+status=completed
+conclusion=failure
+event=push
+created_at=2026-07-26T16:37:51Z
+updated_at=2026-07-26T16:39:08Z
+run_attempt=1
+html_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30210861423
+job=89816720759|build|completed|failure
+step=1|Set up job|completed|success
+step=2|Run actions/checkout@v4|completed|success
+step=3|Install catalog, build, and media dependencies|completed|success
+step=4|Discover and physically verify public SnowBoard respring packages|completed|success
+step=5|Integrate verified SnowBoard catalog and bump 3.5.6|completed|success
+step=6|Build rootless Gif2Ani 3.5.6|completed|failure
+step=7|Upload package and verification evidence|completed|success
+step=8|Publish package, generated catalog, source changes, and status|completed|failure
+step=16|Post Run actions/checkout@v4|completed|success
+step=17|Complete job|completed|success
