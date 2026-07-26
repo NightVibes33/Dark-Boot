@@ -9,12 +9,23 @@ static BOOL G2StringContainsOnlyCharacters(NSString *value, NSCharacterSet *allo
     return [value rangeOfCharacterFromSet:allowed.invertedSet].location == NSNotFound;
 }
 
+static NSString * const G2OpenThemePinnedRawHost = @"raw.githubusercontent.com";
+static NSString * const G2OpenThemePinnedRawPrefix = @"/VirenMohindra/CydiaRepo/c507a391f193c2bb362ff77fc1c1673c0da2dcae/debs/";
+
 static BOOL G2OpenThemeURLIsAllowed(NSURL *url, BOOL indexURL) {
     if (![url.scheme.lowercaseString isEqualToString:@"https"]) return NO;
-    if (![url.host.lowercaseString isEqualToString:@"virenmohindra.github.io"]) return NO;
+    NSString *host = url.host.lowercaseString;
     NSString *path = url.path.stringByStandardizingPath;
-    if (indexURL) return [path isEqualToString:@"/Packages"];
-    return [path hasPrefix:@"/debs/"] && [path.pathExtension.lowercaseString isEqualToString:@"deb"];
+    if (indexURL) {
+        return [host isEqualToString:@"virenmohindra.github.io"] && [path isEqualToString:@"/Packages"];
+    }
+    if ([host isEqualToString:@"virenmohindra.github.io"]) {
+        return [path hasPrefix:@"/debs/"] && [path.pathExtension.lowercaseString isEqualToString:@"deb"];
+    }
+    if ([host isEqualToString:G2OpenThemePinnedRawHost]) {
+        return [path hasPrefix:G2OpenThemePinnedRawPrefix] && [path.pathExtension.lowercaseString isEqualToString:@"deb"];
+    }
+    return NO;
 }
 
 static NSString *G2SHA256ForData(NSData *data) {
