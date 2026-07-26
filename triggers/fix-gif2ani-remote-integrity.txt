@@ -1,0 +1,2 @@
+requested_at_utc=2026-07-26T00:40:00Z
+purpose=verify-pinned-bytes-and-sha256
