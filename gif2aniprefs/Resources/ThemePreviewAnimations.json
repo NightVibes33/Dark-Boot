@@ -7,2102 +7,2888 @@
   },
   "previews": [
     {
-      "bytes": 32637,
+      "bytes": 59411,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "amber-cyber-grid",
-      "sha256": "d19a451cbbf9868f63c88d0eb51db9421222441fc325db8766c1ee548387a7d7",
+      "maximumFrameColorError": 0.6104,
+      "meanAbsoluteColorError": 0.5989,
+      "paletteColors": 256,
+      "sha256": "8560352bacdd592772a2b826154143717b8798b945450d2bce6936d91e569fe9",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/amber-cyber-grid.gif"
     },
     {
-      "bytes": 14185,
+      "bytes": 26996,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "amber-energy-wave",
-      "sha256": "f3b52ea5c80cc9ec6034256568efaa4a3a5a055929ec9510a3249a8b913d89e5",
+      "maximumFrameColorError": 0.1324,
+      "meanAbsoluteColorError": 0.1278,
+      "paletteColors": 256,
+      "sha256": "ed78adab4d72caaa535b53b9713934603725a6685c148f3f11bcdbaa72d2fd42",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/amber-energy-wave.gif"
     },
     {
-      "bytes": 20760,
+      "bytes": 37800,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "amber-equalizer",
-      "sha256": "dbfef790264cc79e73891b2646fb70de1927e7c819b94265706606e33a2763ca",
+      "maximumFrameColorError": 1.0353,
+      "meanAbsoluteColorError": 0.8584,
+      "paletteColors": 256,
+      "sha256": "cb58bdbfd13f55f177d8108241af7500ca3199683a8418a8ac1b577f0a583946",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/amber-equalizer.gif"
     },
     {
-      "bytes": 14685,
+      "bytes": 27937,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "amber-halo-spinner",
-      "sha256": "024945fa4b564860ea99a09642dc8f97be3be399315046930e87dd14dbf3edce",
+      "maximumFrameColorError": 0.4945,
+      "meanAbsoluteColorError": 0.3956,
+      "paletteColors": 256,
+      "sha256": "79a58666f659aab17863ca6b7c6c1527c8331bd4b303bebd75e49e43d871c944",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/amber-halo-spinner.gif"
     },
     {
-      "bytes": 9919,
+      "bytes": 19861,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "amber-orbit-dots",
-      "sha256": "0783ea141ef9791076436c34751266dd6d3b7ffa376483f4844759f649d78beb",
+      "maximumFrameColorError": 0.2508,
+      "meanAbsoluteColorError": 0.2031,
+      "paletteColors": 256,
+      "sha256": "e82f8ca9280ed68846e21d6c0d21451c80ffc3281913ba4d831cf0ba8fd3a4ae",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/amber-orbit-dots.gif"
     },
     {
-      "bytes": 34973,
+      "bytes": 63545,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "amber-pulse-rings",
-      "sha256": "390d54c19c2ff8d18c05d5395d5a96fbf4e5c672d811fcec8345e124f1695e8d",
+      "maximumFrameColorError": 1.515,
+      "meanAbsoluteColorError": 1.3057,
+      "paletteColors": 256,
+      "sha256": "28c1e4240bebafeadc60d7c93a50d334700a7b8995fb53760197c7be9dba14cf",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/amber-pulse-rings.gif"
     },
     {
-      "bytes": 21229,
+      "bytes": 41185,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "amber-radar-sweep",
-      "sha256": "16848a569eb27fd8be323285c2a6c047e956c1d2daa1a7cabcb113a07c3f3cfa",
+      "maximumFrameColorError": 0.2739,
+      "meanAbsoluteColorError": 0.2379,
+      "paletteColors": 256,
+      "sha256": "7e4f33f59bac8dc42f44a4fd3db14ed1e88e3b379ba19cb756f48aa093e6b253",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/amber-radar-sweep.gif"
     },
     {
-      "bytes": 22694,
+      "bytes": 42451,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "amber-spark-burst",
-      "sha256": "717b223c34a511a2184fbb341da0c48e59295b99565117edd5843e778f294e36",
+      "maximumFrameColorError": 1.1272,
+      "meanAbsoluteColorError": 1.008,
+      "paletteColors": 256,
+      "sha256": "211396732a2ce4ba986afa41a135b241530c9cd13f93095f0ef056a461a6e421",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/amber-spark-burst.gif"
     },
     {
-      "bytes": 24577,
+      "bytes": 43954,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "amber-square-tunnel",
-      "sha256": "028d809361f0bcc5241a5e27866f8e3aab7bcf2d40f703ca21cb69bc56559305",
+      "maximumFrameColorError": 1.4324,
+      "meanAbsoluteColorError": 1.137,
+      "paletteColors": 256,
+      "sha256": "2e63795a6c8231517d3ae2e4305a495a32193ad33f55c4a459f71b81a7a84d91",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/amber-square-tunnel.gif"
     },
     {
-      "bytes": 30371,
+      "bytes": 58028,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "cyan-cyber-grid",
-      "sha256": "5438d2ec8945389e2c07a1755d3bbd0c1a4cb3288cb484fd4228af3da6d0eeea",
+      "maximumFrameColorError": 0.5181,
+      "meanAbsoluteColorError": 0.5111,
+      "paletteColors": 256,
+      "sha256": "b7fcfa9422fa980a7f18da56df7522a1e3464d6e8864f7245d24b29ea5837a0a",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/cyan-cyber-grid.gif"
     },
     {
-      "bytes": 13732,
+      "bytes": 26635,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "cyan-energy-wave",
-      "sha256": "35d43dfb8022d441ffa3d948d305ac501a9dbccfeb9bcc8ff1453c2ea44c5ca8",
+      "maximumFrameColorError": 0.1397,
+      "meanAbsoluteColorError": 0.1276,
+      "paletteColors": 256,
+      "sha256": "becb2ab3f2fc47f9105c8fcd2ac1341adbec84eb7fa4b7672e40dd53b7fb54b6",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/cyan-energy-wave.gif"
     },
     {
-      "bytes": 20586,
+      "bytes": 37187,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "cyan-equalizer",
-      "sha256": "a892fd078bb1fc126642a52c7736a3aa4df79de74a9db93311a92d3ae3b4a05e",
+      "maximumFrameColorError": 0.9293,
+      "meanAbsoluteColorError": 0.7499,
+      "paletteColors": 256,
+      "sha256": "6c0b49b5066b0a0f929f133f2a1d493bdda8c937f6ae0ce258a873faca2f30f9",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/cyan-equalizer.gif"
     },
     {
-      "bytes": 14596,
+      "bytes": 28177,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "cyan-halo-spinner",
-      "sha256": "9d00bab8ee7b284935a201b05717cdc6defb2986832d70c75fea1f2673390548",
+      "maximumFrameColorError": 0.5258,
+      "meanAbsoluteColorError": 0.41,
+      "paletteColors": 256,
+      "sha256": "0767638ce310440c27795047a2e9cbdf0fa8f19bbfd6931b01243d6a0d48d888",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/cyan-halo-spinner.gif"
     },
     {
-      "bytes": 9752,
+      "bytes": 19469,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "cyan-orbit-dots",
-      "sha256": "a399909d220cd56f131ba5e618e699fd4765c92bada3fca4c554e9e34d025fb6",
+      "maximumFrameColorError": 0.2067,
+      "meanAbsoluteColorError": 0.184,
+      "paletteColors": 256,
+      "sha256": "d5a9a325685d8f6eda95ffdb5de3e5eb5be032c544411a08eb15391ae3ba5d98",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/cyan-orbit-dots.gif"
     },
     {
-      "bytes": 34207,
+      "bytes": 60827,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "cyan-pulse-rings",
-      "sha256": "65b0bc97c39349e6dc57bce7c7da070958e1ed7950591dd20b9aa21aff254dd0",
+      "maximumFrameColorError": 1.1481,
+      "meanAbsoluteColorError": 1.0531,
+      "paletteColors": 256,
+      "sha256": "db556aaf3bcc3154751b73adcac2b7c5713a2d48b990a56403b109f561fa333c",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/cyan-pulse-rings.gif"
     },
     {
-      "bytes": 19351,
+      "bytes": 40267,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "cyan-radar-sweep",
-      "sha256": "2bcffb692cfc663b883b45668c7a2d7e835c73f86c3fab40128fa4fd00d0513a",
+      "maximumFrameColorError": 0.278,
+      "meanAbsoluteColorError": 0.2343,
+      "paletteColors": 256,
+      "sha256": "838f89e98ac937288365f11f3e51fbdc7d692f8a4b94e74229679f414a85af3b",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/cyan-radar-sweep.gif"
     },
     {
-      "bytes": 22489,
+      "bytes": 41966,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "cyan-spark-burst",
-      "sha256": "b448d47a9ae726b616dbb76a560ba9ebdac08a3b6515f546a024fbe9b2cbc465",
+      "maximumFrameColorError": 0.9725,
+      "meanAbsoluteColorError": 0.9143,
+      "paletteColors": 256,
+      "sha256": "7bc30adf12acdd96bd98baeee2d1e48ecc94bbaaad3e57951dd9c90a97cbe889",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/cyan-spark-burst.gif"
     },
     {
-      "bytes": 24297,
+      "bytes": 44147,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "cyan-square-tunnel",
-      "sha256": "4690707773968ea8b8e77c1c5b03202e63444635bffc52a5476da46aafbcf747",
+      "maximumFrameColorError": 1.4747,
+      "meanAbsoluteColorError": 1.1114,
+      "paletteColors": 256,
+      "sha256": "76a198f4f4e01332f6d61f7f0145aedd140ec0467c263df10fe887ec67b72034",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/cyan-square-tunnel.gif"
     },
     {
-      "bytes": 28954,
+      "bytes": 57292,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "ice-cyber-grid",
-      "sha256": "459ab0476b59397b66ef95ab4566176c9d4a80c1a8a28ac5b8ba14d586a16586",
+      "maximumFrameColorError": 0.4321,
+      "meanAbsoluteColorError": 0.4235,
+      "paletteColors": 256,
+      "sha256": "d86c89e33d7bacdbdd5b0b58603abaf848884a8d0967b9dc372f765b80e44e88",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/ice-cyber-grid.gif"
     },
     {
-      "bytes": 13762,
+      "bytes": 26643,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "ice-energy-wave",
-      "sha256": "709e2c5552dc738b297bdf19d782eaf46a219e4733f77400e8235153f333f10d",
+      "maximumFrameColorError": 0.1286,
+      "meanAbsoluteColorError": 0.1201,
+      "paletteColors": 256,
+      "sha256": "6a5eda9d225f95c3eeed83ee3c2d2a91f31ce2e560b651ae94b417f8b9f21b83",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/ice-energy-wave.gif"
     },
     {
-      "bytes": 20047,
+      "bytes": 36182,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "ice-equalizer",
-      "sha256": "e457b7fe19f0e178d6a39261f1fb4e96e95fbcd42eaa2f0b40957b4a1c14836d",
+      "maximumFrameColorError": 0.8044,
+      "meanAbsoluteColorError": 0.657,
+      "paletteColors": 256,
+      "sha256": "c46d3d302e153851c73502b154464033c1f06a35d0c599cdd79b33fff502cb03",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/ice-equalizer.gif"
     },
     {
-      "bytes": 14298,
+      "bytes": 27521,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "ice-halo-spinner",
-      "sha256": "afee04ef9ea8b6a937a44f47003c76c5d034a3dc7e04adaeb3f56a33288b01c2",
+      "maximumFrameColorError": 0.5717,
+      "meanAbsoluteColorError": 0.3897,
+      "paletteColors": 256,
+      "sha256": "b05461053ad1d1475a7c20e002e05c567688676c73739f83c874dabdfa2b877b",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/ice-halo-spinner.gif"
     },
     {
-      "bytes": 9680,
+      "bytes": 19179,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "ice-orbit-dots",
-      "sha256": "065c659da425b4f1a721578fa4b44814c95c2dbc47af3dd8a8b2f37128113527",
+      "maximumFrameColorError": 0.2007,
+      "meanAbsoluteColorError": 0.1867,
+      "paletteColors": 256,
+      "sha256": "265f41c55343d1f9a471768ef54e1b322f31b4da60153c63b31c3fb0ecbe9146",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/ice-orbit-dots.gif"
     },
     {
-      "bytes": 33041,
+      "bytes": 59301,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "ice-pulse-rings",
-      "sha256": "6320c068d03877aa74aef6b8aff921622c2b93af912d38fc73ae36bbdef440d8",
+      "maximumFrameColorError": 1.2103,
+      "meanAbsoluteColorError": 0.9932,
+      "paletteColors": 256,
+      "sha256": "ee6a01e4cb1578d6d749114b63033a2f0cd842bd064de8b7aec850b10133c422",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/ice-pulse-rings.gif"
     },
     {
-      "bytes": 18540,
+      "bytes": 39059,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "ice-radar-sweep",
-      "sha256": "b7a3d8f9715c0a7eb3c0954db367fe8c8c2b87d8833426c3bdb51c2b80d3a8da",
+      "maximumFrameColorError": 0.2799,
+      "meanAbsoluteColorError": 0.2328,
+      "paletteColors": 256,
+      "sha256": "df08f4b3a7b4bed18bd26a0fb6cf85c6393c17f72d03c2b306db22de3b802689",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/ice-radar-sweep.gif"
     },
     {
-      "bytes": 22359,
+      "bytes": 41943,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "ice-spark-burst",
-      "sha256": "1e0c9e4877772874062fdb2641ab552815751c733a888832a495e8842265c541",
+      "maximumFrameColorError": 0.9792,
+      "meanAbsoluteColorError": 0.8807,
+      "paletteColors": 256,
+      "sha256": "d67000a297bec2066a88faf2a5c3970d3bad8da4f090bc7d08738ca450b1e5a3",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/ice-spark-burst.gif"
     },
     {
-      "bytes": 24140,
+      "bytes": 43952,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "ice-square-tunnel",
-      "sha256": "87139a79ce306531b54d54574a47c29f24901e2ae47ade1d962e29aad6d1c11b",
+      "maximumFrameColorError": 1.5519,
+      "meanAbsoluteColorError": 1.0348,
+      "paletteColors": 256,
+      "sha256": "7333ed38f88efe3a503eab8e65cb37806cc9299a0f751d8f9a09123de0fab668",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/ice-square-tunnel.gif"
     },
     {
-      "bytes": 10142,
+      "bytes": 30139,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.a-wave",
+      "maximumFrameColorError": 0.9752,
+      "meanAbsoluteColorError": 0.9494,
       "package": "io.github.virenmohindra.a-wave",
-      "sha256": "3648f6250cdba9a54db99255b6472b9455186167262e06d0ac9f216991cbfdc2"
+      "paletteColors": 256,
+      "sha256": "dd3b901cdf35e24041569c4f1a714c9d911f71df7b44852b08a78c0674028601"
     },
     {
-      "bytes": 10841,
+      "bytes": 27044,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.alone",
+      "maximumFrameColorError": 1.1222,
+      "meanAbsoluteColorError": 1.0997,
       "package": "io.github.virenmohindra.alone",
-      "sha256": "24074f7ae2dc40a52df9149e84e525afa424e6bc5e8420e0dce923847e954139"
+      "paletteColors": 256,
+      "sha256": "971ad4ad280c6d2ae2cc1c0825722a0826bc189125845a3894bb01d123b24765"
     },
     {
-      "bytes": 17596,
+      "bytes": 44115,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.bipolar-balls",
+      "maximumFrameColorError": 0.4759,
+      "meanAbsoluteColorError": 0.4225,
       "package": "io.github.virenmohindra.bipolar-balls",
-      "sha256": "1f6ea000a32a31127d7dd12343b086007eec3635e671403d9c2434c79f44f473"
+      "paletteColors": 256,
+      "sha256": "9b99e69e8b0b0980c001db2aa58e6ea6c92b9a3b06abd212e8dd046b10f9be8e"
     },
     {
-      "bytes": 37643,
+      "bytes": 89908,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.black-hole",
+      "maximumFrameColorError": 1.026,
+      "meanAbsoluteColorError": 0.8899,
       "package": "io.github.virenmohindra.black-hole",
-      "sha256": "b7f1c668c4ec016ed485c46922e602009b46655a5c678fecc21e4581c0b55132"
+      "paletteColors": 256,
+      "sha256": "5eae3f546fe9299cfed6074f186d11ca8ee78a8cf462cd169e66f929585fc021"
     },
     {
-      "bytes": 15515,
+      "bytes": 54041,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.boo",
+      "maximumFrameColorError": 0.8941,
+      "meanAbsoluteColorError": 0.8229,
       "package": "io.github.virenmohindra.boo",
-      "sha256": "be6ddfdc673faade4226c3831c13bd44b4d9871c231e9ed26e12b8dbabe68acb"
+      "paletteColors": 256,
+      "sha256": "539e4de4dda9ec5eaa7c96aa39c5690e9a25e6aa3e648e84e7fbc9da6cb618ea"
     },
     {
-      "bytes": 16930,
+      "bytes": 27953,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.bubbles",
+      "maximumFrameColorError": 1.3895,
+      "meanAbsoluteColorError": 1.2271,
       "package": "io.github.virenmohindra.bubbles",
-      "sha256": "3781b81e40cb6e11cdd30b7739ae40e17c55b439bd3390ff814de0e3a7102f10"
+      "paletteColors": 256,
+      "sha256": "6b426e3f737bfa7b4acc262ae93dcd0abb3587c4eaa7c91b3b22597379301b4d"
     },
     {
-      "bytes": 10312,
+      "bytes": 31403,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.colorful-stars-in-space",
+      "maximumFrameColorError": 0.4506,
+      "meanAbsoluteColorError": 0.4302,
       "package": "io.github.virenmohindra.colorful-stars-in-space",
-      "sha256": "b8df9541b62882b458744f277e1e9f70cfa334353667998d0e09033bbd3fa282"
+      "paletteColors": 256,
+      "sha256": "df92b7576565cc6fb994f655cbc3907ed2a388b683e88ca3fddb908905b80980"
     },
     {
-      "bytes": 13308,
+      "bytes": 26065,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.columns",
+      "maximumFrameColorError": 0.1411,
+      "meanAbsoluteColorError": 0.1383,
       "package": "io.github.virenmohindra.columns",
-      "sha256": "379a78500b57a163fb57bd84b7791e5f1a70e1a13f392e935655fefdea34514b"
+      "paletteColors": 256,
+      "sha256": "233eeb8bf3e64f85c2526ca812917230be097a79fc27e8089f9a11e55546ea73"
     },
     {
-      "bytes": 16391,
+      "bytes": 40583,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.complicated",
+      "maximumFrameColorError": 0.6447,
+      "meanAbsoluteColorError": 0.6285,
       "package": "io.github.virenmohindra.complicated",
-      "sha256": "01eaa4c982220d52e9758e3ca90be8ad2e492620cf33c2a0691169e6db9762cf"
+      "paletteColors": 256,
+      "sha256": "6298024e427d42454006878060445e9a4125af46482f950ae29fb37eff7cedff"
     },
     {
-      "bytes": 6434,
+      "bytes": 17173,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.echo",
+      "maximumFrameColorError": 0.0934,
+      "meanAbsoluteColorError": 0.0777,
       "package": "io.github.virenmohindra.echo",
-      "sha256": "fa273c69b2d38b13f46fdc958841528862f8f42295fc04dbd79b36b625e70418"
+      "paletteColors": 256,
+      "sha256": "ca2eed029cb7da524c0e526f41637e0eafd04f02970d63b926bf22309a2b29b6"
     },
     {
-      "bytes": 51474,
+      "bytes": 111709,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.fall-leaves",
+      "maximumFrameColorError": 1.3835,
+      "meanAbsoluteColorError": 1.3337,
       "package": "io.github.virenmohindra.fall-leaves",
-      "sha256": "8488d0e70b61da809041e2da2e01e9ec22056152470ba067233f471ab25eb6a5"
+      "paletteColors": 256,
+      "sha256": "66684060dd7b172a5825a59f5e0206002ee7e008c61276ef9aafd4d5b5c67188"
     },
     {
-      "bytes": 14317,
+      "bytes": 38738,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.flower",
+      "maximumFrameColorError": 0.5262,
+      "meanAbsoluteColorError": 0.4946,
       "package": "io.github.virenmohindra.flower",
-      "sha256": "dfe8435b5f7b1d218982f55bb417d112c433b9a18366654fc90eea80a796828f"
+      "paletteColors": 256,
+      "sha256": "d6f124c81cac3efd46c7a561cb140bb703458a6beb103c94faabe0119abd2ec0"
     },
     {
-      "bytes": 10370,
+      "bytes": 24409,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.fluid",
+      "maximumFrameColorError": 0.6109,
+      "meanAbsoluteColorError": 0.5993,
       "package": "io.github.virenmohindra.fluid",
-      "sha256": "4ca52aa8d3aef3d676dd56be0474fbac8af7119d9e235824fabf30a58c123067"
+      "paletteColors": 256,
+      "sha256": "29197a9d5c636df2a8aab8e07ca3258a1e3d46bf7c0ff2b955570e0d6f571144"
     },
     {
-      "bytes": 16686,
+      "bytes": 62513,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.fragments",
+      "maximumFrameColorError": 0.9216,
+      "meanAbsoluteColorError": 0.6692,
       "package": "io.github.virenmohindra.fragments",
-      "sha256": "979f2fcc94c1577ad6ef32eaff7101c68c8d08ef90dadfb44a7bfb3bccac7aa6"
+      "paletteColors": 256,
+      "sha256": "5733d542e9a5805ae5ce5d3eb055d17c6ec46599e3afa54f819449e3da28bac1"
     },
     {
-      "bytes": 11192,
+      "bytes": 30120,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.funny-computer",
+      "maximumFrameColorError": 0.1189,
+      "meanAbsoluteColorError": 0.1124,
       "package": "io.github.virenmohindra.funny-computer",
-      "sha256": "6b4190020697c87272b4a818c198222a57bb202407466fb0338ce078e29bf02c"
+      "paletteColors": 256,
+      "sha256": "cc20ad16e2d5b102de61ab7f56abefa44a109ee4d29124e642ea6f6757362ee1"
     },
     {
-      "bytes": 18280,
+      "bytes": 28337,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.gameboy-advance",
+      "maximumFrameColorError": 1.9737,
+      "meanAbsoluteColorError": 1.4815,
       "package": "io.github.virenmohindra.gameboy-advance",
-      "sha256": "10855f49fed523d51b45bcc1c1d5d30d5b2105a411b0081dbab86d71e5a81898"
+      "paletteColors": 256,
+      "sha256": "33a0aa9505bd41c21bf2087138a600c1e8075e9de0dbfe530de0fb27d415d7bc"
     },
     {
-      "bytes": 14029,
+      "bytes": 25974,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.gamecube-logo",
+      "maximumFrameColorError": 0.4645,
+      "meanAbsoluteColorError": 0.1895,
       "package": "io.github.virenmohindra.gamecube-logo",
-      "sha256": "2c9c94e8b8f846e7bee95dcd48f37b2af850d3261a75132bbc23c4f0d285c7e0"
+      "paletteColors": 256,
+      "sha256": "4f8d09efb7cc977d1660669a5438cb610c57eb43dd406ca70ba2ee4cf412420c"
     },
     {
-      "bytes": 4976,
+      "bytes": 10680,
       "catalog": "springy",
       "frames": 8,
       "identifier": "io.github.virenmohindra.hello-again",
+      "maximumFrameColorError": 0.0573,
+      "meanAbsoluteColorError": 0.0414,
       "package": "io.github.virenmohindra.hello-again",
-      "sha256": "05cd80fef2ba8a304c11399a8086b25374f9c1753013cbbfc0e5326607417764"
+      "paletteColors": 256,
+      "sha256": "fd38cb664659018cbc63dbf160687b0c64cdf5d9dd5df9c648b6534b0ac9e5b3"
     },
     {
-      "bytes": 23633,
+      "bytes": 58337,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.hypnotoad",
+      "maximumFrameColorError": 0.6912,
+      "meanAbsoluteColorError": 0.6861,
       "package": "io.github.virenmohindra.hypnotoad",
-      "sha256": "2ec2d23e2ceb63889aff84977e08917f6e7288b5658cfd4978d21111380ad77b"
+      "paletteColors": 256,
+      "sha256": "f17c16710d986495c8e4242ff2410b385a0699ea5039b7d0ca9fc1980aeb915c"
     },
     {
-      "bytes": 16329,
+      "bytes": 40531,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.lines",
+      "maximumFrameColorError": 0.993,
+      "meanAbsoluteColorError": 0.9838,
       "package": "io.github.virenmohindra.lines",
-      "sha256": "c45354877e6ee87a21a2e9fbceddc22ed8b878a6a0d0b222e1b73808c2d4f897"
+      "paletteColors": 256,
+      "sha256": "14451306d28e2bf2f8ebfe56e0dd70fd24df56b543a209220adb87e55269483f"
     },
     {
-      "bytes": 10838,
+      "bytes": 29428,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.mograph",
+      "maximumFrameColorError": 0.3811,
+      "meanAbsoluteColorError": 0.3663,
       "package": "io.github.virenmohindra.mograph",
-      "sha256": "7bd43f49e82665638c930b2044f175a4bf842b70b6bf1770fcd3210498cdebc1"
+      "paletteColors": 256,
+      "sha256": "874d381aa700ce99ff8d6949666693812d621360af06ea63d52088be2081ba27"
     },
     {
-      "bytes": 14776,
+      "bytes": 38627,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.only-human",
+      "maximumFrameColorError": 0.4608,
+      "meanAbsoluteColorError": 0.4509,
       "package": "io.github.virenmohindra.only-human",
-      "sha256": "b8ac591e326979f5f1e8c4f22adb8cddbda90b6093e5f55f17642e3ad4586bea"
+      "paletteColors": 256,
+      "sha256": "fc69d24ecf5e7d3bd1e4cd93e1de0944180fc18a137710d128e6ed4aa82d1e93"
     },
     {
-      "bytes": 34274,
+      "bytes": 92648,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.pepe-matrix",
+      "maximumFrameColorError": 0.6128,
+      "meanAbsoluteColorError": 0.6002,
       "package": "io.github.virenmohindra.pepe-matrix",
-      "sha256": "accbce7d4b0355d8f69efc91e7711546c067cd858af8682db9a877f12b8d98f0"
+      "paletteColors": 256,
+      "sha256": "2cfd614a80c723bb4f223538510027695a73a82e22242e82026ba4754231014b"
     },
     {
-      "bytes": 26893,
+      "bytes": 57736,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.pizza",
+      "maximumFrameColorError": 1.047,
+      "meanAbsoluteColorError": 0.9523,
       "package": "io.github.virenmohindra.pizza",
-      "sha256": "3d3c2202eaccc1fa0b2c29f5aad4aa8bae34e60f54faaee157bcdb1aca7107f7"
+      "paletteColors": 256,
+      "sha256": "0a466da1e424d81cc6e3f4c240fb0318f7d7b431779dd0353092d3616cc9f5fe"
     },
     {
-      "bytes": 28710,
+      "bytes": 58776,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.pizza-hi",
+      "maximumFrameColorError": 1.0029,
+      "meanAbsoluteColorError": 0.8668,
       "package": "io.github.virenmohindra.pizza-hi",
-      "sha256": "7dc661b67f6c77c8e69e56b3ba477063dc523a87fa90dfc826d3d4f12981cdf7"
+      "paletteColors": 256,
+      "sha256": "b2b40d124ef6fd806e6ed9348f80a52240ccc559a160cf7f5b13268832b976c5"
     },
     {
-      "bytes": 16465,
+      "bytes": 40887,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.pokemon",
+      "maximumFrameColorError": 0.2356,
+      "meanAbsoluteColorError": 0.2304,
       "package": "io.github.virenmohindra.pokemon",
-      "sha256": "e2a0792037552ebfa5f62e9c4e80a00de4cf94f71877cc564c342871c269b76b"
+      "paletteColors": 256,
+      "sha256": "325291679ab0d6ae353dafabf22b537acbc204f8564d41e40d55b034f2913826"
     },
     {
-      "bytes": 3795,
+      "bytes": 12288,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.pulse",
+      "maximumFrameColorError": 0.031,
+      "meanAbsoluteColorError": 0.0137,
       "package": "io.github.virenmohindra.pulse",
-      "sha256": "c45f74fd286fe811cb2bf452288542501d5bf5832954a17bb427276556564925"
+      "paletteColors": 256,
+      "sha256": "6b2d7555774abd64118a70b1b8f7680d10e43b889cca8e411eeed7d526c911d2"
     },
     {
-      "bytes": 9345,
+      "bytes": 18866,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.rainbow-8",
+      "maximumFrameColorError": 0.0874,
+      "meanAbsoluteColorError": 0.0504,
       "package": "io.github.virenmohindra.rainbow-8",
-      "sha256": "1512627297ac455d49121ecefe0de96e3f24d6e85b4456349bbd56a037e3bc0f"
+      "paletteColors": 256,
+      "sha256": "4000357db758819f76d0f0adb4458671b8122ac74b354389372e31e79159665e"
     },
     {
-      "bytes": 38171,
+      "bytes": 85786,
       "catalog": "springy",
       "frames": 9,
       "identifier": "io.github.virenmohindra.rainy",
+      "maximumFrameColorError": 0.8026,
+      "meanAbsoluteColorError": 0.7976,
       "package": "io.github.virenmohindra.rainy",
-      "sha256": "2f263a626d0edfcf993f25599e848fafdd4c0be72e86bcda183439681a108758"
+      "paletteColors": 256,
+      "sha256": "072fdb0cf5db0c463a4f8598f8c65cf3814bfc4bfae63868cfb09c30d727b84c"
     },
     {
-      "bytes": 10661,
+      "bytes": 43005,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.rolling-circles",
+      "maximumFrameColorError": 0.653,
+      "meanAbsoluteColorError": 0.6494,
       "package": "io.github.virenmohindra.rolling-circles",
-      "sha256": "7ff7b946132f389dc69e42455b623d51d6d57a6828ea2e16f20169fa5e1a6e15"
+      "paletteColors": 256,
+      "sha256": "6f860d515a869b458455b583a0765cbaaa5100d3bf20ef069064451333641247"
     },
     {
-      "bytes": 9661,
+      "bytes": 40543,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.routine",
+      "maximumFrameColorError": 0.9613,
+      "meanAbsoluteColorError": 0.8779,
       "package": "io.github.virenmohindra.routine",
-      "sha256": "b9207f9328a00148b53b19094071fe8a27c4880e5d3f9331b774d360327f967b"
+      "paletteColors": 256,
+      "sha256": "054918fada4d8ce829ae5a07e3cc1e11138bb5c698a63a02cbc9e4d19edeadf4"
     },
     {
-      "bytes": 10618,
+      "bytes": 21159,
       "catalog": "springy",
       "frames": 4,
       "identifier": "io.github.virenmohindra.sonic-running",
+      "maximumFrameColorError": 0.8188,
+      "meanAbsoluteColorError": 0.648,
       "package": "io.github.virenmohindra.sonic-running",
-      "sha256": "128e14052869da31e060abbb0f4ae24f713cf2c00aa5e22bd3228c083dc6ff02"
+      "paletteColors": 256,
+      "sha256": "a00bdd21832945f10660ac37c7983f14cedd8aef157cb5c320306f99f7cc77db"
     },
     {
-      "bytes": 16815,
+      "bytes": 35334,
       "catalog": "springy",
       "frames": 9,
       "identifier": "io.github.virenmohindra.soup",
+      "maximumFrameColorError": 0.3833,
+      "meanAbsoluteColorError": 0.3751,
       "package": "io.github.virenmohindra.soup",
-      "sha256": "2c3aa9b806e684d43ec44b9a99f7e0921beeaec50f3ff60dc3535bc5ccba73f8"
+      "paletteColors": 256,
+      "sha256": "46d38740c97e0ff4723a5ad65cd1faedcd2ac3d0cdec6f59158e410e19d37c03"
     },
     {
-      "bytes": 41567,
+      "bytes": 82965,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.spikey",
+      "maximumFrameColorError": 0.5817,
+      "meanAbsoluteColorError": 0.5773,
       "package": "io.github.virenmohindra.spikey",
-      "sha256": "05a4542c129b9aad49f58be11e28e855a5525328ee2dae877a40a6a339a9b382"
+      "paletteColors": 256,
+      "sha256": "3d628d2d4d19ebb3b8588fa31bea531a81fb20d8dff317bee31634dacbbd7b3a"
     },
     {
-      "bytes": 13675,
+      "bytes": 24747,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.sploosh",
+      "maximumFrameColorError": 0.3441,
+      "meanAbsoluteColorError": 0.2835,
       "package": "io.github.virenmohindra.sploosh",
-      "sha256": "2d65f9d4800d291cfce9156fc21073d997b77b69d0a50b2de8ab063ea92c63de"
+      "paletteColors": 256,
+      "sha256": "bf42cbc6e61cc852a9a33218afbde6433808ced5bf7c3038eb31d3164223960d"
     },
     {
-      "bytes": 16579,
+      "bytes": 39034,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.stay-in-lane",
+      "maximumFrameColorError": 1.101,
+      "meanAbsoluteColorError": 1.0502,
       "package": "io.github.virenmohindra.stay-in-lane",
-      "sha256": "63f58380006c2248b6b1d5b86e0ae4c985c819db36214da24d09c387e422696b"
+      "paletteColors": 256,
+      "sha256": "9803be6e499a46ad6e325b97aad53019c9f628774d3ff46e10147a374b707412"
     },
     {
-      "bytes": 5839,
+      "bytes": 24190,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.stranger-things",
+      "maximumFrameColorError": 0.0901,
+      "meanAbsoluteColorError": 0.0828,
       "package": "io.github.virenmohindra.stranger-things",
-      "sha256": "316dac3a9824f9b1eb7126a3275dc1e87648eab1de8f6e3e35885b4d3dbc130d"
+      "paletteColors": 256,
+      "sha256": "39e17c8aae89f4a6b5a1a2f2d28f96f8d2680fb06a27caf912a373842c39aa6d"
     },
     {
-      "bytes": 32536,
+      "bytes": 65751,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.super-mario",
+      "maximumFrameColorError": 1.1566,
+      "meanAbsoluteColorError": 1.1002,
       "package": "io.github.virenmohindra.super-mario",
-      "sha256": "60d24284a529a846b606a63d7b525a40ab317cd5a54e76bd42fa7014d858b86c"
+      "paletteColors": 256,
+      "sha256": "24efefad44d92777b0eefcc644c70cc071be39318d076b8e40c9809780b3b24f"
     },
     {
-      "bytes": 9755,
+      "bytes": 19288,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.swimmer",
+      "maximumFrameColorError": 0.0326,
+      "meanAbsoluteColorError": 0.0315,
       "package": "io.github.virenmohindra.swimmer",
-      "sha256": "641f8afcefa899e5e0718cebac8898aae489a6d260e5278c40b5349ed952a3fb"
+      "paletteColors": 256,
+      "sha256": "e269edc62e21d4140bd2710819c06c5e8f0688ed31e00ffbfc7dd6a58fff64f0"
     },
     {
-      "bytes": 7301,
+      "bytes": 25639,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.swish",
+      "maximumFrameColorError": 1.0318,
+      "meanAbsoluteColorError": 1.0078,
       "package": "io.github.virenmohindra.swish",
-      "sha256": "ca4b45bd9306d04ae8468da16b15a245402bab02de0343f645e5b50f89a13c30"
+      "paletteColors": 256,
+      "sha256": "1efb0b36771dbfdbd3205c61b4f0a3048a7afef1881ab5e5962c2742875c69d2"
     },
     {
-      "bytes": 50397,
+      "bytes": 85145,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.tesseract",
+      "maximumFrameColorError": 2.433,
+      "meanAbsoluteColorError": 1.7975,
       "package": "io.github.virenmohindra.tesseract",
-      "sha256": "60beccd59bad56aaf447ab3249ded5f1aab1b75881227cfea3e9bea0ddcb8352"
+      "paletteColors": 256,
+      "sha256": "949286e033e53e8ddc02edd1ee14db6b97aea4c7818f6db6ed9df9e36bc412ab"
     },
     {
-      "bytes": 21072,
+      "bytes": 52332,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.three-waves",
+      "maximumFrameColorError": 0.8425,
+      "meanAbsoluteColorError": 0.809,
       "package": "io.github.virenmohindra.three-waves",
-      "sha256": "6e85b1f2d945b11437af2dd070e5613d28cbc8c948f00703879e731cd5b7c7c2"
+      "paletteColors": 256,
+      "sha256": "7d4492196ebde73cf627e9fb0ef87ec3f8af1815252f5a1b92b9bdbebf9e2242"
     },
     {
-      "bytes": 10965,
+      "bytes": 28399,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.time-and-money",
+      "maximumFrameColorError": 0.3876,
+      "meanAbsoluteColorError": 0.3719,
       "package": "io.github.virenmohindra.time-and-money",
-      "sha256": "b9ded884cb8a64558f647a853ad1308bf7e2ccbbbf90e47a4dfabab51a7980ac"
+      "paletteColors": 256,
+      "sha256": "34eaf8c0885d8a6991f6abff1f943d064a5fc0efe057098d1c9bcb55ee7095e8"
     },
     {
-      "bytes": 38425,
+      "bytes": 73017,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.twisting-cubes",
+      "maximumFrameColorError": 0.7398,
+      "meanAbsoluteColorError": 0.7361,
       "package": "io.github.virenmohindra.twisting-cubes",
-      "sha256": "80cd1166f7d6b5acdc92f451a3a8bedebf8165a23b04ee29dd5eaa33685869ab"
+      "paletteColors": 256,
+      "sha256": "f183abf31d9ad1f86e6fa37b65bba55c912c92e32d9fbcfc6d0bd458d9a86d68"
     },
     {
-      "bytes": 5406,
+      "bytes": 14889,
       "catalog": "springy",
       "frames": 7,
       "identifier": "io.github.virenmohindra.upload",
+      "maximumFrameColorError": 0.2399,
+      "meanAbsoluteColorError": 0.2371,
       "package": "io.github.virenmohindra.upload",
-      "sha256": "062b8c6d017e3a8bcba02cd3d62d5d6191d7f1df0f5e9b3a6465ffab60386541"
+      "paletteColors": 256,
+      "sha256": "63e8e74e7592ed18ba8bcc71c9dbecb67388b2fbc1f42290a2c0c6311da7c82c"
     },
     {
-      "bytes": 24802,
+      "bytes": 48576,
       "catalog": "springy",
       "frames": 9,
       "identifier": "io.github.virenmohindra.waiting",
+      "maximumFrameColorError": 0.8743,
+      "meanAbsoluteColorError": 0.8736,
       "package": "io.github.virenmohindra.waiting",
-      "sha256": "aa1fbbf95286e7c8bace76ca1b40c678e2527e0e672a989aa397f09c0bcc7ca8"
+      "paletteColors": 256,
+      "sha256": "e47293508f00bd65218ef4412e4a15f572a7b2ce04e16cc7117b167dbfbcbefb"
     },
     {
-      "bytes": 11784,
+      "bytes": 28510,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.world-swap",
+      "maximumFrameColorError": 1.21,
+      "meanAbsoluteColorError": 1.2044,
       "package": "io.github.virenmohindra.world-swap",
-      "sha256": "6e9d4ec4a483a720cf421053769db83ef98741d5a872352dc5d12c314db423b7"
+      "paletteColors": 256,
+      "sha256": "9513234f805564bbcc0976310362529f5f26bb5a338af5ac2180e2f84ebb3e90"
     },
     {
-      "bytes": 8807,
+      "bytes": 26401,
       "catalog": "springy",
       "frames": 10,
       "identifier": "io.github.virenmohindra.yin-and-yang",
+      "maximumFrameColorError": 0.9807,
+      "meanAbsoluteColorError": 0.9486,
       "package": "io.github.virenmohindra.yin-and-yang",
-      "sha256": "cc1e5e111e3ae0fef309599b69b4d72dbb773eea813bd994615a97dcfb3385ed"
+      "paletteColors": 256,
+      "sha256": "5d5ecae52b01f6c3ae33b429433756cc2ab9d78e249e428b9c2757c91cd9a093"
     },
     {
-      "bytes": 28917,
+      "bytes": 59515,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "lime-cyber-grid",
-      "sha256": "8444f4b5e5c8ac4bde3b386e46898b69d4af39ff12e8135f51dcffda97334966",
+      "maximumFrameColorError": 0.434,
+      "meanAbsoluteColorError": 0.4231,
+      "paletteColors": 256,
+      "sha256": "971abf182fd3bf61fb57f18a60b1442ce45960de67ca62b0121525d62a947702",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/lime-cyber-grid.gif"
     },
     {
-      "bytes": 13552,
+      "bytes": 25842,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "lime-energy-wave",
-      "sha256": "2e123b8dbb18d8daf57366a0f947821a5fa968490f7d34f5e46d2e79bd9b8814",
+      "maximumFrameColorError": 0.1438,
+      "meanAbsoluteColorError": 0.1319,
+      "paletteColors": 256,
+      "sha256": "ddf798059e8bea203b5b555c3f74c3c7ca4933159a84cace0ea81c4ee06e2a06",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/lime-energy-wave.gif"
     },
     {
-      "bytes": 19222,
+      "bytes": 35687,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "lime-equalizer",
-      "sha256": "defc2715eb117a8beabe7864608a83bd4b228ec52b0c266d097658b8295873a2",
+      "maximumFrameColorError": 0.8376,
+      "meanAbsoluteColorError": 0.6007,
+      "paletteColors": 256,
+      "sha256": "74f066d44eb83a3ab611db09fc25cabda1e268ee59d1b07bbf98860fd536acc7",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/lime-equalizer.gif"
     },
     {
-      "bytes": 13983,
+      "bytes": 26658,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "lime-halo-spinner",
-      "sha256": "c379ba4785e331329c8390817d608694ba8f24e07239a9b07e18370e78e2e1fe",
+      "maximumFrameColorError": 0.4402,
+      "meanAbsoluteColorError": 0.3327,
+      "paletteColors": 256,
+      "sha256": "0271d860e0ce7d86d3c7a847e0ff5f3108552c1a85fa3916b1cf905045f79902",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/lime-halo-spinner.gif"
     },
     {
-      "bytes": 9301,
+      "bytes": 19287,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "lime-orbit-dots",
-      "sha256": "91bca6aca4df26bb1fe38f856a2e93a2b6e6dc75c01a883d0fe1df692b495588",
+      "maximumFrameColorError": 0.1804,
+      "meanAbsoluteColorError": 0.1457,
+      "paletteColors": 256,
+      "sha256": "cbcd5419abc6a163a874cbea69d2ed4ca6dc809ed7836cf9ea5bde80be37b19e",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/lime-orbit-dots.gif"
     },
     {
-      "bytes": 31046,
+      "bytes": 57773,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "lime-pulse-rings",
-      "sha256": "5f16175fd9a9af2e0ded8c3460b67113c9640be85b236dfccd69c0f53875ca2d",
+      "maximumFrameColorError": 1.138,
+      "meanAbsoluteColorError": 0.9626,
+      "paletteColors": 256,
+      "sha256": "8a5cc0b9ff0c77f445821a7bae5e0cdf8c32e4175091bd1c98eef821f4c113d0",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/lime-pulse-rings.gif"
     },
     {
-      "bytes": 18660,
+      "bytes": 39389,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "lime-radar-sweep",
-      "sha256": "a1ab51aecbb90255639ca808c4c8e6d09c1470b1cdb4de67741f8c9b8b0109ae",
+      "maximumFrameColorError": 0.2124,
+      "meanAbsoluteColorError": 0.1845,
+      "paletteColors": 256,
+      "sha256": "6533027aa70b0466bc31d0a0f846ed3ec08b74c64d40dca3689f139dd67531dd",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/lime-radar-sweep.gif"
     },
     {
-      "bytes": 22310,
+      "bytes": 41552,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "lime-spark-burst",
-      "sha256": "0395f63848896073411508c2248e5ece515fca87b1465876285e5a72f1a82656",
+      "maximumFrameColorError": 0.8732,
+      "meanAbsoluteColorError": 0.8022,
+      "paletteColors": 256,
+      "sha256": "74d8a90f866ff9bd7ae3725ce914864c951c0dd64651faa422faa2ca403bae5f",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/lime-spark-burst.gif"
     },
     {
-      "bytes": 24147,
+      "bytes": 43770,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "lime-square-tunnel",
-      "sha256": "9d0a83313ede8a704a925625735f27a79468fe0f843e71db938f03788b111eb5",
+      "maximumFrameColorError": 1.6335,
+      "meanAbsoluteColorError": 1.0584,
+      "paletteColors": 256,
+      "sha256": "5693cff43f9e4674b87a692de9398754d842ef345e90dfd6d9ed812f56f3e707",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/lime-square-tunnel.gif"
     },
     {
-      "bytes": 32092,
+      "bytes": 58513,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "magenta-cyber-grid",
-      "sha256": "5c967010983549c45d6a5e3ecc6d2188561c36b8860159839ce3f24516028067",
+      "maximumFrameColorError": 0.6353,
+      "meanAbsoluteColorError": 0.6151,
+      "paletteColors": 256,
+      "sha256": "0871ebbe3646068d8fcddc147a889b37debaefbe2728f32046a182f9a2199773",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/magenta-cyber-grid.gif"
     },
     {
-      "bytes": 14004,
+      "bytes": 26098,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "magenta-energy-wave",
-      "sha256": "fcd0abf3da5c3ce627983af8b06eee4acf57de6195a39a7cd317897a2123810b",
+      "maximumFrameColorError": 0.1502,
+      "meanAbsoluteColorError": 0.1423,
+      "paletteColors": 256,
+      "sha256": "09d7952a968af3abbe693bc1d9b03315479578e6b68f9897f4e5610df92699d0",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/magenta-energy-wave.gif"
     },
     {
-      "bytes": 20102,
+      "bytes": 36203,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "magenta-equalizer",
-      "sha256": "1dc0e1f7fb4816f81d2f21131adbc3620e6224d7b0814eae50fee454219432d9",
+      "maximumFrameColorError": 0.7462,
+      "meanAbsoluteColorError": 0.6409,
+      "paletteColors": 256,
+      "sha256": "570fa4cdb44141ec71993d476d5e4f5c1f42a49c070ad47736a00d0c1f38c652",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/magenta-equalizer.gif"
     },
     {
-      "bytes": 14465,
+      "bytes": 27013,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "magenta-halo-spinner",
-      "sha256": "1338de70478a8bd48b59834edfafe734825316b6b39bedaa29b8b750c5b45ba4",
+      "maximumFrameColorError": 0.437,
+      "meanAbsoluteColorError": 0.3557,
+      "paletteColors": 256,
+      "sha256": "f53df6be03c730dd73f5993efbcf6d5829c93d38b4d29b02d21d4d833dfebb62",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/magenta-halo-spinner.gif"
     },
     {
-      "bytes": 9632,
+      "bytes": 19240,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "magenta-orbit-dots",
-      "sha256": "af8e412a1c0f175f8874b13b72817639b4aedabc0583b82ce1dc3eb837a3c19e",
+      "maximumFrameColorError": 0.1956,
+      "meanAbsoluteColorError": 0.163,
+      "paletteColors": 256,
+      "sha256": "cc29961b82deca459fb63bfb9184f6a4128844059c506b8c7902b99df672a352",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/magenta-orbit-dots.gif"
     },
     {
-      "bytes": 33772,
+      "bytes": 58942,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "magenta-pulse-rings",
-      "sha256": "4211cc903c49427f87617fa20de7ed1dffe2b29073cff9d8196d389c25f9e249",
+      "maximumFrameColorError": 1.0349,
+      "meanAbsoluteColorError": 0.9188,
+      "paletteColors": 256,
+      "sha256": "ee5738374d538b50778c4ad6fb30954ae0ab912af50ce2649d26aed67ecda808",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/magenta-pulse-rings.gif"
     },
     {
-      "bytes": 20941,
+      "bytes": 39678,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "magenta-radar-sweep",
-      "sha256": "3eec1679de16ae86dbb24871a273d96bf4886a8a84d46ab15b0f790446d2a6ca",
+      "maximumFrameColorError": 0.2711,
+      "meanAbsoluteColorError": 0.2431,
+      "paletteColors": 256,
+      "sha256": "6678bacc6d33772cdccf03173ec318acf7d671fc222b71c37d80c744d7065c1f",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/magenta-radar-sweep.gif"
     },
     {
-      "bytes": 22229,
+      "bytes": 41959,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "magenta-spark-burst",
-      "sha256": "94c632091d069dfb20a2a93a673f7ee3a1e0f6b88d1668e47152d0a200402539",
+      "maximumFrameColorError": 1.0009,
+      "meanAbsoluteColorError": 0.9117,
+      "paletteColors": 256,
+      "sha256": "3d50285713acff5ec30b13df29608ab374094e938d29b36a909ef663f09d7d49",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/magenta-spark-burst.gif"
     },
     {
-      "bytes": 24200,
+      "bytes": 44546,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "magenta-square-tunnel",
-      "sha256": "c0c3e476df53e6ff618116283505d4c667a8e836a0782a9c1de34ac413065136",
+      "maximumFrameColorError": 1.8883,
+      "meanAbsoluteColorError": 1.2648,
+      "paletteColors": 256,
+      "sha256": "e7983f87f49fdef1c48c5c9c8b1527fb68048babd1000a752b839510d1201297",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/magenta-square-tunnel.gif"
     },
     {
-      "bytes": 17912,
+      "bytes": 30864,
       "catalog": "snowboard",
       "frames": 10,
       "identifier": "snowboard.beta-hende-megapack.1-spinning-polygon",
+      "maximumFrameColorError": 0.2989,
+      "meanAbsoluteColorError": 0.2789,
       "package": "beta.hende.megapack",
-      "sha256": "9e583f3b00a0b9b332f22d03f1239f7883b664ddd886a94ec3b289fa36fe3f5e"
+      "paletteColors": 256,
+      "sha256": "2d6c7b3f5958727ad7cf553ace8cce84a9c46d8d02e0bfed13b88826f4412bd5"
     },
     {
-      "bytes": 13157,
+      "bytes": 24733,
       "catalog": "snowboard",
       "frames": 10,
       "identifier": "snowboard.beta-hende-megapack.2-running-skull",
+      "maximumFrameColorError": 0.1753,
+      "meanAbsoluteColorError": 0.1488,
       "package": "beta.hende.megapack",
-      "sha256": "29b9406d632975aaa0a0966ce33caa138daaf49e149094e3b23f50f3b7395e9a"
+      "paletteColors": 256,
+      "sha256": "bbbe261a62512b17177bc65644420f29c173b521bcca03100527444947c7a352"
     },
     {
-      "bytes": 19695,
+      "bytes": 38923,
       "catalog": "snowboard",
       "frames": 10,
       "identifier": "snowboard.beta-hende-megapack.3-spinning-cubes",
+      "maximumFrameColorError": 0.2604,
+      "meanAbsoluteColorError": 0.247,
       "package": "beta.hende.megapack",
-      "sha256": "9983f2ed4700384187ea2bab0640ac669f88c5039b3cecd1a8c789ddc9a34fae"
+      "paletteColors": 256,
+      "sha256": "345d273f3a4b91270a7b97486ef704a39df14179dc07d42f345a83927ca4cf97"
     },
     {
-      "bytes": 7946,
+      "bytes": 17823,
       "catalog": "snowboard",
       "frames": 8,
       "identifier": "snowboard.beta-hende-megapack.4-cubes",
+      "maximumFrameColorError": 1.0346,
+      "meanAbsoluteColorError": 1.0238,
       "package": "beta.hende.megapack",
-      "sha256": "c8ce4dfd171f9826dff28632a8b9024328be531a3e17a3e42807b8842b2d7c2e"
+      "paletteColors": 256,
+      "sha256": "75d1ea9f64b4028a17f7def7a2b5426fd4fb07a5182e01a4555fc8ba6c86dfc0"
     },
     {
-      "bytes": 8401,
+      "bytes": 32321,
       "catalog": "snowboard",
       "frames": 10,
       "identifier": "snowboard.beta-hende-megapack.5-dots",
+      "maximumFrameColorError": 0.8765,
+      "meanAbsoluteColorError": 0.8747,
       "package": "beta.hende.megapack",
-      "sha256": "3f08c73920508bdbf11b151c80f0f7c99bafc6e6ceba7fc39d08882344b19a68"
+      "paletteColors": 256,
+      "sha256": "e0e4001b26c236decde840eb59a5f3c2eeb1691cb1d84e2bc0bfa3ca4381054f"
     },
     {
-      "bytes": 11521,
+      "bytes": 24245,
       "catalog": "snowboard",
       "frames": 10,
       "identifier": "snowboard.beta-hende-megapack.9-hand-tap",
+      "maximumFrameColorError": 0.0842,
+      "meanAbsoluteColorError": 0.0765,
       "package": "beta.hende.megapack",
-      "sha256": "154e0f9eed4c8c6e0e44b08103350dcf925c52aae9423cb87c36f51ddff448fb"
-    },
-    {
-      "bytes": 5084,
-      "catalog": "snowboard",
-      "frames": 4,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.01-anemone-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "f1b188690002b650f583a5b46315b7674cb96748e6d7ab22b0cb3f1546a00332"
-    },
-    {
-      "bytes": 2141,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.02-blusparkdev-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "cf1e2d60fa7924adbb062c6f3a4cb25c31f284ee94f89ec191671e77c96ea777"
-    },
-    {
-      "bytes": 3840,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.03-filza-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "47e5e30112dc7d5b44025a1ec1be63b71fb1424b4f3f716fde7899ec593a7141"
-    },
-    {
-      "bytes": 2442,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.04-respring-still-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "ef376253042b21cd2483fec2bc070df9816bb73610de9fa0b50f12e33206fda9"
-    },
-    {
-      "bytes": 8350,
-      "catalog": "snowboard",
-      "frames": 10,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.05-respring-animated-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "cd558ff88860adbc9447f2bb4058c9c8b9240b9bb96123ceb6f3f4c5a938320f"
-    },
-    {
-      "bytes": 4205,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.06-unc0ver-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "e185b544022805389878c58ad33e4d66708cc731e16c63738180bf3e730a1082"
-    },
-    {
-      "bytes": 3232,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.07-unc0ver-dark-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "7111ab0cd113646474693ce80d059a88335a290f98f9ce96e060963d59d42084"
-    },
-    {
-      "bytes": 3477,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.08-nepeta-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "13d1716c54e13b9bfa7385b5e117a21eece9d2653e98a19b04eb45826fa3fe1d"
-    },
-    {
-      "bytes": 2135,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.09-nepeta-s-tree-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "2f627a9816ca7846b200c4a04c464488727f7cb33a9123fb212e2072442698c8"
-    },
-    {
-      "bytes": 1838,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.10-electra-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "4ace7b7dec95ea3f3c0d2c97af77898aaf5046510c97fa82fc0c57a61a3423f1"
-    },
-    {
-      "bytes": 4604,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.11-snowboard-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "b506fd7327877f7436e0ebca2ae2bbdc9ccbdf2e93bfa86c65d8ec3b9349b617"
-    },
-    {
-      "bytes": 3002,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.12-delta-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "e930666e2aec23175b7bc1ad87011f3b847bc53dbb2a6ecb5493620809c751f9"
-    },
-    {
-      "bytes": 4281,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.13-crash-reporter-face-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "3b112f5cc583e76a2bc9b4a1520318c58b9fd698d9cf329f988883c121d003b8"
-    },
-    {
-      "bytes": 2730,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.14-crash-reporter-warning-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "b8987ca27b10231fc8c16fc6fb27c7c99822b356f15d74db6f4e9830feb9e727"
-    },
-    {
-      "bytes": 2489,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.15-reprovision-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "319d8827d01b988e82c1ca3f808f0440e140f9d0414ed7a1ad344da723aa1215"
-    },
-    {
-      "bytes": 2753,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.16-tweakbox-original-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "e34030945b6c3c1513725f43d24b47b2c153a3a6f4b1e320766b6d31f1933960"
-    },
-    {
-      "bytes": 3482,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.17-tweakbox-blue-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "8edf40a434ac1f3ff13365a217131a174da51db407335468aa969b66495ae596"
-    },
-    {
-      "bytes": 2974,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.18-tweakbox-red-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "22ee5a49338a4e8354367b8a495c7a660a92e3198986187732f6c4ca65ed2881"
-    },
-    {
-      "bytes": 2901,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.19-packix-pack-1",
-      "package": "com.bluspark.pixeliosrespringpack1",
-      "sha256": "4b6dfd2ff0690fe7c122915c90c90a4518e200d493da8a7dfd02fd34ed3bb31a"
-    },
-    {
-      "bytes": 10286,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.7up",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "40d490da6726115b24517ab421ed12da743316514fc878876befa17eca370b17"
-    },
-    {
-      "bytes": 5652,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.adidas",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "09d1d021d54fb855fda91eb6c5bdcc04671fe573d931855b2036e54ee03482da"
-    },
-    {
-      "bytes": 13536,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.ajax",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "a956af6b2ca20951fe948dae97e9ba90b5f21fc391bc1410ce7a2d89101aebb5"
-    },
-    {
-      "bytes": 4205,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.albania-flag",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "5c15b88c2da777744f95c7e93c52749a545ddb0cc182d4ae67fdf3e23c9ac9d5"
-    },
-    {
-      "bytes": 22256,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.alfa-romeo",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "5e71cecf620901c8e44fec1b624d1222096b5addba71410a467e2325fb9805b5"
-    },
-    {
-      "bytes": 7406,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.alice-in-wonderland",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "72be3bf2f94a6cd393cf2faf1fc51562ef32636834e8a8d80cc1fb94a4e52f97"
-    },
-    {
-      "bytes": 5354,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.amazon",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "91c3b1609db259fef99a1060f57056b116153f5f363775b566b13bde04d2994d"
-    },
-    {
-      "bytes": 7983,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.apex-legends",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "46b1c9531e0387dcd419b5c7b9ae7cd320ac392d1e8cf4cf52eae156e68294c0"
-    },
-    {
-      "bytes": 10219,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.atletico-madrid",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "79e3af2ffaed6819b6f6af9c6842e2cbaa70c4d9394a7a61e555e33824c56a41"
-    },
-    {
-      "bytes": 3386,
-      "catalog": "snowboard",
-      "frames": 5,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.audi",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "adff67008c265a7775d874b4dcd62ea3ecad2ea4f17e1fb719c135f6fc08d880"
-    },
-    {
-      "bytes": 12291,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.barcelona",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "1cc62cf2cd0e77a96a166de62c18c3f22265c118ae19528397a63e6919d32514"
-    },
-    {
-      "bytes": 20725,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.benfica",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "23cab782acd29228480f02cab7360a4aca5d09855b1cae3ed1a97b10a90e9da5"
-    },
-    {
-      "bytes": 5558,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.bently",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "d8c65ab8280451dcb3f07fb828090a72cc32ac57bbbf70905eb586ff14f28340"
-    },
-    {
-      "bytes": 4528,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.bih-flag",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "95af8a8319586ce169e5ee1cb90a12f690e3c9903b99bbbf3bff00b09850fbbe"
-    },
-    {
-      "bytes": 7311,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.bmw",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "316e5a5f7ae933c18487454bf36e0620ea42996f22fbd29399d296548573877f"
-    },
-    {
-      "bytes": 6160,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.borussia-mo-nchengladbach",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "15d887c95be8ca8311ba17cbb873c487fa0324b668d5f7e8e2ea0515beb7d321"
-    },
-    {
-      "bytes": 10089,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.bugatti",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "50881678cb69259e77d3d9080a0a41167ba6b987baa3d7b4837d0b329a23b16f"
-    },
-    {
-      "bytes": 2238,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.bulgaria-flag",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "e7fa36c08b42a2e155325c47bae8240276a750a2a11c0b131ddb79d1e0985254"
-    },
-    {
-      "bytes": 7607,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.c",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "2c9d91f8b8ee4b8107bfd29cdb3d09264133e944d0998d283828b66dc222c1c7"
-    },
-    {
-      "bytes": 7066,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.c-2",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "1a3e5a2ec6f06f0b45f42bf480ab2021c0befda5ddab70fffede06685efb7622"
-    },
-    {
-      "bytes": 7102,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.c-3",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "27201da1b3436b451b2f8d7b5830ec44217e0de7f4e015abf5071c8b2398778c"
-    },
-    {
-      "bytes": 5441,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.checkra1n",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "b324260098aaba4c097ecae940093360d9004730d1e08e9a1943c6345437f5c9"
-    },
-    {
-      "bytes": 4743,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.coca-cola",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "6e61f49bf6f5f89097f3e9290bc94d18b50f6d06f2127be2eebfdcdbd0363d48"
-    },
-    {
-      "bytes": 5667,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.cod-4",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "01ff35004d2c9da938c2fb66b09c2d9e4c6ade8547595031526dea034351136a"
-    },
-    {
-      "bytes": 4783,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.croatia-flag",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "b0c10bb4a1ebd5fefd050e606027faaa26447085c018dba578644eda949bff9c"
-    },
-    {
-      "bytes": 7127,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.css",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "22b005bf870dd0fb0a81722f630656ccd1f8bec8d9d857b8d2137fdc0c91f471"
-    },
-    {
-      "bytes": 2524,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.england-flag",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "8b50c3cce7a354087b3bf2351fefd460baf7f0ed2caea5af93bc7ecaea5519af"
-    },
-    {
-      "bytes": 3507,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.facebook",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "ee67a3ceedde034822398868645dd6a514f49c17f77f63b9f6abd78639dffda6"
-    },
-    {
-      "bytes": 10308,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.fanta",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "a236a253db84e2461e230ba88336b3f5e40216c396c167966a18b21784fcb943"
-    },
-    {
-      "bytes": 8686,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.ferrari",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "e02eef07e9c380b349e21d1f279c12c5783e349b67f600a8846336431f4d48e2"
-    },
-    {
-      "bytes": 7232,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.ford",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "8a17bc234efdd271ac68a66b497a20679cc7fe1e23976acd0da45fb68fc44273"
-    },
-    {
-      "bytes": 4564,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.fortnite",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "1ed024718e314807a1190fe79e5b4520c02af4db1d352e33769f99877c83600f"
-    },
-    {
-      "bytes": 12610,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.fsk",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "f0a4d1efd911ed9be0bd9fbbe710a0351efe7a9d66cd7d544c560e5af79db52f"
-    },
-    {
-      "bytes": 1860,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.germany-flag",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "29681e1fdf4da6367792195cb7834685b981d16cab0298be21e76e62ce5770fc"
-    },
-    {
-      "bytes": 5216,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.google",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "4c4c4822ff37781f536f4750843742dc3e64d7562ba1594a3b7723d69e66e485"
-    },
-    {
-      "bytes": 3213,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.greece-flag",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "d4cc3127ecaec04c7e3fca0baf2be8c64dcace1d1ce0917d069a66a84a084ee3"
-    },
-    {
-      "bytes": 2738,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.heart-symbol",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "37b899f4ae8d24ad7e900053e69910a04f20ab7cd0c764dc8b5d012ad9e0f121"
-    },
-    {
-      "bytes": 3849,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.heineken",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "d5dcd1f52f5297f4d7ea1ab64d13d79d227215cdccbccfbc599e14927dc97e59"
-    },
-    {
-      "bytes": 2509,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.honda",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "604edac42aa3608efcc865cf00d9d97d53a4e8a79797e4dac84171eb9b3672ba"
-    },
-    {
-      "bytes": 7599,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.html",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "fa4698c6c7f69da7a52e91cc4a0b5e88a2507bdd184dfab89a63b4ad87da2d90"
-    },
-    {
-      "bytes": 4510,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.instagram",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "78a28a21301201b4bf5a55313efec48b4dc9688e9836490f81f00319baad2db6"
-    },
-    {
-      "bytes": 4072,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "38c50d2abe904dcb7842ed5fcc0f4ea5e1ed112d00271ff6b8c40a411e8f63f9"
-    },
-    {
-      "bytes": 3741,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-11",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "e443b7485debbb77b445405b82a2edde086c98d6ab986ef338140930de92d608"
-    },
-    {
-      "bytes": 3489,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-11-pro",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "97d8d215e4f2c043f400fa9b7f2f7c12ff6afb175b0d162e706022271d10b5ae"
-    },
-    {
-      "bytes": 4046,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-3g",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "bbe693d3cbac24bc2bbde737f5bca9b08dc573e756d5a54b2ffc7ad685afea67"
-    },
-    {
-      "bytes": 3881,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-3gs",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "31a2a975b2beea2c003a92fc7a6e4f407bec9e2f221af3d4dc999344cf321867"
-    },
-    {
-      "bytes": 3781,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-4",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "be599c3b6f8a699f3df5b3c8747f23b37f89a1b3e0e26573bfad6332c816041f"
-    },
-    {
-      "bytes": 4242,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-4s",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "b155ef6fad6d13fc04b36eae7a46511fe0ed90c2e21e234e489ddd046bb40638"
-    },
-    {
-      "bytes": 4040,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-5",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "bc36aaec9e7746ed19db95972b0b5e4e26370ca9deb1b5a8ab595cce69acd8cb"
-    },
-    {
-      "bytes": 3833,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-5c",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "9de5aa7e17589403ece2b11e7edd0c2b2dc01fed4a15a0df1bf05f203c8a01cb"
-    },
-    {
-      "bytes": 3923,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-5s",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "2fb3d427c0afd68ca3b6fac36c91da3c1eec34946263e139aa17797b0f6cc1e9"
-    },
-    {
-      "bytes": 3917,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-6",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "282db63cb38fb81a818d4015f9ef21f46cfe7d6774621a23eb483f11a1c2d277"
-    },
-    {
-      "bytes": 3976,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-6s",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "ef7b1f1f29e6ccb136fd66769302e31812c52bf3d93e2a63d0c8e5d39fb8485c"
-    },
-    {
-      "bytes": 3813,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-7",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "a5366913f32ef4c231c152e4baf5a238aad1f489d32fac6b48a9100bebb0fef9"
-    },
-    {
-      "bytes": 3874,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-8",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "c5caf4ac82423c1a1a01fce0a97ccf37ce4c7844ad6eeb2d04336b2e57b163f7"
-    },
-    {
-      "bytes": 4141,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-se",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "6b18446724d22295f98859465c78e3def44d51d5dc08894b0ffeb30c07778a63"
-    },
-    {
-      "bytes": 3741,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-x",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "3e96d8cec4243363bb684bc2641c1614e336a640a659919ec2d6b80dba9b17fb"
-    },
-    {
-      "bytes": 3895,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-xr",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "ba9bca7a4ace68c6d82aee7e5e910af172b3794ed20338e2db37c2e151de378c"
-    },
-    {
-      "bytes": 3949,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-xs",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "cc08e79ed5948c801c9bd51e9b1024c51ce5b93de859db3ff0173d27db56ad3f"
-    },
-    {
-      "bytes": 6933,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.ipko",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "d4e6bd94cfae4b859d5a7d1a964da2d603b533b789117ed38e32a30f64697d7d"
-    },
-    {
-      "bytes": 3002,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.italy-flag",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "5cdbdeed4f0dfd3ac5f44d7f8e750c6496b87a97f191742adeb265c30325e4c7"
-    },
-    {
-      "bytes": 9618,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.jack-daniel-s",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "50a3df3a6f356ffd121fe374a11df0e105784d68cd2b340d450c2e2b47f4e7e4"
-    },
-    {
-      "bytes": 5978,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.java",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "839ccdf03e165e2b1299097cf505ab5c0e1e70c2a3796bd21d9f1e7db15638e1"
-    },
-    {
-      "bytes": 5535,
-      "catalog": "snowboard",
-      "frames": 2,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.klasa-hanifes-hd",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "56f9d83982b0d6e59803b5a48a8be83ec44d115aea5f61ef9008d51e9e6c0d31"
-    },
-    {
-      "bytes": 5038,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.kosovo-flag",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "5fc1ae44b42c1976bf084cf9a15d441c37098674f05b7a71c781678807bed9e1"
-    },
-    {
-      "bytes": 7467,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.kotlin",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "af4295b2d4fdacc9b757d03cfc1e1da9aec5915648a32eb6671b45fab667f6ff"
-    },
-    {
-      "bytes": 12621,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.land-rover",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "49ecad7c9425fb70a65ca9334a3d10386cff209e07a7ef0c011e9c49c5239c95"
-    },
-    {
-      "bytes": 20466,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.liverpool",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "d27a4a7fd15785c8ac8fb71de85867f2ca0ece652033a159e6a3bbcf6d719418"
-    },
-    {
-      "bytes": 10428,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.lotus",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "ee7f4f384e2508ee58c5208774b623be9ad6261c28a87993c2889dead6a633f5"
-    },
-    {
-      "bytes": 20942,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.manchester-city",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "fcad6d5674e9414146a554590bda6c4f8645e9412acdf9fae97246aed7377bcd"
-    },
-    {
-      "bytes": 17373,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.manchester-united",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "cb17dfb3a8408286534ff0a2bc4b5f70b86684f83f88353c5a2af1c979c72197"
-    },
-    {
-      "bytes": 4281,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.maserati",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "2a4d1e65717890d2670b42ca2bcf0402b168e8ce854c8a3afb64dc2b87e42f40"
-    },
-    {
-      "bytes": 3627,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.mercedes-benz",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "6b907fe2237c90fa8d50d1105f751934ab96bd56d04cb0229adbb2722e7f1837"
+      "paletteColors": 256,
+      "sha256": "58985f7d7d01a6a18baf52b300370ec831579e5f4ba4b1327eb603890b90fa3a"
     },
     {
       "bytes": 12433,
       "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.mickey-mouse",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "fdfc90bc0d505403d2cb31b21bed7655cd3425ace861172e528cef2f0e4398a6"
-    },
-    {
-      "bytes": 4008,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.microsoft",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "55c00eb39e30bc366963925ff3582b3d3586b184db822274325e26b7e7a9032b"
-    },
-    {
-      "bytes": 8833,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.milan",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "631e32ebb0f9a754a3f557b6c67705c046db1beff1463806d76d26657d55f61a"
-    },
-    {
-      "bytes": 5206,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.montenegro-flag",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "6f71d4b0d4123b732b0c664d81a6ffc8fbc36dfe0d99e75a5422c78babf981b8"
-    },
-    {
-      "bytes": 6884,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.nescafe",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "21971117b1595075c2af9b2b001b2343ba58fd53ddedd6483fe5e5391ee06b5c"
-    },
-    {
-      "bytes": 2364,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.nike",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "06d82a5530468c5c203af00395bcff51ec26504501f9f96fe671d95a5945520b"
-    },
-    {
-      "bytes": 5983,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.north-macedonia-flag",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "8b7187b0a75b157f1591b119b66c2dd8b239cce8342f70fc0dee487adb75d1a1"
-    },
-    {
-      "bytes": 5291,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.pepsi",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "9dd09b88b336a11b387867db813b3cd809f0c2c16ad628ec6b7b40bc48f537dc"
-    },
-    {
-      "bytes": 13588,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.portugal-soccer-team",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "8f2e5ce1a58b9517e54d404ee1e3ca646d20bf19e6134c48115b480c36831dcc"
-    },
-    {
-      "bytes": 7799,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.pubg",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "cd0bf32e6e135e5744bef59c18ec65205d0a670a1d12832a456ee492b0413256"
+      "frames": 4,
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.01-anemone-pack-1",
+      "maximumFrameColorError": 0.9877,
+      "meanAbsoluteColorError": 0.4552,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "a8483b3a6392589aa49aac41403f05eac3dacb54a66e1f168e159a63bfa79560"
     },
     {
       "bytes": 4434,
       "catalog": "snowboard",
       "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.puma",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "9965f9eaf2493a3344047a2e5db82a4f511dbba6bc1defe55efb588bc96c92ff"
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.02-blusparkdev-pack-1",
+      "maximumFrameColorError": 0.1368,
+      "meanAbsoluteColorError": 0.1305,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "9f2e1bb29554defc9e43215e3454feac522492959c13b47e4fb3e08eab56174a"
     },
     {
-      "bytes": 4537,
+      "bytes": 10831,
       "catalog": "snowboard",
       "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.python",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "a18caf81318f787546dad4007003b9c5654129eae051a1421a748867702260c9"
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.03-filza-pack-1",
+      "maximumFrameColorError": 0.2698,
+      "meanAbsoluteColorError": 0.2605,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "3692b7449c5e57f40a97d821e8385e0224452aff8c373eafd422329540e2f867"
     },
     {
-      "bytes": 15688,
+      "bytes": 8714,
       "catalog": "snowboard",
       "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.real-madrid",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "06ffc2a67514c6d51c7441029ec4489c826ca5ccb6006dde9c22666b60478e00"
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.04-respring-still-pack-1",
+      "maximumFrameColorError": 0.3437,
+      "meanAbsoluteColorError": 0.3384,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "7f3e808d9c98f9071265ac7963ce8a2dcc4ab6a292bed2820456784a34186b53"
     },
     {
-      "bytes": 12738,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.rolls-royce",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "6a045f672050b0e33a2945709b76b05570aef1ffff9c1ee7c8644f5c692b54b3"
-    },
-    {
-      "bytes": 3165,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.romania-flag",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "a93aa162d5577d8e3061d64acded8582869fef912cbe8ebf2c0f92c9e46d3e12"
-    },
-    {
-      "bytes": 11691,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.ruby",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "87fe2397db72e8fdd7a1bc2c7b60da17b7f773bfd256173766738584ef64b220"
-    },
-    {
-      "bytes": 3755,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.samsung",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "392737ab3daec5d01956af2d1f6630e037b3cb757f8ac2605ae0fe92997baf7d"
-    },
-    {
-      "bytes": 7763,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.serbia-flag",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "01a6b6bbc21f9896b34d08e77b72569d2a56e8675f3631121dc32137232c9adf"
-    },
-    {
-      "bytes": 3487,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.slovenia-flag",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "17108316728156013609ca8545b108db05e163d4ee0d908deade267ba05c4197"
-    },
-    {
-      "bytes": 6204,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.snapchat",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "62b3d3f94d909a97b1bcdcfed60a9b182910e2954feb952bc478e7a6e146ac16"
-    },
-    {
-      "bytes": 6569,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.snoopy",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "38694b64f294fa64067e29e5d55bc83246a254dd24c379e0ad29bb39a6db8222"
-    },
-    {
-      "bytes": 8548,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.supermarketi-besa",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "1578bc64954e4d650f7fcaea37188dda834fd2940d20c747a26cbdb5914e8c9d"
-    },
-    {
-      "bytes": 3206,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.suzuki",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "1d82b1924884a439ce13188421958f0db1f2528e7595a89b8a88d7256eaa1ef3"
-    },
-    {
-      "bytes": 4093,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.tesla",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "8f7eb8838b734428df52cfdf01ee8b0fb0a2fd3919375af1f2526517c28f3469"
-    },
-    {
-      "bytes": 4582,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.toyota",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "cea98a4b2778e9203d4de6a006d5640781385ddca31894e9a339d9d2d6dc29aa"
-    },
-    {
-      "bytes": 9331,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.trabzonspor",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "e18076316afc430cdce4c1eea8bf7e5a124d83e2430aaa9018a7bbaa0dbd16ce"
-    },
-    {
-      "bytes": 3190,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.turkey-flag",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "2266abfed037b172f05754a77a31e625e403f2f59047f23a059f555aa6d17a5b"
-    },
-    {
-      "bytes": 11421,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.uc-k",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "56391e3b617c8bcf411475924fcd7db3f7bc06d1e024b9d086d681cd5ea92a7c"
-    },
-    {
-      "bytes": 5784,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.usa-flag",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "9a3688e301ee115c2e11d9c2e5a4fc2dbb88ef002d3e04bab7d33360b28285bf"
-    },
-    {
-      "bytes": 6421,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.vala",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "c1cd66425f220baa8f25ae1c72c0357773ef785595c7247f64584dff773f0b97"
-    },
-    {
-      "bytes": 4658,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.vete-vendosje",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "02b1e131849359302c679514fb87e1331948ecee0208b8a978d922caeea4e36e"
-    },
-    {
-      "bytes": 5527,
-      "catalog": "snowboard",
-      "frames": 3,
-      "identifier": "snowboard.com-rkycyku-allin1-respring.volkswagen",
-      "package": "com.rkycyku.allin1.respring",
-      "sha256": "d790350c5c6cd29798360c1b9f12d3964eb2fdaa9a36d2006f39d581e1746e32"
-    },
-    {
-      "bytes": 7938,
-      "catalog": "snowboard",
-      "frames": 7,
-      "identifier": "snowboard.com-shadows-respringmix.apple-1977",
-      "package": "com.shadows.respringmix",
-      "sha256": "8aef557a950b33e28bb82f45ce2afce61a3ae308e8eddeec24f1c2d9ce8299e0"
-    },
-    {
-      "bytes": 11660,
-      "catalog": "snowboard",
-      "frames": 8,
-      "identifier": "snowboard.com-shadows-respringmix.apple-classic",
-      "package": "com.shadows.respringmix",
-      "sha256": "222eb8eccb0117a7949e4b2cfc6292d5dd99ecb660a1b176ec97290a6d5b839f"
-    },
-    {
-      "bytes": 12461,
-      "catalog": "snowboard",
-      "frames": 8,
-      "identifier": "snowboard.com-shadows-respringmix.apple-moon",
-      "package": "com.shadows.respringmix",
-      "sha256": "080e3601cf335107e2cba9170b6bec47b71139db3799c60f357cf849495de021"
-    },
-    {
-      "bytes": 13718,
-      "catalog": "snowboard",
-      "frames": 8,
-      "identifier": "snowboard.com-shadows-respringmix.apple-new-1977",
-      "package": "com.shadows.respringmix",
-      "sha256": "9239f52a555045bd721c6c5e1db95cbd93c5d499f8764d56609201112f2768a3"
-    },
-    {
-      "bytes": 17216,
+      "bytes": 26745,
       "catalog": "snowboard",
       "frames": 10,
-      "identifier": "snowboard.com-shadows-respringmix.charmander",
-      "package": "com.shadows.respringmix",
-      "sha256": "15859167d9b5a0d5e204b7a9d581a37e2a2706a56979e087f3483df0a91a3371"
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.05-respring-animated-pack-1",
+      "maximumFrameColorError": 0.2564,
+      "meanAbsoluteColorError": 0.2479,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "d28a76c10944871b51794339cf2d3b73b175ac974ea9ab9b744793b96d2cb864"
     },
     {
-      "bytes": 14422,
+      "bytes": 10486,
       "catalog": "snowboard",
-      "frames": 10,
-      "identifier": "snowboard.com-shadows-respringmix.circles",
-      "package": "com.shadows.respringmix",
-      "sha256": "e75a67ab26e412cee5a8215b2152a64dd0cc3100c61297bfc7f39b10154546e6"
+      "frames": 3,
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.06-unc0ver-pack-1",
+      "maximumFrameColorError": 0.6573,
+      "meanAbsoluteColorError": 0.5205,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "f2ee9de759a291e3fa28180d9ba7a3d848459356759fcd9d99d3643d823bc751"
     },
     {
-      "bytes": 18816,
+      "bytes": 9613,
       "catalog": "snowboard",
-      "frames": 10,
-      "identifier": "snowboard.com-shadows-respringmix.eevee-evolves",
-      "package": "com.shadows.respringmix",
-      "sha256": "aa804168dddb3bd480d99ff213070fbbd22eaafc12b511938ebefff07bc65970"
+      "frames": 3,
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.07-unc0ver-dark-pack-1",
+      "maximumFrameColorError": 0.2581,
+      "meanAbsoluteColorError": 0.254,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "4ce11dcca9e66b57a63ef3bca0432230d90eb9e05752c0580c0f1e21603ada8a"
     },
     {
-      "bytes": 11832,
+      "bytes": 8998,
       "catalog": "snowboard",
-      "frames": 9,
-      "identifier": "snowboard.com-shadows-respringmix.pikachu",
-      "package": "com.shadows.respringmix",
-      "sha256": "e90b0b43796a7e947e918c5c8fae936175c29433cd11995ba012d2e5d6c83831"
+      "frames": 3,
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.08-nepeta-pack-1",
+      "maximumFrameColorError": 0.1918,
+      "meanAbsoluteColorError": 0.1871,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "c536d74078ee4cdbaffd5cfa1f32c76a267cab03bc18be94d968645d7ffc10ea"
     },
     {
-      "bytes": 12706,
+      "bytes": 5681,
       "catalog": "snowboard",
-      "frames": 10,
-      "identifier": "snowboard.com-shadows-respringmix.pikachu-run",
-      "package": "com.shadows.respringmix",
-      "sha256": "d36a613d3018b5fa1f688385a59ea302304314423c4eeaa73706c2e5128e9aaf"
+      "frames": 3,
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.09-nepeta-s-tree-pack-1",
+      "maximumFrameColorError": 0.0918,
+      "meanAbsoluteColorError": 0.0912,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "db834e2a97613c2ecc657a72d4ed385c086b628337884f83a35ec7b0e05d5663"
     },
     {
-      "bytes": 13402,
+      "bytes": 4841,
       "catalog": "snowboard",
-      "frames": 10,
-      "identifier": "snowboard.com-shadows-respringmix.reload",
-      "package": "com.shadows.respringmix",
-      "sha256": "8987c6bb16a653e86ecf4ce09f0a89eb70136d0cd7444276dfff399872f7d70b"
+      "frames": 3,
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.10-electra-pack-1",
+      "maximumFrameColorError": 0.0536,
+      "meanAbsoluteColorError": 0.0518,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "b82553864e3025d0dd7383db8a299c322fae5789d366eea57fc895412eb2a5fc"
     },
     {
-      "bytes": 6244,
+      "bytes": 10600,
       "catalog": "snowboard",
-      "frames": 4,
-      "identifier": "snowboard.com-shadows-respringmix.shojo",
-      "package": "com.shadows.respringmix",
-      "sha256": "04231db6c06c642638a2186e8603f861884e685df997e84a07055032404369be"
+      "frames": 3,
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.11-snowboard-pack-1",
+      "maximumFrameColorError": 0.1493,
+      "meanAbsoluteColorError": 0.1464,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "a9a57496b3e6dc0fa7b2f2637b7baf073d3eea61a721f6629beacd35acf2c63d"
     },
     {
-      "bytes": 11806,
+      "bytes": 7553,
       "catalog": "snowboard",
-      "frames": 8,
-      "identifier": "snowboard.com-shadows-respringmix.the-rolling-stones",
-      "package": "com.shadows.respringmix",
-      "sha256": "0badb531fa568872188982f5d80cbf031b08af0700a2940bcf96622dcb52ed27"
+      "frames": 3,
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.12-delta-pack-1",
+      "maximumFrameColorError": 0.0819,
+      "meanAbsoluteColorError": 0.0799,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "3594bf7507a16d88ea56bfb3c340390fc32d2f2a7776ba86b97f4ed09f1bb05b"
     },
     {
-      "bytes": 10056,
+      "bytes": 9319,
       "catalog": "snowboard",
-      "frames": 8,
-      "identifier": "snowboard.com-shadows-respringmix.totoro",
-      "package": "com.shadows.respringmix",
-      "sha256": "b75444ccc0182c4b9c5ca6b1fe0b57680b7f69c5a9067b47d384099a56d3cecb"
+      "frames": 3,
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.13-crash-reporter-face-pack-1",
+      "maximumFrameColorError": 0.2931,
+      "meanAbsoluteColorError": 0.2893,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "26c380d49a6aa457c50e48211d4f0f6b02f7b45cf55093267c5914747610ac9f"
     },
     {
-      "bytes": 14476,
+      "bytes": 6890,
       "catalog": "snowboard",
-      "frames": 10,
-      "identifier": "snowboard.com-shadows-respringmix.waiting",
-      "package": "com.shadows.respringmix",
-      "sha256": "ff00a398d50b8d7b393ecb22e959e6191cbbb6dcbc208117a7ce9a4b2119d5a7"
+      "frames": 3,
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.14-crash-reporter-warning-pack-1",
+      "maximumFrameColorError": 0.1615,
+      "meanAbsoluteColorError": 0.1594,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "f85e9dc97b7cf1952a1000ca41b9fdb52b3408cf7b65089eccf088340e3044e1"
     },
     {
-      "bytes": 23618,
+      "bytes": 6622,
       "catalog": "snowboard",
-      "frames": 10,
-      "identifier": "snowboard.com-shadows-respringmix.world",
-      "package": "com.shadows.respringmix",
-      "sha256": "829ec662cb7a477da0706879164525e022280ecf810f47a3f92ca9fdbc0bf972"
+      "frames": 3,
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.15-reprovision-pack-1",
+      "maximumFrameColorError": 0.12,
+      "meanAbsoluteColorError": 0.118,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "22d95e064129ea06a612739eafdcbc2c58425f4c0cda67664e8bea79f0223075"
+    },
+    {
+      "bytes": 6675,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.16-tweakbox-original-pack-1",
+      "maximumFrameColorError": 0.3181,
+      "meanAbsoluteColorError": 0.3136,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "45f3847fe46063dc9c0c00ae9881c47f1185b9a32b879057b7ef990958b1886b"
+    },
+    {
+      "bytes": 8020,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.17-tweakbox-blue-pack-1",
+      "maximumFrameColorError": 0.1566,
+      "meanAbsoluteColorError": 0.1545,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "b6426416eec53ce542a1260444c8f572cdf617f1089ed4778efd65229fffd367"
+    },
+    {
+      "bytes": 7615,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.18-tweakbox-red-pack-1",
+      "maximumFrameColorError": 0.1885,
+      "meanAbsoluteColorError": 0.1861,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "56c4820c355bc832bc3ed80d5bebd5c6fbda2a0584eadf5957476f4b0bb8fd6f"
+    },
+    {
+      "bytes": 7240,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-bluspark-pixeliosrespringpack1.19-packix-pack-1",
+      "maximumFrameColorError": 0.0955,
+      "meanAbsoluteColorError": 0.0916,
+      "package": "com.bluspark.pixeliosrespringpack1",
+      "paletteColors": 256,
+      "sha256": "32da1cbcf12c02c7de7bb955f391dde448a615ec2382a858edaae559bd31e456"
+    },
+    {
+      "bytes": 18529,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.7up",
+      "maximumFrameColorError": 1.0264,
+      "meanAbsoluteColorError": 1.016,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "9950bdb30fcf45c42f393c3a16e6d46253fa5d904978b059acf42ae43a5da629"
+    },
+    {
+      "bytes": 10049,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.adidas",
+      "maximumFrameColorError": 0.6289,
+      "meanAbsoluteColorError": 0.6231,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "27b521953c90961b03fe269a9a945a46fcc0affbb25dd80c4cd339f4e8efbf0f"
+    },
+    {
+      "bytes": 21740,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.ajax",
+      "maximumFrameColorError": 1.428,
+      "meanAbsoluteColorError": 1.4228,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "268543b0821db1292674014e0e8b17da0fd8c9918620c11082767e4cbf929d33"
+    },
+    {
+      "bytes": 8759,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.albania-flag",
+      "maximumFrameColorError": 0.5446,
+      "meanAbsoluteColorError": 0.5438,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "f34dd3525a2536f9e9a346eae5e8edb877453c52aa988229effcb8e10efaf4ec"
+    },
+    {
+      "bytes": 46312,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.alfa-romeo",
+      "maximumFrameColorError": 1.7252,
+      "meanAbsoluteColorError": 1.6988,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "2bb296e77c6a730690089dea905b03ea4a93f35ad531b8fd67f047d02e3b43f8"
+    },
+    {
+      "bytes": 13309,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.alice-in-wonderland",
+      "maximumFrameColorError": 0.3124,
+      "meanAbsoluteColorError": 0.3096,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "4f75984e27305b4c6be592f6a05ed0146a55606846ca32e11c4e3fa883450ac7"
+    },
+    {
+      "bytes": 9521,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.amazon",
+      "maximumFrameColorError": 0.2599,
+      "meanAbsoluteColorError": 0.2542,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "5cfb2ee9064b57a894457383521a9a8188d998f9783ad06b219f4b14c509372c"
+    },
+    {
+      "bytes": 13998,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.apex-legends",
+      "maximumFrameColorError": 0.6313,
+      "meanAbsoluteColorError": 0.6224,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "2bdc1468545f6cc77ffd47516c48c99fcdb98caec020bb69dbb9e77111ca2d0e"
+    },
+    {
+      "bytes": 19123,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.atletico-madrid",
+      "maximumFrameColorError": 0.8595,
+      "meanAbsoluteColorError": 0.85,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "5fb71a4fd7a9e0c2d081229e9e471908c218bf4d84f882c52abfd7f8e2815cb9"
+    },
+    {
+      "bytes": 3775,
+      "catalog": "snowboard",
+      "frames": 5,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.audi",
+      "maximumFrameColorError": 0.0014,
+      "meanAbsoluteColorError": 0.0003,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "7694090f44d46e504a703606da51b87dc7a18be3434b432ee641da4645114851"
+    },
+    {
+      "bytes": 24198,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.barcelona",
+      "maximumFrameColorError": 1.0554,
+      "meanAbsoluteColorError": 1.0532,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "6a66a3fff168ff55ef16e93ce9f1e3a2ef0ff77964fd5c60c6e2f5aa98a4e829"
+    },
+    {
+      "bytes": 34710,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.benfica",
+      "maximumFrameColorError": 1.5088,
+      "meanAbsoluteColorError": 1.4505,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "9866e0e9f44e7753c55edda3c259476c601d878a57bc7dbc3289c22d62e33f0d"
     },
     {
       "bytes": 10775,
       "catalog": "snowboard",
-      "frames": 9,
-      "identifier": "snowboard.com-thwlfu-cakrespring.checkra1n",
-      "package": "com.thwlfu.cakrespring",
-      "sha256": "b43a18c0045d4613aacd288ec39ee8e913f5f615131e4ed86874ffc1843e8a8b"
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.bently",
+      "maximumFrameColorError": 0.2014,
+      "meanAbsoluteColorError": 0.1978,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "ca359c85e191645c6a4dfbf8dbbea5407aee793f07c80e623743a349b62fed67"
     },
     {
-      "bytes": 6275,
+      "bytes": 11225,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.bih-flag",
+      "maximumFrameColorError": 0.3842,
+      "meanAbsoluteColorError": 0.3794,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "fdae629c3f58589a92eb4600fe423cc6789dd88bd6bf2f71be223beb3692bd2e"
+    },
+    {
+      "bytes": 15116,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.bmw",
+      "maximumFrameColorError": 0.3432,
+      "meanAbsoluteColorError": 0.3399,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "d62064b704eaa6449eb4c8382734867cc4e9960cab631c9740548aff223be603"
+    },
+    {
+      "bytes": 11665,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.borussia-mo-nchengladbach",
+      "maximumFrameColorError": 0.3283,
+      "meanAbsoluteColorError": 0.3263,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "0b2f55f2e3e345e8987c031a0f7d529373442163dbb56115478972ef07c5a6fb"
+    },
+    {
+      "bytes": 19360,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.bugatti",
+      "maximumFrameColorError": 0.6113,
+      "meanAbsoluteColorError": 0.586,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "5bbafb722545d522c098020510a4c68e49cdad096e035b8c2b72d2c6b9047837"
+    },
+    {
+      "bytes": 2714,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.bulgaria-flag",
+      "maximumFrameColorError": 0.4736,
+      "meanAbsoluteColorError": 0.4709,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "3bef1b2ca67d80e8033855106fc748b812dc02dc37fb223fc3ae92cf5454e6dd"
+    },
+    {
+      "bytes": 19693,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.c",
+      "maximumFrameColorError": 1.0092,
+      "meanAbsoluteColorError": 0.9771,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "93195985441526957a758c1c998f87a55519e843f196a6ca1c97ef6f5b35e476"
+    },
+    {
+      "bytes": 14334,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.c-2",
+      "maximumFrameColorError": 0.8707,
+      "meanAbsoluteColorError": 0.8611,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "e8e3c324be6843a6400d52587e70d2fce4c4b5bcdbe14da5c5d77f0741678cb6"
+    },
+    {
+      "bytes": 15095,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.c-3",
+      "maximumFrameColorError": 0.2278,
+      "meanAbsoluteColorError": 0.2236,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "e13b8c0283d2fd42223c45700559d3e2f991a5367d2105f5ab9b5203022f1d65"
+    },
+    {
+      "bytes": 10381,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.checkra1n",
+      "maximumFrameColorError": 0.6853,
+      "meanAbsoluteColorError": 0.6721,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "2f59a58ebd82dda530864470c577708c9237d0e24eb27c37bb794f03be05c152"
+    },
+    {
+      "bytes": 11894,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.coca-cola",
+      "maximumFrameColorError": 0.1,
+      "meanAbsoluteColorError": 0.099,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "67f9b0c98993bfe57b419cbb8298566f1a9e09afdf5febd3f780472b2b6eb753"
+    },
+    {
+      "bytes": 10487,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.cod-4",
+      "maximumFrameColorError": 0.3079,
+      "meanAbsoluteColorError": 0.3037,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "add9f2abb675f03a93fa0b9866b1a7416098ae495e46c13295913b69f77ea1df"
+    },
+    {
+      "bytes": 8336,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.croatia-flag",
+      "maximumFrameColorError": 0.5998,
+      "meanAbsoluteColorError": 0.5922,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "73f048f0d6bde2d65ed4069e07e01052187be1efacb7ff93e6957b6d0dce2eb8"
+    },
+    {
+      "bytes": 16514,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.css",
+      "maximumFrameColorError": 0.7346,
+      "meanAbsoluteColorError": 0.7103,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "2033d0386a272b1f658b11eacf3a1156b7c0fd3e51ae3ddea6a3a99cd08282e0"
+    },
+    {
+      "bytes": 4019,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.england-flag",
+      "maximumFrameColorError": 0.8587,
+      "meanAbsoluteColorError": 0.8469,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "eed33f9dbc4f04a631a9841707a14b26bf823aa9a8d76faabd755e73f5ce6742"
+    },
+    {
+      "bytes": 9026,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.facebook",
+      "maximumFrameColorError": 0.0923,
+      "meanAbsoluteColorError": 0.0907,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "0e1652c1c349797e7691291c4e2cee978c94586b4caab4289f8529409159798c"
+    },
+    {
+      "bytes": 19948,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.fanta",
+      "maximumFrameColorError": 0.8598,
+      "meanAbsoluteColorError": 0.8405,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "d75463a3842a4fc136753ff9a5f1a80bbe5e93e720910e0eb90d4749dd060897"
+    },
+    {
+      "bytes": 16752,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.ferrari",
+      "maximumFrameColorError": 0.7754,
+      "meanAbsoluteColorError": 0.7584,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "b5eb5ff3b93bd9e34df33795ca324ce39b8638130b07e251216191ec7f10aa68"
+    },
+    {
+      "bytes": 14493,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.ford",
+      "maximumFrameColorError": 0.3498,
+      "meanAbsoluteColorError": 0.3132,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "46516de56e90178af969dbf997b41be3a9448b8b8ee77bb0d4585daf9fd54650"
+    },
+    {
+      "bytes": 8241,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.fortnite",
+      "maximumFrameColorError": 0.4235,
+      "meanAbsoluteColorError": 0.4194,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "a39c737f11d7873219beebe95bf2a6f77e0b642892b43794300abe0a35b87aa7"
+    },
+    {
+      "bytes": 26767,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.fsk",
+      "maximumFrameColorError": 0.5377,
+      "meanAbsoluteColorError": 0.5299,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "4e677fd59912cff32a838bcb2c753a0f4f5667b6b3c8c1cde73c85934ab3bbd9"
+    },
+    {
+      "bytes": 2458,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.germany-flag",
+      "maximumFrameColorError": 0.0263,
+      "meanAbsoluteColorError": 0.0241,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "000205fcf68811d0c45b642da629ab23f19f6911a4dca8b1fb926fcb016eb933"
+    },
+    {
+      "bytes": 10736,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.google",
+      "maximumFrameColorError": 0.1605,
+      "meanAbsoluteColorError": 0.1551,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "b05aa999d5d38400b5b351d4508483f3642c2b75f4ff742e30dd3a21bb36f59e"
+    },
+    {
+      "bytes": 6956,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.greece-flag",
+      "maximumFrameColorError": 0.8539,
+      "meanAbsoluteColorError": 0.8369,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "aa129b51b15bf91a500dddd41b407f0fc756ca8d9960f16f2cbb39a11065d761"
+    },
+    {
+      "bytes": 6110,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.heart-symbol",
+      "maximumFrameColorError": 0.4469,
+      "meanAbsoluteColorError": 0.4463,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "43a2f722fc8276df40ae7d26d750f0f682ef6a7bf03aea534ebbdcaad41f7ac3"
+    },
+    {
+      "bytes": 8070,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.heineken",
+      "maximumFrameColorError": 0.0624,
+      "meanAbsoluteColorError": 0.0608,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "a97d7aacac415ba49a8f5198f924959ea2dbea4eb6677f7f085d22d0d7c09a5d"
+    },
+    {
+      "bytes": 7056,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.honda",
+      "maximumFrameColorError": 0.0352,
+      "meanAbsoluteColorError": 0.0345,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "0f44a20bc8a4a075f961eeef1d40326c3d23c481aa505c51aff981242489a5f4"
+    },
+    {
+      "bytes": 15681,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.html",
+      "maximumFrameColorError": 0.646,
+      "meanAbsoluteColorError": 0.6391,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "eb9427b6f55545d9f306c4bda4cf7d3cdb685a402702fcb554bfd55fdff866cc"
+    },
+    {
+      "bytes": 8566,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.instagram",
+      "maximumFrameColorError": 0.1913,
+      "meanAbsoluteColorError": 0.1894,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "3ce907d3d31b23f94fd058d4fbdd4a9976993472597852b600dc231a57c99d49"
+    },
+    {
+      "bytes": 7825,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone",
+      "maximumFrameColorError": 0.2137,
+      "meanAbsoluteColorError": 0.2086,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "e97ad008b7980f945a8e19b31190cfadabd5b88414e5a7468578b53ce7abe7a9"
+    },
+    {
+      "bytes": 7231,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-11",
+      "maximumFrameColorError": 0.1586,
+      "meanAbsoluteColorError": 0.1562,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "4099115a0eb190c71c17942a3393e3c5c73226aaeee7ff8af90024d01606ca57"
+    },
+    {
+      "bytes": 6975,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-11-pro",
+      "maximumFrameColorError": 0.1159,
+      "meanAbsoluteColorError": 0.1146,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "ed675f860b0a2965509c9137e3b0a2c6dfc15749f19e1580054273032f4aeaf2"
+    },
+    {
+      "bytes": 7844,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-3g",
+      "maximumFrameColorError": 0.1789,
+      "meanAbsoluteColorError": 0.1748,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "f4fe382fa85fd5c9d0e844f51c3c77418db1d5725e54b7a30cb39744792508e5"
+    },
+    {
+      "bytes": 7507,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-3gs",
+      "maximumFrameColorError": 0.1419,
+      "meanAbsoluteColorError": 0.1401,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "759af7f65ec69be762e6edd43a11f5ce32c992b84dd6638ba5ec7dfa5697027e"
+    },
+    {
+      "bytes": 7406,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-4",
+      "maximumFrameColorError": 0.1906,
+      "meanAbsoluteColorError": 0.188,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "5450f45850f68f29ba6d73dda8f7d09720d747e4ad16b2f71c3e670fa2d303b6"
+    },
+    {
+      "bytes": 8471,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-4s",
+      "maximumFrameColorError": 0.1551,
+      "meanAbsoluteColorError": 0.1524,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "a28b50e68d43cac17df97f6afa261aaf54c661b20f7b9e0f40e4bf2c61bfcb4d"
+    },
+    {
+      "bytes": 7831,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-5",
+      "maximumFrameColorError": 0.1505,
+      "meanAbsoluteColorError": 0.1432,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "812ecc0c14ee6d766dc30c4ca08cd58126850ffd8ee46145245c0529102b0d15"
+    },
+    {
+      "bytes": 7550,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-5c",
+      "maximumFrameColorError": 0.1108,
+      "meanAbsoluteColorError": 0.1067,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "850339c6100a83c42a6e5680ff494cfc241f5852fe701715d9d087e752dc99fa"
+    },
+    {
+      "bytes": 7541,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-5s",
+      "maximumFrameColorError": 0.1108,
+      "meanAbsoluteColorError": 0.1084,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "4156d59b8b6d0da38d6d28dff17e81ac83bea3cef5c46089da4ce5ab5d1ba01c"
+    },
+    {
+      "bytes": 7718,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-6",
+      "maximumFrameColorError": 0.1128,
+      "meanAbsoluteColorError": 0.1092,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "c744033c43d1ff68079075da9063ee056a52c9ec4c78a766629965d03260963c"
+    },
+    {
+      "bytes": 7556,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-6s",
+      "maximumFrameColorError": 0.1175,
+      "meanAbsoluteColorError": 0.1154,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "64856d0e25960d98f8f178099b79451cd99286c0bfd9f8cc907580481a92464c"
+    },
+    {
+      "bytes": 7456,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-7",
+      "maximumFrameColorError": 0.179,
+      "meanAbsoluteColorError": 0.1763,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "72a0a53eebfae391ccf963886b298157e29d5b94344404887c62e072d917febf"
+    },
+    {
+      "bytes": 7515,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-8",
+      "maximumFrameColorError": 0.1839,
+      "meanAbsoluteColorError": 0.1823,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "97420e482fa7b3df12cb36a0442d2c2434312aa5d6233bd3455b098f12b65f04"
+    },
+    {
+      "bytes": 7972,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-se",
+      "maximumFrameColorError": 0.1452,
+      "meanAbsoluteColorError": 0.1382,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "7e242f9cbc488999caf73e43d8b66d6741e086843016fa4c47a9ef2b8239ed29"
+    },
+    {
+      "bytes": 7355,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-x",
+      "maximumFrameColorError": 0.1744,
+      "meanAbsoluteColorError": 0.1729,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "cfe1056205ff0d64868270bcc09e3de1c9e573a4c722f422ddf183f545a164da"
+    },
+    {
+      "bytes": 7478,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-xr",
+      "maximumFrameColorError": 0.1523,
+      "meanAbsoluteColorError": 0.1496,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "f1c76f81d14aea3b3612701694d0b6dd4767bfb50082c33a82d82dbe2608c9aa"
+    },
+    {
+      "bytes": 7461,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.iphone-xs",
+      "maximumFrameColorError": 0.1522,
+      "meanAbsoluteColorError": 0.1469,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "2e572892a52f357521c22d06d59af3a722a900f7436498bba6fe23bbf48cc1e1"
+    },
+    {
+      "bytes": 19162,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.ipko",
+      "maximumFrameColorError": 0.8652,
+      "meanAbsoluteColorError": 0.854,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "0e090641d506f181b9d51dc7247850d8f8dc46deebc69eee019ee0f9f76b5456"
+    },
+    {
+      "bytes": 3289,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.italy-flag",
+      "maximumFrameColorError": 0.5769,
+      "meanAbsoluteColorError": 0.5671,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "404113578b199fa3a2aee3f10f86f5c0c5da043273dcd8e6338fd68da2b39e39"
+    },
+    {
+      "bytes": 17365,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.jack-daniel-s",
+      "maximumFrameColorError": 0.3415,
+      "meanAbsoluteColorError": 0.3379,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "ed48de54e3e3f05b874e0285b5ebeed34fdf066b02410481eb34af75210e8e24"
+    },
+    {
+      "bytes": 12458,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.java",
+      "maximumFrameColorError": 0.169,
+      "meanAbsoluteColorError": 0.1677,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "2e01523a6dedce778c62d628ece18d04134675d2be1234ac33c460c456cc648b"
+    },
+    {
+      "bytes": 10099,
+      "catalog": "snowboard",
+      "frames": 2,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.klasa-hanifes-hd",
+      "maximumFrameColorError": 0.3988,
+      "meanAbsoluteColorError": 0.3864,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "1ebd03dcd6b2b0fc088ffd4c0bc74204ab0f0bf603a6c89498f35f214b0fa247"
+    },
+    {
+      "bytes": 11352,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.kosovo-flag",
+      "maximumFrameColorError": 0.3688,
+      "meanAbsoluteColorError": 0.3553,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "f692e96771ab0224704c67bbc3510e6c043e54623f9a9b8b1e2b416ac4370852"
+    },
+    {
+      "bytes": 21098,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.kotlin",
+      "maximumFrameColorError": 0.8089,
+      "meanAbsoluteColorError": 0.792,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "1c7a7e0eba1e32d0ae3f8cecab5a7e218f3265d903a999eb3ffcaad618e8386e"
+    },
+    {
+      "bytes": 23466,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.land-rover",
+      "maximumFrameColorError": 0.8723,
+      "meanAbsoluteColorError": 0.814,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "5534d6c28b859194cdd184a47f6daf6c72f532249997d5925cbb621e50cc6e5e"
+    },
+    {
+      "bytes": 34080,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.liverpool",
+      "maximumFrameColorError": 1.3264,
+      "meanAbsoluteColorError": 1.2993,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "252ef8257f886a1e265adb7efe295286c05d5663f5a82f4d3a7d7c2978d3eefb"
+    },
+    {
+      "bytes": 21101,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.lotus",
+      "maximumFrameColorError": 0.9568,
+      "meanAbsoluteColorError": 0.9403,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "87d6097646d68594d00bcb46f47a5211f8c0c41fca7fcf177ad8cb3645a4f31f"
+    },
+    {
+      "bytes": 34592,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.manchester-city",
+      "maximumFrameColorError": 2.0069,
+      "meanAbsoluteColorError": 1.9641,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "330fb45c8add75c6d7139ee1f4c66eeb3edea44d22207510cdc81994b28d177e"
+    },
+    {
+      "bytes": 32425,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.manchester-united",
+      "maximumFrameColorError": 0.7531,
+      "meanAbsoluteColorError": 0.7439,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "932a44bec9499d27d2dd4b0f3e8491a82a480a7670496f9294164de4ea6dd2f7"
+    },
+    {
+      "bytes": 8120,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.maserati",
+      "maximumFrameColorError": 0.1225,
+      "meanAbsoluteColorError": 0.1219,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "39ece1597796140dc01a166825ecd1b0cc7bdcc589f3d3cf86646a4f89ca89b0"
+    },
+    {
+      "bytes": 7262,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.mercedes-benz",
+      "maximumFrameColorError": 0.0723,
+      "meanAbsoluteColorError": 0.0721,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "4666deb1f2245f8abf1f103b0dd81621949988de0509d702089258d2d6103619"
+    },
+    {
+      "bytes": 24965,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.mickey-mouse",
+      "maximumFrameColorError": 1.3771,
+      "meanAbsoluteColorError": 1.3548,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "d5fe4bbefb07ff380070103f6671e5b7155949ea6476312181b46da4aba5b46c"
+    },
+    {
+      "bytes": 7577,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.microsoft",
+      "maximumFrameColorError": 0.1035,
+      "meanAbsoluteColorError": 0.1027,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "32501d038e094d1b22fb7498d63770b3c2ae4dfc579fd26db138d55d19b50f4f"
+    },
+    {
+      "bytes": 17419,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.milan",
+      "maximumFrameColorError": 0.4898,
+      "meanAbsoluteColorError": 0.4856,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "4c9d5a4bdba603412278291f6be4c8f682bee53432da83a22b424f0df7c3c973"
+    },
+    {
+      "bytes": 10857,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.montenegro-flag",
+      "maximumFrameColorError": 0.327,
+      "meanAbsoluteColorError": 0.3214,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "a1659ffdaf81b1009c8bc7efd233b9e9e119bfeb6da27aecb870070865fc7d34"
+    },
+    {
+      "bytes": 11896,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.nescafe",
+      "maximumFrameColorError": 0.379,
+      "meanAbsoluteColorError": 0.3717,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "1c8c56dd421262f5b8cf09692dfe33d3d18a1413f2910a8d78dfa4b8891fbe77"
+    },
+    {
+      "bytes": 5265,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.nike",
+      "maximumFrameColorError": 0.2342,
+      "meanAbsoluteColorError": 0.2335,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "75b9ec1475c477b09d4b7ab40630f5c57e787cc39fcb4d105a7d46ef8db3571d"
+    },
+    {
+      "bytes": 14111,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.north-macedonia-flag",
+      "maximumFrameColorError": 0.282,
+      "meanAbsoluteColorError": 0.28,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "4c69eedf34c8833f6fde825ae14f3e6d956fa0eb60f3f846cf6c52705245f4ac"
+    },
+    {
+      "bytes": 10403,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.pepsi",
+      "maximumFrameColorError": 0.2366,
+      "meanAbsoluteColorError": 0.2299,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "f3e070f0ed83e77f8b02803cda973f6382e2b6928cfc5e91aa07779860c9c7bb"
+    },
+    {
+      "bytes": 24722,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.portugal-soccer-team",
+      "maximumFrameColorError": 0.658,
+      "meanAbsoluteColorError": 0.6561,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "9edc5f54096d628b70007648124a503e786fad5dc1545947b91c10417c3d76ab"
+    },
+    {
+      "bytes": 13249,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.pubg",
+      "maximumFrameColorError": 0.3314,
+      "meanAbsoluteColorError": 0.3293,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "7cbc5f956aed55c732c8c1b19fd51364604bdf5a9a912bbd43f444ad96e88437"
+    },
+    {
+      "bytes": 7972,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.puma",
+      "maximumFrameColorError": 0.4471,
+      "meanAbsoluteColorError": 0.4349,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "f034a479586f1faa2a57b79e64ddea5034b677d790f5c73db541276403f9fa16"
+    },
+    {
+      "bytes": 8678,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.python",
+      "maximumFrameColorError": 0.148,
+      "meanAbsoluteColorError": 0.1441,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "6f2ef624a87e50a9b292080323c52002463ddb922de8f7738efce2ec9eb2a783"
+    },
+    {
+      "bytes": 27190,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.real-madrid",
+      "maximumFrameColorError": 1.2721,
+      "meanAbsoluteColorError": 1.2464,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "c3a2027b091b6c5b803fec2b2895a778e2421bb706c11b8802c263e0f9d9abe1"
+    },
+    {
+      "bytes": 31770,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.rolls-royce",
+      "maximumFrameColorError": 0.4427,
+      "meanAbsoluteColorError": 0.438,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "f67946e99d46eb3eee6385c3c00541c086f1725252726ed51e5d370d31d4ed5c"
+    },
+    {
+      "bytes": 3367,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.romania-flag",
+      "maximumFrameColorError": 0.0205,
+      "meanAbsoluteColorError": 0.0125,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "bf2ac140f42b33c34c16dbf4bc271b995d51973f2470854b784373b0f7efd1e4"
+    },
+    {
+      "bytes": 32960,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.ruby",
+      "maximumFrameColorError": 1.5954,
+      "meanAbsoluteColorError": 1.5854,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "3d0e72d52e02827f77e67c31d6183b9b3f3b47ba5e1e237beb41b20e77d5ea5c"
+    },
+    {
+      "bytes": 8654,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.samsung",
+      "maximumFrameColorError": 0.0715,
+      "meanAbsoluteColorError": 0.0707,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "93be0607b7defd91e4a427c4591b579387f82ad28e86eefaa0115e6230815dc5"
+    },
+    {
+      "bytes": 14050,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.serbia-flag",
+      "maximumFrameColorError": 1.1655,
+      "meanAbsoluteColorError": 1.1354,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "c3915373e7244037ee0c01dde87b39759dd7d2d9abcb7ad2b6bc007f8250622d"
+    },
+    {
+      "bytes": 6500,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.slovenia-flag",
+      "maximumFrameColorError": 0.431,
+      "meanAbsoluteColorError": 0.4271,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "128e1276989c95c7f424fd301b6f008afd8a30d1a13a9a4c9d9ffbdea8398ea9"
+    },
+    {
+      "bytes": 11795,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.snapchat",
+      "maximumFrameColorError": 1.3076,
+      "meanAbsoluteColorError": 1.2155,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "0d2f48f4fb22290c5ec8a7db9995d3a45e50c9c33647274b6d3d9be3adda0659"
+    },
+    {
+      "bytes": 12785,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.snoopy",
+      "maximumFrameColorError": 0.4395,
+      "meanAbsoluteColorError": 0.4349,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "6ffa4a95750ddfe71192999c8829787d2f118e14ece1eb9c834395b8d23243ed"
+    },
+    {
+      "bytes": 16913,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.supermarketi-besa",
+      "maximumFrameColorError": 0.6009,
+      "meanAbsoluteColorError": 0.5913,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "a91fb46a076175022047ad54f360554b9a48b283c2efd0617adeb3c0416fa70a"
+    },
+    {
+      "bytes": 8049,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.suzuki",
+      "maximumFrameColorError": 0.0683,
+      "meanAbsoluteColorError": 0.0669,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "309bff0b03861d73156a8d91cba6378f8670b1f60a329b497aa88eeda889eb1d"
+    },
+    {
+      "bytes": 11195,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.tesla",
+      "maximumFrameColorError": 0.1433,
+      "meanAbsoluteColorError": 0.1415,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "84306dc058af2eda0907b14c892033f8359a9824750087f616a17686d640fd34"
+    },
+    {
+      "bytes": 8747,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.toyota",
+      "maximumFrameColorError": 0.0686,
+      "meanAbsoluteColorError": 0.067,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "63aaa62d31247d9ad85b64a504b781c57f275775b3ff5b0afbf3182f35a1876e"
+    },
+    {
+      "bytes": 18392,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.trabzonspor",
+      "maximumFrameColorError": 0.4599,
+      "meanAbsoluteColorError": 0.4481,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "7d25941ac589fc8040b5f5e1f326e0c8567de4de394827bac725e1fae1f6e719"
+    },
+    {
+      "bytes": 11762,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.turkey-flag",
+      "maximumFrameColorError": 0.714,
+      "meanAbsoluteColorError": 0.7137,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "831285937bb67443fbe961c74e998f9e22472b7733a13764ba788f909c3ebd17"
+    },
+    {
+      "bytes": 32560,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.uc-k",
+      "maximumFrameColorError": 0.5375,
+      "meanAbsoluteColorError": 0.5236,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "bdbfd2dc87ec0aee3f04dd132e6390e9551be96900c0a52c744ae7e650bcfa48"
+    },
+    {
+      "bytes": 11770,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.usa-flag",
+      "maximumFrameColorError": 0.6157,
+      "meanAbsoluteColorError": 0.5976,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "069d9bfb53336cc8a3d596b6890511f90670c773404f43ba74da12c5761e3c2d"
+    },
+    {
+      "bytes": 17161,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.vala",
+      "maximumFrameColorError": 0.3731,
+      "meanAbsoluteColorError": 0.3715,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "70f3e6de2c1d0a19fb10ff8c2b46738311222cc7ee17cd3da4400c6e4a9cf89f"
+    },
+    {
+      "bytes": 10316,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.vete-vendosje",
+      "maximumFrameColorError": 0.0934,
+      "meanAbsoluteColorError": 0.0912,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "c8d0c4fbabbba677e56b28a832cca42c8c8201d5469452ec1fb947ac7951bc2f"
+    },
+    {
+      "bytes": 14082,
+      "catalog": "snowboard",
+      "frames": 3,
+      "identifier": "snowboard.com-rkycyku-allin1-respring.volkswagen",
+      "maximumFrameColorError": 0.2105,
+      "meanAbsoluteColorError": 0.2088,
+      "package": "com.rkycyku.allin1.respring",
+      "paletteColors": 256,
+      "sha256": "bdb50df82662fddcc0d52309f3f099d754b45980ff0cdb6289ea6c05e0c1e6b4"
+    },
+    {
+      "bytes": 15963,
+      "catalog": "snowboard",
+      "frames": 7,
+      "identifier": "snowboard.com-shadows-respringmix.apple-1977",
+      "maximumFrameColorError": 0.1963,
+      "meanAbsoluteColorError": 0.1501,
+      "package": "com.shadows.respringmix",
+      "paletteColors": 256,
+      "sha256": "7ffeb84ea9f83fb924a8c65714fd72ebc560585d551e1e28f623406568c4c330"
+    },
+    {
+      "bytes": 21870,
+      "catalog": "snowboard",
+      "frames": 8,
+      "identifier": "snowboard.com-shadows-respringmix.apple-classic",
+      "maximumFrameColorError": 0.1372,
+      "meanAbsoluteColorError": 0.1172,
+      "package": "com.shadows.respringmix",
+      "paletteColors": 256,
+      "sha256": "14998f8da9f7a013cf080cc1fb2644731002f26d781de935d96fc41aa2154339"
+    },
+    {
+      "bytes": 30680,
+      "catalog": "snowboard",
+      "frames": 8,
+      "identifier": "snowboard.com-shadows-respringmix.apple-moon",
+      "maximumFrameColorError": 0.1925,
+      "meanAbsoluteColorError": 0.1344,
+      "package": "com.shadows.respringmix",
+      "paletteColors": 256,
+      "sha256": "e9a337fde880d28973c6c07d03f3e17bc39a0381f7d99e8798ff6c869a1421e8"
+    },
+    {
+      "bytes": 24492,
+      "catalog": "snowboard",
+      "frames": 8,
+      "identifier": "snowboard.com-shadows-respringmix.apple-new-1977",
+      "maximumFrameColorError": 0.3319,
+      "meanAbsoluteColorError": 0.2744,
+      "package": "com.shadows.respringmix",
+      "paletteColors": 256,
+      "sha256": "4c050f0c46a7320c6750f24158c87c035352acccbf6eb7214d0f9248fc3c159d"
+    },
+    {
+      "bytes": 30969,
+      "catalog": "snowboard",
+      "frames": 10,
+      "identifier": "snowboard.com-shadows-respringmix.charmander",
+      "maximumFrameColorError": 0.4008,
+      "meanAbsoluteColorError": 0.2375,
+      "package": "com.shadows.respringmix",
+      "paletteColors": 256,
+      "sha256": "85008606fc6d8089016f5475e80eb102533f02843ab31f7a6c0d22b3be829cd7"
+    },
+    {
+      "bytes": 25221,
+      "catalog": "snowboard",
+      "frames": 10,
+      "identifier": "snowboard.com-shadows-respringmix.circles",
+      "maximumFrameColorError": 0.9008,
+      "meanAbsoluteColorError": 0.466,
+      "package": "com.shadows.respringmix",
+      "paletteColors": 256,
+      "sha256": "13a1a075e0cbb7e9f1254caea9d04322fa40965994d9bfddc169dd1dc27e7683"
+    },
+    {
+      "bytes": 29294,
+      "catalog": "snowboard",
+      "frames": 10,
+      "identifier": "snowboard.com-shadows-respringmix.eevee-evolves",
+      "maximumFrameColorError": 0.7779,
+      "meanAbsoluteColorError": 0.6167,
+      "package": "com.shadows.respringmix",
+      "paletteColors": 256,
+      "sha256": "a14b8ac30a110cad96a593234bf26f0f61c68cc6b54be596beceb4ef00b48444"
+    },
+    {
+      "bytes": 21326,
+      "catalog": "snowboard",
+      "frames": 9,
+      "identifier": "snowboard.com-shadows-respringmix.pikachu",
+      "maximumFrameColorError": 0.1595,
+      "meanAbsoluteColorError": 0.1464,
+      "package": "com.shadows.respringmix",
+      "paletteColors": 256,
+      "sha256": "99a4f0d3181d0e3033b13042f9a9ebc1149ca5fa6ae2ba31c28db6305cc44eea"
+    },
+    {
+      "bytes": 27128,
+      "catalog": "snowboard",
+      "frames": 10,
+      "identifier": "snowboard.com-shadows-respringmix.pikachu-run",
+      "maximumFrameColorError": 0.2022,
+      "meanAbsoluteColorError": 0.1936,
+      "package": "com.shadows.respringmix",
+      "paletteColors": 256,
+      "sha256": "78ffd323195acc88c55de4d00529092e5b0222c475c5202d9b048a128bf90d00"
+    },
+    {
+      "bytes": 26438,
+      "catalog": "snowboard",
+      "frames": 10,
+      "identifier": "snowboard.com-shadows-respringmix.reload",
+      "maximumFrameColorError": 0.1291,
+      "meanAbsoluteColorError": 0.1269,
+      "package": "com.shadows.respringmix",
+      "paletteColors": 256,
+      "sha256": "df7b329ac2bc6c9fb79a26d9948da158abc7a8133c02d9d84eb00626b99d7359"
+    },
+    {
+      "bytes": 12092,
+      "catalog": "snowboard",
+      "frames": 4,
+      "identifier": "snowboard.com-shadows-respringmix.shojo",
+      "maximumFrameColorError": 0.2447,
+      "meanAbsoluteColorError": 0.2401,
+      "package": "com.shadows.respringmix",
+      "paletteColors": 256,
+      "sha256": "6de4d9fd818cafd2a6d1ea6a2b7e6b097f74f388470e7ee5f96ccdfae19f2ed6"
+    },
+    {
+      "bytes": 21305,
+      "catalog": "snowboard",
+      "frames": 8,
+      "identifier": "snowboard.com-shadows-respringmix.the-rolling-stones",
+      "maximumFrameColorError": 0.0973,
+      "meanAbsoluteColorError": 0.0862,
+      "package": "com.shadows.respringmix",
+      "paletteColors": 256,
+      "sha256": "970a903b56840bce767ae6a6449b9827fca083922b2d0b052218db75d4f14aee"
+    },
+    {
+      "bytes": 21572,
+      "catalog": "snowboard",
+      "frames": 8,
+      "identifier": "snowboard.com-shadows-respringmix.totoro",
+      "maximumFrameColorError": 0.1669,
+      "meanAbsoluteColorError": 0.1501,
+      "package": "com.shadows.respringmix",
+      "paletteColors": 256,
+      "sha256": "3a0da4123db9dc269c90e8f0b6f8efc7f0fdd73f815616b3004e5b6620ecfa29"
+    },
+    {
+      "bytes": 27481,
+      "catalog": "snowboard",
+      "frames": 10,
+      "identifier": "snowboard.com-shadows-respringmix.waiting",
+      "maximumFrameColorError": 0.1141,
+      "meanAbsoluteColorError": 0.1019,
+      "package": "com.shadows.respringmix",
+      "paletteColors": 256,
+      "sha256": "1007fc59a1559a3d8837868681ec8c9cbb2fcb374d822e6afb2b1b9b0ce74397"
+    },
+    {
+      "bytes": 52326,
+      "catalog": "snowboard",
+      "frames": 10,
+      "identifier": "snowboard.com-shadows-respringmix.world",
+      "maximumFrameColorError": 0.4869,
+      "meanAbsoluteColorError": 0.4403,
+      "package": "com.shadows.respringmix",
+      "paletteColors": 256,
+      "sha256": "0b9082c750502ce64cb1bbdb29156708d1f9745281e181267c8646bac680bd9b"
+    },
+    {
+      "bytes": 21499,
+      "catalog": "snowboard",
+      "frames": 9,
+      "identifier": "snowboard.com-thwlfu-cakrespring.checkra1n",
+      "maximumFrameColorError": 0.2839,
+      "meanAbsoluteColorError": 0.2744,
+      "package": "com.thwlfu.cakrespring",
+      "paletteColors": 256,
+      "sha256": "a8c112a706d865a825a9bafd5592fbbabc15e162e2731e2d8b50985003b3c542"
+    },
+    {
+      "bytes": 14354,
       "catalog": "snowboard",
       "frames": 9,
       "identifier": "snowboard.respring-hende-megapack.cubes",
+      "maximumFrameColorError": 0.2324,
+      "meanAbsoluteColorError": 0.2039,
       "package": "respring.hende.megapack",
-      "sha256": "79aa1ba390097c29f8ff9ff55bdf70f1360d522f086ba08d414fb01f49cab82b"
+      "paletteColors": 256,
+      "sha256": "b6ba91243e002a7b2abe1d5b9598539906fad1c06de86b58611e7f3e8ce4c24c"
     },
     {
-      "bytes": 15079,
+      "bytes": 40355,
       "catalog": "snowboard",
       "frames": 10,
       "identifier": "snowboard.respring-hende-megapack.cubes-stacking",
+      "maximumFrameColorError": 0.4654,
+      "meanAbsoluteColorError": 0.4611,
       "package": "respring.hende.megapack",
-      "sha256": "85dad51ae92a9f6c0447468902df368750eb74790d9ce6272e4efaf39687e37c"
+      "paletteColors": 256,
+      "sha256": "9a7b79f0105ab841e989c92276342629a7ae02160dd5de3d5e421143775c8f7b"
     },
     {
-      "bytes": 4832,
+      "bytes": 11830,
       "catalog": "snowboard",
       "frames": 9,
       "identifier": "snowboard.respring-hende-megapack.dots",
+      "maximumFrameColorError": 0.0293,
+      "meanAbsoluteColorError": 0.0188,
       "package": "respring.hende.megapack",
-      "sha256": "e6fb85544893339aab460bee7d7af566cca589d3e3e7eac43562f412479a0254"
+      "paletteColors": 256,
+      "sha256": "2773b2c022ad7f9d4f2989ff25ee4bc5d6c93a36b1486ff008f09ea288c3fb70"
     },
     {
-      "bytes": 11521,
+      "bytes": 24245,
       "catalog": "snowboard",
       "frames": 10,
       "identifier": "snowboard.respring-hende-megapack.hand-tap",
+      "maximumFrameColorError": 0.0842,
+      "meanAbsoluteColorError": 0.0765,
       "package": "respring.hende.megapack",
-      "sha256": "154e0f9eed4c8c6e0e44b08103350dcf925c52aae9423cb87c36f51ddff448fb"
+      "paletteColors": 256,
+      "sha256": "58985f7d7d01a6a18baf52b300370ec831579e5f4ba4b1327eb603890b90fa3a"
     },
     {
-      "bytes": 6322,
+      "bytes": 20395,
       "catalog": "snowboard",
       "frames": 10,
       "identifier": "snowboard.respring-hende-megapack.merging-dots",
+      "maximumFrameColorError": 0.2476,
+      "meanAbsoluteColorError": 0.1821,
       "package": "respring.hende.megapack",
-      "sha256": "613c1695ad33feea971e6d5513f55e026dd45fd425b4219f3b417da4c9b07f8d"
+      "paletteColors": 256,
+      "sha256": "86881eb36e5d3eb05933bdfe41b189fd14a551dba4b949c56d28548c2cfa411d"
     },
     {
-      "bytes": 29158,
+      "bytes": 60636,
       "catalog": "snowboard",
       "frames": 10,
       "identifier": "snowboard.respring-hende-megapack.morphing-blob",
+      "maximumFrameColorError": 0.2631,
+      "meanAbsoluteColorError": 0.2442,
       "package": "respring.hende.megapack",
-      "sha256": "de104af1977a116a3e080592a017270f98592ddeb60f2be98aaf97cd14d14eb9"
+      "paletteColors": 256,
+      "sha256": "51f5c5580692b029b4cab19b3c0772520cdcda585576b6276617c0936f700b76"
     },
     {
-      "bytes": 24508,
+      "bytes": 47960,
       "catalog": "snowboard",
       "frames": 10,
       "identifier": "snowboard.respring-hende-megapack.running-skull",
+      "maximumFrameColorError": 0.5268,
+      "meanAbsoluteColorError": 0.4289,
       "package": "respring.hende.megapack",
-      "sha256": "1ca965ad430d3d4380394889d533672d116ae98ca536552a18919b613d784d68"
+      "paletteColors": 256,
+      "sha256": "6185786875e09612aca3065fa2bea861f2fe65d79e0ba75929c873cbcfe8c5f2"
     },
     {
-      "bytes": 19695,
+      "bytes": 38923,
       "catalog": "snowboard",
       "frames": 10,
       "identifier": "snowboard.respring-hende-megapack.spinning-cubes",
+      "maximumFrameColorError": 0.2604,
+      "meanAbsoluteColorError": 0.247,
       "package": "respring.hende.megapack",
-      "sha256": "9983f2ed4700384187ea2bab0640ac669f88c5039b3cecd1a8c789ddc9a34fae"
+      "paletteColors": 256,
+      "sha256": "345d273f3a4b91270a7b97486ef704a39df14179dc07d42f345a83927ca4cf97"
     },
     {
-      "bytes": 17912,
+      "bytes": 30864,
       "catalog": "snowboard",
       "frames": 10,
       "identifier": "snowboard.respring-hende-megapack.spinning-polygon",
+      "maximumFrameColorError": 0.2989,
+      "meanAbsoluteColorError": 0.2789,
       "package": "respring.hende.megapack",
-      "sha256": "9e583f3b00a0b9b332f22d03f1239f7883b664ddd886a94ec3b289fa36fe3f5e"
+      "paletteColors": 256,
+      "sha256": "2d6c7b3f5958727ad7cf553ace8cce84a9c46d8d02e0bfed13b88826f4412bd5"
     },
     {
-      "bytes": 6637,
+      "bytes": 15877,
       "catalog": "snowboard",
       "frames": 10,
       "identifier": "snowboard.respring-hende-megapack.triangles",
+      "maximumFrameColorError": 0.0783,
+      "meanAbsoluteColorError": 0.0758,
       "package": "respring.hende.megapack",
-      "sha256": "6ae76d384b8e2467182e304501262a4fec58c34624539a33dbfe9301a0584d8f"
+      "paletteColors": 256,
+      "sha256": "961593a6efa47981f6cb6787599de194bf2cb2803e2a0d11cc20dcf2e56ac880"
     },
     {
-      "bytes": 20943,
+      "bytes": 39793,
       "catalog": "snowboard",
       "frames": 8,
       "identifier": "snowboard.respring-hende-razerlogo.razer-logo-black-green",
+      "maximumFrameColorError": 0.2234,
+      "meanAbsoluteColorError": 0.1801,
       "package": "respring.hende.razerlogo",
-      "sha256": "279c29a77ac848a03cca341a60d55f8149fc8d3b82202588a13a27683b999816"
+      "paletteColors": 256,
+      "sha256": "1f29357985f3a1ae1d45b8f376ea515c048eeb6fe9e56d4d77941a790fb5104b"
     },
     {
-      "bytes": 24505,
+      "bytes": 40112,
       "catalog": "snowboard",
       "frames": 8,
       "identifier": "snowboard.respring-hende-razerlogo.razer-logo-chroma",
+      "maximumFrameColorError": 0.9398,
+      "meanAbsoluteColorError": 0.8226,
       "package": "respring.hende.razerlogo",
-      "sha256": "ede1d02d20a879811bd45843dcbbe55724d0fbd0389267e344f23ec41abcf39d"
+      "paletteColors": 256,
+      "sha256": "7ae6424a6dcfd1726d8f75488f7fd080456e244ff0a626bce15b1144add31c3b"
     },
     {
-      "bytes": 14227,
+      "bytes": 26377,
       "catalog": "snowboard",
       "frames": 8,
       "identifier": "snowboard.respring-hende-razerlogo.razer-logo-glow",
+      "maximumFrameColorError": 0.0464,
+      "meanAbsoluteColorError": 0.0388,
       "package": "respring.hende.razerlogo",
-      "sha256": "0a161deb3e62eae6569805e5cd88a214f6bbc49e8502a4557e7f7958600eba2d"
+      "paletteColors": 256,
+      "sha256": "d5447f78aef036d810326ed092067815ebc21e57fcdab778f251649a6afcc7a1"
     },
     {
-      "bytes": 19808,
+      "bytes": 34630,
       "catalog": "snowboard",
       "frames": 8,
       "identifier": "snowboard.respring-hende-razerlogo.razer-logo-text",
+      "maximumFrameColorError": 0.166,
+      "meanAbsoluteColorError": 0.144,
       "package": "respring.hende.razerlogo",
-      "sha256": "ee2aee083fba70e629873f1421b982557fdbd1728a81ccd665984225d128d718"
+      "paletteColors": 256,
+      "sha256": "443cccc67d9b7da2a5826c6e0d281f046c6e3a860a577aaa0d3631eb29cceebe"
     },
     {
-      "bytes": 30342,
+      "bytes": 58457,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "violet-cyber-grid",
-      "sha256": "a2c3c6a6403c15b72760788d9a5787faf57f08a9452d07094f882a12a0f3cf73",
+      "maximumFrameColorError": 0.4239,
+      "meanAbsoluteColorError": 0.4106,
+      "paletteColors": 256,
+      "sha256": "9012e6ca4f0294258a30a0d8653351a428941ed336dd9222a3eea49cf7dbd4ea",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/violet-cyber-grid.gif"
     },
     {
-      "bytes": 13883,
+      "bytes": 26727,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "violet-energy-wave",
-      "sha256": "054204e1717b1cab5237219d35d7708d723cad27de103a379f35183e8eb2a2c2",
+      "maximumFrameColorError": 0.1385,
+      "meanAbsoluteColorError": 0.1306,
+      "paletteColors": 256,
+      "sha256": "a4af45adddae30ce53273cfdfa968750d751724b85804faf9725774ebc5114e6",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/violet-energy-wave.gif"
     },
     {
-      "bytes": 20474,
+      "bytes": 36571,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "violet-equalizer",
-      "sha256": "afad364d1d10f8218867ea348424c3844e5f54b227a5d13a2e8d203647fd3569",
+      "maximumFrameColorError": 1.0821,
+      "meanAbsoluteColorError": 0.6983,
+      "paletteColors": 256,
+      "sha256": "0d7b5a27d55d71e35fae803192e277c0884ab7c25d0d7cface5ff7d8f06a8eaf",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/violet-equalizer.gif"
     },
     {
-      "bytes": 14858,
+      "bytes": 27926,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "violet-halo-spinner",
-      "sha256": "7a940730147fa8c9dab42bb113da00ba8c216a6190dd88483bb9120a9ec26ff4",
+      "maximumFrameColorError": 0.5467,
+      "meanAbsoluteColorError": 0.4463,
+      "paletteColors": 256,
+      "sha256": "44ec61c509c722d029c7bd885fe09cc5b8416130f2f1e833a77abf06d5a290a8",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/violet-halo-spinner.gif"
     },
     {
-      "bytes": 9862,
+      "bytes": 19718,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "violet-orbit-dots",
-      "sha256": "c72cfdc015adeef929c5acd10fcb0e546f9f0bd1d0ce55907c1f3a250d5f0ea4",
+      "maximumFrameColorError": 0.2841,
+      "meanAbsoluteColorError": 0.1879,
+      "paletteColors": 256,
+      "sha256": "b8197a7ff429eeb2008056a0987629cf80e8cd230ee90efbba060f70c16a7dd2",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/violet-orbit-dots.gif"
     },
     {
-      "bytes": 35276,
+      "bytes": 62248,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "violet-pulse-rings",
-      "sha256": "c3192d24575e9d4d624fafde0bda19f74172750fc9936b741d97ac757adb7275",
+      "maximumFrameColorError": 1.1051,
+      "meanAbsoluteColorError": 0.9354,
+      "paletteColors": 256,
+      "sha256": "e632f9f03392758a8ed7485bf2b42a618666cc42ba9da214de1c7c3b44c79c88",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/violet-pulse-rings.gif"
     },
     {
-      "bytes": 19976,
+      "bytes": 39157,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "violet-radar-sweep",
-      "sha256": "23857b5717ba909632e0a8d12600e3737fb5b18a40f719e30277cf287e8a3dcc",
+      "maximumFrameColorError": 0.2648,
+      "meanAbsoluteColorError": 0.2232,
+      "paletteColors": 256,
+      "sha256": "b12b272080159b534c3f2a7ef58775b52f762d39b59b7e47cc5ce733b6ee8870",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/violet-radar-sweep.gif"
     },
     {
-      "bytes": 23008,
+      "bytes": 43283,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "violet-spark-burst",
-      "sha256": "354f0811427807429ae5b6dba53711d73fbaaec5a3cd395705dc16650e0fbdb0",
+      "maximumFrameColorError": 1.058,
+      "meanAbsoluteColorError": 0.9161,
+      "paletteColors": 256,
+      "sha256": "1e134671e69e29d6e0655dfa0f557aa3e7d33826151d75a03785fb2d327b5e9f",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/violet-spark-burst.gif"
     },
     {
-      "bytes": 24645,
+      "bytes": 42900,
       "catalog": "cc0",
       "frames": 10,
       "identifier": "violet-square-tunnel",
-      "sha256": "d2d677ce8d23850ce47d4ed19a998d0a093a2a333ea1331c2961be776172834f",
+      "maximumFrameColorError": 1.0749,
+      "meanAbsoluteColorError": 0.8243,
+      "paletteColors": 256,
+      "sha256": "c05fc9b8681471c8ff7f3627e24c720b450d11037dcf606750bfd660e4293a83",
       "source": "https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/violet-square-tunnel.gif"
     }
   ],
-  "totalBytes": 3290738,
+  "totalBytes": 6787715,
   "version": 1
 }
