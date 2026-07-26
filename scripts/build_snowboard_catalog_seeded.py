@@ -64,6 +64,37 @@ SEEDS = {
 }
 
 
+def fixed_safe_archive(deb: Path) -> None:
+    """Validate dpkg-deb listings without turning ./Library into /Library."""
+    listing = base.command(["dpkg-deb", "-c", str(deb)])
+    entries = 0
+    for raw in listing.splitlines():
+        if not raw.strip():
+            continue
+        mode = raw[0]
+        if mode in "lhcbps":
+            raise RuntimeError(f"unsafe archive entry type {mode}")
+        marker = raw.rfind(" ./")
+        if marker < 0:
+            continue
+        # Skip the complete ' ./' marker. The previous parser skipped only
+        # ' .' and incorrectly converted valid ./Library paths to /Library.
+        path = raw[marker + 3 :].split(" -> ", 1)[0].replace("\\", "/").strip()
+        if not path or path in {".", "/"}:
+            continue
+        parts = [part for part in path.split("/") if part and part != "."]
+        if path.startswith("/") or ".." in parts:
+            raise RuntimeError(f"unsafe archive path {path}")
+        entries += 1
+        if entries > 5000:
+            raise RuntimeError("archive contains more than 5000 entries")
+    if not entries:
+        raise RuntimeError("archive has no readable entries")
+
+
+base.safe_archive = fixed_safe_archive
+
+
 def package_pages() -> list[base.PackagePage]:
     pages: dict[str, base.PackagePage] = dict(SEEDS)
     for page_url in sorted(getattr(transport, "KNOWN", {})):
