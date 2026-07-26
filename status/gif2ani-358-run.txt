@@ -1,0 +1,20 @@
+Gif2Ani 3.5.8 Exact Build
+target_sha=7ccbfbb589c00c0dbfa613141aac6573d518eb16
+id=30212812686
+head_sha=7ccbfbb589c00c0dbfa613141aac6573d518eb16
+status=completed
+conclusion=failure
+created_at=2026-07-26T17:33:07Z
+updated_at=2026-07-26T17:34:22Z
+html_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30212812686
+job=89821838778|build|completed|failure
+step=1|Set up job|completed|success
+step=2|Run actions/checkout@v4|completed|success
+step=3|Install dependencies and Theos|completed|success
+step=4|Apply SHA-bound package identity fix|completed|success
+step=5|Validate catalogs and policy|completed|success
+step=6|Compile and verify rootless package|completed|success
+step=7|Upload package evidence|completed|success
+step=8|Publish package and status|completed|failure
+step=16|Post Run actions/checkout@v4|completed|success
+step=17|Complete job|completed|success
