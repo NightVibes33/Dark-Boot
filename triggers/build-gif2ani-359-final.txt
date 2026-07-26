@@ -1,0 +1,2 @@
+requested_at_utc=2026-07-26T18:29:00Z
+purpose=run regex-safe 3.5.9 patch, generate 262 animated previews, compile rootless package, and publish only after all gates pass
