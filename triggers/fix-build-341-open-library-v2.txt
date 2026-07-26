@@ -1,0 +1,2 @@
+run=2026-07-25T19:52:00-05:00
+reason=Validate the packaged 54-theme CC0 manifest and 48-theme open-source manifest without pipefail false failures.
