@@ -1,0 +1,62 @@
+name: Report Gif2Ani 3.5.9 Final3 Failure
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/report-gif2ani-359-final3-failure.yml
+      - triggers/report-gif2ani-359-final3-failure.txt
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Extract exact post-build failure
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          JOB_ID: '89826752432'
+        run: |
+          set -euo pipefail
+          curl -fsSL -H "Authorization: Bearer ${GH_TOKEN}" -H 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/${REPO}/actions/jobs/${JOB_ID}/logs" -o job.log
+          mkdir -p status
+          python3 - <<'PY'
+          from pathlib import Path
+          raw=Path('job.log').read_text(errors='replace').splitlines()
+          cleaned=[]
+          for line in raw:
+              if 'Z ' in line and line[:4].isdigit():
+                  line=line.split('Z ',1)[1]
+              cleaned.append(line)
+          indexes=[i for i,line in enumerate(cleaned) if 'Compile and verify package' in line or "dm.pl: building package" in line]
+          selected=[]
+          for index in indexes:
+              selected.extend(cleaned[max(0,index-20):min(len(cleaned),index+180)])
+          selected.extend([line for line in cleaned if any(token in line for token in ('##[error]', 'Process completed with exit code', 'No such file', 'not found', 'AssertionError', 'failed', 'FAILED'))])
+          dedup=[]
+          seen=set()
+          for line in selected:
+              if line not in seen:
+                  seen.add(line)
+                  dedup.append(line)
+          output=['Gif2Ani 3.5.9 Final3 Verification Failure',f'job_id={89826752432}','--- relevant log ---',*dedup[-320:]]
+          Path('status/gif2ani-359-final3-failure.txt').write_text('\n'.join(output)+'\n')
+          PY
+      - name: Publish failure report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add status/gif2ani-359-final3-failure.txt
+          git commit -m 'Report Gif2Ani 3.5.9 final3 verification failure [skip ci]' || exit 0
+          git push origin HEAD:main
