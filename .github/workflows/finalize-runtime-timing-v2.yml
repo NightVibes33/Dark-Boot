@@ -1,0 +1,238 @@
+name: Finalize Gif2Ani Runtime Timing V2
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/finalize-runtime-timing-v2.yml
+      - triggers/finalize-runtime-timing-v2.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-runtime-timing-v2
+  cancel-in-progress: true
+
+jobs:
+  finalize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch actual runtime source
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path('Tweak.xm')
+          text = path.read_text()
+
+          def sub_once(pattern, replacement, label, flags=0):
+              global text
+              updated, count = re.subn(pattern, replacement, text, count=1, flags=flags)
+              if count != 1:
+                  raise SystemExit(f'{label}: expected one match, found {count}')
+              text = updated
+
+          if 'static NSArray<NSNumber *> *g2KeyTimes;' not in text:
+              sub_once(r'(static NSArray<UIImage \*> \*g2Frames;\n)', r'\1static NSArray<NSNumber *> *g2KeyTimes;\n', 'key-time global')
+
+          if 'static __weak CALayer *g2AppleLoaderLayer;' not in text:
+              sub_once(
+                  r'(static CALayer \*g2DedicatedAnimationLayer;\n)',
+                  r'\1static __weak CALayer *g2AppleLoaderLayer;\nstatic float g2AppleLoaderOriginalOpacity = 1.0f;\n',
+                  'Apple loader globals')
+
+          if 'static void G2RestoreAppleLoader(void)' not in text:
+              sub_once(
+                  r'(static void G2ClearLoadSentinel\(void\) \{\n.*?\n\}\n)',
+                  r'''\1
+static void G2RestoreAppleLoader(void) {
+    CALayer *layer = g2AppleLoaderLayer;
+    if (layer) layer.opacity = g2AppleLoaderOriginalOpacity;
+    g2AppleLoaderLayer = nil;
+    g2AppleLoaderOriginalOpacity = 1.0f;
+}
+''',
+                  'Apple loader restore helper',
+                  re.S)
+
+          if 'NSArray<NSNumber *> **keyTimesOut' not in text:
+              sub_once(
+                  r'(static BOOL G2DecodeActiveGIF\(NSDictionary \*metadata,\n\s+NSArray<UIImage \*> \*\*framesOut,\n)',
+                  r'\1                               NSArray<NSNumber *> **keyTimesOut,\n',
+                  'decoder keyTimes output')
+
+          if 'sourceFrameStartTimes' not in text:
+              sub_once(
+                  r'''(\s+NSMutableArray<UIImage \*> \*frames = \[NSMutableArray arrayWithCapacity:decodedFrames\];\n)(\s+unsigned long long decodedBytes = 0;\n\s+NSTimeInterval duration = 0;\n\n\s+for \(NSUInteger index = 0; index < sourceFrames; index\+\+\) \{\n)(\s+duration \+= G2FrameDelay\(source, index\);\n\s+\})''',
+                  r'''\1    NSMutableArray<NSNumber *> *keyTimes = [NSMutableArray arrayWithCapacity:decodedFrames];
+    NSMutableArray<NSNumber *> *sourceFrameStartTimes = [NSMutableArray arrayWithCapacity:sourceFrames];
+\2        [sourceFrameStartTimes addObject:@(duration)];
+\3''',
+                  'source frame start times')
+
+          if '[keyTimes addObject:' not in text:
+              sub_once(
+                  r'(\s+\[frames addObject:frame\];\n)(\s+\}\n\n\s+CFRelease\(source\);)',
+                  r'''\1        NSTimeInterval frameStart = [sourceFrameStartTimes[sourceIndex] doubleValue];
+        [keyTimes addObject:@(duration > 0 ? MIN(1.0, MAX(0.0, frameStart / duration)) : 0.0)];
+\2''',
+                  'sampled key times')
+
+          if 'if (keyTimesOut) *keyTimesOut = [keyTimes copy];' not in text:
+              sub_once(
+                  r'(\s+if \(framesOut\) \*framesOut = \[frames copy\];\n)',
+                  r'\1    if (keyTimesOut) *keyTimesOut = [keyTimes copy];\n',
+                  'decoder keyTimes return')
+
+          if 'NSArray<NSNumber *> *keyTimes = nil;' not in text:
+              sub_once(
+                  r'(\s+NSArray<UIImage \*> \*frames = nil;\n)',
+                  r'\1    NSArray<NSNumber *> *keyTimes = nil;\n',
+                  'load keyTimes local')
+
+          if '&frames, &keyTimes, &duration' not in text:
+              sub_once(
+                  r'G2DecodeActiveGIF\(metadata, &frames, &duration, &decodedBytes, &failureReason\)',
+                  'G2DecodeActiveGIF(metadata, &frames, &keyTimes, &duration, &decodedBytes, &failureReason)',
+                  'decoder invocation')
+
+          if 'g2KeyTimes = keyTimes.count == frames.count ? keyTimes : nil;' not in text:
+              sub_once(
+                  r'(\s+g2Frames = frames;\n)',
+                  r'\1    g2KeyTimes = keyTimes.count == frames.count ? keyTimes : nil;\n',
+                  'global keyTimes assignment')
+
+          if 'animation.keyTimes = g2KeyTimes.count == values.count ? g2KeyTimes : nil;' not in text:
+              sub_once(
+                  r'(\s+animation.values = values;\n)',
+                  r'\1    animation.keyTimes = g2KeyTimes.count == values.count ? g2KeyTimes : nil;\n',
+                  'keyframe keyTimes')
+
+          if 'g2AppleLoaderLayer = appleLayer;' not in text:
+              sub_once(
+                  r'''\s+BOOL appleLoaderHidden = container != appleLayer;\n\s+if \(appleLoaderHidden\) appleLayer.opacity = 0\.0;''',
+                  '''
+    BOOL appleLoaderHidden = container != appleLayer;
+    if (appleLoaderHidden) {
+        if (g2AppleLoaderLayer != appleLayer) {
+            G2RestoreAppleLoader();
+            g2AppleLoaderLayer = appleLayer;
+            g2AppleLoaderOriginalOpacity = appleLayer.opacity;
+        }
+        appleLayer.opacity = 0.0;
+    }''',
+                  'Apple loader capture')
+
+          # Clear key times wherever decoded media state is cleared.
+          text = re.sub(r'(\n\s+g2Frames = nil;\n)(?!\s+g2KeyTimes = nil;)', r'\1    g2KeyTimes = nil;\n', text)
+
+          # Restore the Apple loader before every dedicated overlay removal.
+          text = re.sub(
+              r'(\n\s+g2PreparedContentLayer = nil;\n)(?!\s+G2RestoreAppleLoader\(\);)(\s+\[g2DedicatedAnimationLayer removeFromSuperlayer\];)',
+              r'\1    G2RestoreAppleLoader();\n\2',
+              text)
+
+          # Replace the Darwin callback body with a main-queue serialized body.
+          reload_pattern = re.compile(
+              r'''static void G2Reload\(__unused CFNotificationCenterRef center,\n.*?\n\}\n\n@interface CADisplay''',
+              re.S)
+          match = reload_pattern.search(text)
+          if not match:
+              raise SystemExit('reload callback block not found')
+          if '@"mainThread": @YES' not in match.group(0):
+              replacement = '''static void G2Reload(__unused CFNotificationCenterRef center,
+                     __unused void *observer,
+                     __unused CFStringRef name,
+                     __unused const void *object,
+                     __unused CFDictionaryRef userInfo) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[G2PreferencesManager sharedInstance] reload];
+        g2Frames = nil;
+        g2KeyTimes = nil;
+        g2NaturalDuration = 0;
+        g2MediaMetadata = nil;
+        g2AnimationPending = NO;
+        g2PreparedContentLayer = nil;
+        G2RestoreAppleLoader();
+        [g2DedicatedAnimationLayer removeFromSuperlayer];
+        g2DedicatedAnimationLayer = nil;
+        g2PresentationBounds = CGRectZero;
+        G2WriteStatus(@"preferences-reloaded-without-media-decode", @{ @"mainThread": @YES });
+    });
+}
+
+@interface CADisplay'''
+              text = text[:match.start()] + replacement + text[match.end():]
+
+          required = [
+              'static NSArray<NSNumber *> *g2KeyTimes;',
+              'NSArray<NSNumber *> **keyTimesOut',
+              'sourceFrameStartTimes',
+              '[keyTimes addObject:',
+              'animation.keyTimes = g2KeyTimes.count == values.count ? g2KeyTimes : nil;',
+              'static void G2RestoreAppleLoader(void)',
+              'g2AppleLoaderOriginalOpacity',
+              '@"mainThread": @YES',
+          ]
+          missing = [token for token in required if token not in text]
+          if missing:
+              raise SystemExit(f'missing runtime tokens: {missing}')
+          if text.count('&frames, &keyTimes, &duration') != 1:
+              raise SystemExit('decoder invocation count is not exactly one')
+          if text.count('G2RestoreAppleLoader();') < 3:
+              raise SystemExit('Apple loader restoration is not wired into all cleanup paths')
+
+          path.write_text(text)
+          PY
+
+      - name: Compile runtime source
+        env:
+          THEOS: /opt/theos
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends bash curl sudo build-essential fakeroot rsync perl git libxml2 dpkg-dev unzip xz-utils ca-certificates python3 file
+          sudo rm -rf /opt/theos
+          sudo mkdir -p /opt
+          sudo chown "$USER:$USER" /opt
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          make clean package FINALPACKAGE=1 2>&1 | tee runtime-v2-build.log
+          test -n "$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_*_iphoneos-arm64.deb' -print -quit)"
+
+      - name: Commit verified runtime fixes
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Tweak.xm
+          git commit -m 'Preserve GIF frame timing and harden BackBoard reloads' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Record failure diagnostics
+        if: failure()
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          mkdir -p status
+          {
+            echo 'Gif2Ani Runtime Timing V2'
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo 'status=failure'
+            echo
+            tail -n 300 runtime-v2-build.log 2>/dev/null || true
+          } > status/runtime-timing-v2.txt
+          git add status/runtime-timing-v2.txt
+          git commit -m 'Record runtime timing V2 failure [skip ci]' || exit 0
+          git push origin HEAD:main
