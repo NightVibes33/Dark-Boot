@@ -1,11 +1,11 @@
 Package: com.nightvibes33.gif2ani
 Name: Gif2Ani Rootless
-Version: 3.5.7
+Version: 3.5.8
 Architecture: iphoneos-arm64
 Depends: firmware (>= 15.0), mobilesubstrate
 Conflicts: com.nightvibes33.darkboot, com.wizage.gif2ani2, com.wizages.gif2ani
 Replaces: com.nightvibes33.darkboot
-Description: Crash-safe custom respring animations for BackBoard on rootless iOS 15 and 16. Gif2Ani 3.5.7 fixes the shared Springy and SnowBoard downloader by capturing dpkg-deb stdout separately from warnings on stderr, so valid legacy packages with control warnings no longer fail package-identity verification. It provides 274 first-class themes: 12 offline animations, 54 pinned CC0 downloads, 48 verified Springy packs, and 160 verified SnowBoard respring themes from seven source-backed packages. Every source DEB is checked by HTTPS source, byte limit, SHA-256, real package ID, safe archive paths, extracted size, file count, and artwork presence before only the selected animation media is staged; original packages are never installed.
+Description: Crash-safe custom respring animations for BackBoard on rootless iOS 15 and 16. Gif2Ani 3.5.8 hardens the shared Springy and SnowBoard downloader: exact source URL, byte count, and SHA-256 bind each downloaded DEB to its audited catalog record; dpkg-deb package metadata is parsed as an additional strict check when available, while a tool-launch or empty-output failure no longer falsely rejects a cryptographically identical package. A clean real package-ID mismatch remains blocked, and every attempt records its expected ID, actual ID, exit code, hash, byte count, and verification mode in LastPackageVerification.plist. The gallery contains 274 themes: 12 offline animations, 54 pinned CC0 downloads, 48 verified Springy packs, and 160 verified SnowBoard respring themes.
 Maintainer: NightVibes33
 Author: wizages, rootless port by NightVibes33
 Section: Tweaks
