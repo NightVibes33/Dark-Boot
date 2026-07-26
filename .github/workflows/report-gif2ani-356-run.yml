@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Read current build workflow status
+      - name: Read latest build workflow status
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
@@ -40,13 +40,7 @@ jobs:
           import json, os, pathlib, urllib.request
           data=json.loads(pathlib.Path('runs.json').read_text())
           runs=data.get('workflow_runs', [])
-          selected=None
-          for run in runs:
-              if run.get('head_sha') == 'c752bbf9db61ccf49a8d5b3fc9c9e9937eacc4b9':
-                  selected=run
-                  break
-          if selected is None and runs:
-              selected=runs[0]
+          selected=runs[0] if runs else None
           lines=['Gif2Ani 3.5.6 Active Build Reporter']
           if selected is None:
               lines.append('run=not_found')
