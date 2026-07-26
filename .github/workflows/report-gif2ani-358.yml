@@ -1,0 +1,57 @@
+name: Report Gif2Ani 3.5.8 Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/report-gif2ani-358.yml
+      - triggers/report-gif2ani-358.txt
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Read exact 3.5.8 run
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          curl -fsSL -H "Authorization: Bearer ${GH_TOKEN}" -H 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/${REPO}/actions/workflows/build-gif2ani-358-sha-bound-identity.yml/runs?per_page=30" > runs.json
+          python3 - <<'PY'
+          import json, os, pathlib, urllib.request
+          target='7ccbfbb589c00c0dbfa613141aac6573d518eb16'
+          runs=json.loads(pathlib.Path('runs.json').read_text()).get('workflow_runs',[])
+          run=next((r for r in runs if r.get('head_sha')==target),None)
+          lines=['Gif2Ani 3.5.8 Exact Build',f'target_sha={target}']
+          if run is None:
+              lines.append('run=not_found')
+          else:
+              for key in ('id','head_sha','status','conclusion','created_at','updated_at','html_url'):
+                  lines.append(f"{key}={run.get(key)}")
+              req=urllib.request.Request(run['jobs_url']+'?per_page=100',headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json','User-Agent':'Gif2Ani-358-reporter'})
+              jobs=json.load(urllib.request.urlopen(req)).get('jobs',[])
+              for job in jobs:
+                  lines.append(f"job={job.get('id')}|{job.get('name')}|{job.get('status')}|{job.get('conclusion')}")
+                  for step in job.get('steps',[]):
+                      lines.append(f"step={step.get('number')}|{step.get('name')}|{step.get('status')}|{step.get('conclusion')}")
+          pathlib.Path('status/gif2ani-358-run.txt').write_text('\n'.join(lines)+'\n')
+          PY
+      - name: Publish report
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add status/gif2ani-358-run.txt
+          git commit -m 'Report Gif2Ani 3.5.8 exact build [skip ci]' || exit 0
+          git push origin HEAD:main
