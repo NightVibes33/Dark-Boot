@@ -1,0 +1,14 @@
+Gif2Ani 3.5.6 Verified SnowBoard Respring Library
+run_id=30209684951
+source_commit=961bbab4c25ceb83057176ee8cb07d918dc1722d
+status=failure
+completed_at_utc=2026-07-26T16:10:30Z
+policy=free direct public original DEBs only; package files are never installed
+checks=HTTPS, published SHA-256, package ID, version, architecture, archive paths, .theme paths, media files
+legacy_import_prompt=removed
+download_cache_postinst_owner=mobile-recursive
+--- SnowBoard catalog summary ---
+candidate_page_count=10
+--- catalog audit tail ---
+--- source patch ---
+--- build tail ---
