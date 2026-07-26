@@ -1,0 +1,207 @@
+name: Build Gif2Ani 3.6.1 Color-Faithful Previews
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-gif2ani-361-color-faithful-previews.yml
+      - scripts/run_color_faithful_theme_previews.py
+      - scripts/apply_gif2ani_361_color_fidelity.py
+      - triggers/build-gif2ani-361-color-faithful-previews.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-361-color-faithful-previews
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies and Theos
+        env:
+          THEOS: /opt/theos
+          CI: '1'
+          SHELL: /bin/bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            bash curl sudo build-essential fakeroot rsync perl git libxml2 dpkg-dev \
+            unzip xz-utils ca-certificates python3 python3-pip file binutils
+          python3 -m pip install --break-system-packages --disable-pip-version-check 'Pillow>=10.0,<12'
+          sudo rm -rf /opt/theos
+          sudo mkdir -p /opt
+          sudo chown "$USER:$USER" /opt
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          test -x /opt/theos/toolchain/linux/iphone/bin/clang
+
+      - name: Apply 3.6.1 version and copy old comparison preview
+        run: |
+          set -euo pipefail
+          mkdir -p comparison
+          cp gif2aniprefs/Resources/ThemePreviewAnimations/io.github.virenmohindra.stranger-things.gif comparison/stranger-things-before.gif
+          python3 scripts/apply_gif2ani_361_color_fidelity.py | tee source-fix.log
+          grep -Fq 'gif2ani_361_color_fidelity_version=success' source-fix.log
+          grep -Fq 'Version: 3.6.1' control
+          grep -Fq 'GIF2ANI 3.6.1' gif2aniprefs/Resources/Root.plist
+
+      - name: Regenerate all 262 previews with shared 256-color palettes
+        run: |
+          set -euo pipefail
+          python3 scripts/run_color_faithful_theme_previews.py 2>&1 | tee color-previews.log
+          grep -Fq 'animated_preview_count=262' color-previews.log
+          grep -Fq 'animated_preview_validation=success' color-previews.log
+
+      - name: Validate color fidelity and Stranger Things
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' | tee color-fidelity-report.txt
+          import json
+          from pathlib import Path
+          from PIL import Image
+
+          manifest_path=Path('gif2aniprefs/Resources/ThemePreviewAnimations.json')
+          root=Path('gif2aniprefs/Resources/ThemePreviewAnimations')
+          manifest=json.loads(manifest_path.read_text())
+          records=manifest['previews']
+          assert manifest['count']==262 and len(records)==262
+          assert len(list(root.glob('*.gif')))==262
+          assert manifest['totalBytes']==sum(path.stat().st_size for path in root.glob('*.gif'))
+          assert manifest['totalBytes'] <= 55*1024*1024
+
+          worst_mean=max(records,key=lambda x:x['meanAbsoluteColorError'])
+          worst_frame=max(records,key=lambda x:x['maximumFrameColorError'])
+          for record in records:
+              assert record['paletteColors']==256, record['identifier']
+              assert record['meanAbsoluteColorError'] <= 10.0, record
+              assert record['maximumFrameColorError'] <= 18.0, record
+              path=root/f"{record['identifier']}.gif"
+              assert path.is_file() and path.stat().st_size==record['bytes']
+              assert path.stat().st_size <= 280000
+              with Image.open(path) as image:
+                  assert image.n_frames==record['frames'] and image.n_frames>=2
+                  assert image.width<=144 and image.height<=144
+
+          stranger=next(x for x in records if x['identifier']=='io.github.virenmohindra.stranger-things')
+          assert stranger['meanAbsoluteColorError'] <= 8.0, stranger
+          assert stranger['maximumFrameColorError'] <= 14.0, stranger
+          print(f"color_fidelity_count={len(records)}")
+          print(f"color_fidelity_total_bytes={manifest['totalBytes']}")
+          print(f"worst_mean={worst_mean['identifier']}|{worst_mean['meanAbsoluteColorError']}")
+          print(f"worst_frame={worst_frame['identifier']}|{worst_frame['maximumFrameColorError']}")
+          print(f"stranger_things_mean_error={stranger['meanAbsoluteColorError']}")
+          print(f"stranger_things_max_frame_error={stranger['maximumFrameColorError']}")
+          print(f"stranger_things_frames={stranger['frames']}")
+          print(f"stranger_things_bytes={stranger['bytes']}")
+          print('color_fidelity_gate=passed')
+          PY
+
+      - name: Compile and verify rootless package
+        env:
+          THEOS: /opt/theos
+        run: |
+          set -euo pipefail
+          make clean package FINALPACKAGE=1 2>&1 | tee build.log
+          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.6.1_iphoneos-arm64.deb' -print -quit)"
+          test -s "$DEB"
+          test "$(dpkg-deb -f "$DEB" Package | tr -d '\r\n')" = 'com.nightvibes33.gif2ani'
+          test "$(dpkg-deb -f "$DEB" Version | tr -d '\r\n')" = '3.6.1'
+          test "$(dpkg-deb -f "$DEB" Architecture | tr -d '\r\n')" = 'iphoneos-arm64'
+
+          rm -rf verify-root
+          dpkg-deb -x "$DEB" verify-root
+          BUNDLE='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle'
+          PREFS="$BUNDLE/Gif2AniPrefs"
+          TWEAK='verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib'
+          test -s "$PREFS" && test -s "$TWEAK"
+          file "$PREFS" | grep -Fq 'Mach-O 64-bit arm64'
+          file "$TWEAK" | grep -Fq 'Mach-O 64-bit arm64'
+          grep -Fq 'GIF2ANI 3.6.1' "$BUNDLE/Root.plist"
+          grep -Fq '274-THEME ANIMATION GALLERY' "$BUNDLE/Root.plist"
+          test "$(find "$BUNDLE/ThemePreviewAnimations" -maxdepth 1 -type f -name '*.gif' | wc -l | tr -d ' ')" = '262'
+          python3 - "$BUNDLE/ThemePreviewAnimations.json" <<'PY'
+          import json,pathlib,sys
+          manifest=json.loads(pathlib.Path(sys.argv[1]).read_text())
+          assert manifest['count']==262
+          assert all(x.get('paletteColors')==256 for x in manifest['previews'])
+          assert max(x['meanAbsoluteColorError'] for x in manifest['previews']) <= 10.0
+          assert max(x['maximumFrameColorError'] for x in manifest['previews']) <= 18.0
+          stranger=next(x for x in manifest['previews'] if x['identifier']=='io.github.virenmohindra.stranger-things')
+          assert stranger['meanAbsoluteColorError'] <= 8.0
+          print('packaged_color_fidelity_manifest=passed')
+          PY
+
+          mkdir -p release-packages
+          cp "$DEB" release-packages/Gif2Ani-3.6.1-color-faithful-previews.deb
+          sha256sum release-packages/Gif2Ani-3.6.1-color-faithful-previews.deb \
+            | tee release-packages/Gif2Ani-3.6.1-color-faithful-previews.sha256
+          echo 'gif2ani_361_package_gate=passed'
+
+      - name: Upload package and comparison evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gif2Ani-3.6.1-color-faithful-previews
+          path: |
+            release-packages/Gif2Ani-3.6.1-color-faithful-previews.deb
+            release-packages/Gif2Ani-3.6.1-color-faithful-previews.sha256
+            comparison/stranger-things-before.gif
+            gif2aniprefs/Resources/ThemePreviewAnimations/io.github.virenmohindra.stranger-things.gif
+            source-fix.log
+            color-previews.log
+            color-fidelity-report.txt
+            build.log
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Publish package and regenerated resources
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          mkdir -p status release-packages
+          {
+            echo 'Gif2Ani 3.6.1 Color-Faithful Previews'
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "source_commit=${GITHUB_SHA}"
+            echo "status=${JOB_STATUS}"
+            echo "completed_at_utc=$(date -u +%FT%TZ)"
+            cat release-packages/Gif2Ani-3.6.1-color-faithful-previews.sha256 2>/dev/null || true
+            echo 'preview_count=262'
+            echo 'palette_colors_per_animation=256'
+            echo 'mean_color_error_limit=10'
+            echo 'maximum_frame_color_error_limit=18'
+            echo 'gallery_total=274'
+            echo '--- fidelity ---'
+            cat color-fidelity-report.txt 2>/dev/null || true
+            echo '--- build tail ---'
+            tail -n 160 build.log 2>/dev/null || true
+          } > status/gif2ani-361-color-faithful-previews.txt
+
+          if [ "$JOB_STATUS" = success ]; then
+            git add control gif2aniprefs/Resources/Root.plist
+            git add gif2aniprefs/Resources/ThemePreviewAnimations.json
+            git add -f gif2aniprefs/Resources/ThemePreviewAnimations
+            git add -f release-packages/Gif2Ani-3.6.1-color-faithful-previews.deb
+            git add release-packages/Gif2Ani-3.6.1-color-faithful-previews.sha256
+          fi
+          git add status/gif2ani-361-color-faithful-previews.txt
+          git commit -m "Publish Gif2Ani 3.6.1 color-faithful previews (${JOB_STATUS}) [skip ci]" || exit 0
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            git rebase --abort >/dev/null 2>&1 || true
+            sleep $((attempt * 3))
+          done
+          exit 1
