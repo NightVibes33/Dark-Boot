@@ -1,0 +1,186 @@
+name: Build Gif2Ani 3.5.6 Verified SnowBoard Library
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-gif2ani-356-snowboard-library.yml
+      - triggers/build-gif2ani-356-snowboard-library.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-356-snowboard-library
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install catalog, build, and media dependencies
+        env:
+          THEOS: /opt/theos
+          CI: '1'
+          SHELL: /bin/bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            bash curl sudo build-essential fakeroot rsync perl git libxml2 dpkg-dev \
+            unzip xz-utils ca-certificates python3 python3-pip python3-pil file binutils
+          python3 -m pip install --break-system-packages requests beautifulsoup4
+          sudo rm -rf /opt/theos
+          sudo mkdir -p /opt
+          sudo chown "$USER:$USER" /opt
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          test -x /opt/theos/toolchain/linux/iphone/bin/clang
+
+      - name: Discover and physically verify public SnowBoard respring packages
+        run: |
+          set -euo pipefail
+          python3 scripts/build_snowboard_catalog.py 2>&1 | tee snowboard-catalog.log
+          grep -Fq 'snowboard_verified_package_count=' snowboard-catalog.log
+          grep -Fq 'snowboard_verified_theme_count=' snowboard-catalog.log
+          python3 - <<'PY'
+          import json, pathlib, re
+          path = pathlib.Path('gif2aniprefs/Resources/SnowBoardCatalog.json')
+          catalog = json.loads(path.read_text())
+          themes = catalog['themes']
+          assert catalog['version'] == 1
+          assert catalog['catalogType'] == 'verified-snowboard-respring'
+          assert catalog['count'] == len(themes) >= 10
+          assert catalog['packageCount'] >= 3
+          assert len({x['identifier'] for x in themes}) == len(themes)
+          for theme in themes:
+              assert theme['identifier'].startswith('snowboard.')
+              assert re.fullmatch(r'[0-9a-f]{64}', theme['sha256'])
+              assert theme['downloadURL'].startswith('https://')
+              assert theme['effectiveURL'].startswith('https://')
+              assert '.theme' in theme['archiveSubpath'].lower()
+              assert int(theme['mediaFiles']) >= 1
+          print(f"verified_snowboard_themes={len(themes)}")
+          print(f"verified_snowboard_packages={catalog['packageCount']}")
+          PY
+
+      - name: Integrate verified SnowBoard catalog and bump 3.5.6
+        run: |
+          set -euo pipefail
+          python3 scripts/apply_snowboard_gallery.py 2>&1 | tee source-patch.log
+          grep -Fq 'snowboard_gallery_source_patch=success' source-patch.log
+          grep -Fq 'Version: 3.5.6' control
+          grep -Fq 'GIF2ANI 3.5.6' gif2aniprefs/Resources/Root.plist
+          grep -Fq 'G2BundledSnowBoardCatalog.inc' gif2aniprefs/G2ThemeGalleryController.m
+          grep -Fq 'G2SnowBoardThemeURLIsAllowed(url)' gif2aniprefs/G2OpenThemeLibrary.inc
+          grep -Fq 'static respring logo could not be normalized safely' gif2aniprefs/G2OpenThemeLibrary.inc
+          grep -Fq 'self.legacy = @[]' gif2aniprefs/G2ThemeGalleryPart5.inc
+          ! grep -Fq 'Import Pack File' gif2aniprefs/G2ThemeGalleryPart6.inc
+
+      - name: Build rootless Gif2Ani 3.5.6
+        env:
+          THEOS: /opt/theos
+        run: |
+          set -euo pipefail
+          make clean package FINALPACKAGE=1 2>&1 | tee build.log
+          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.5.6_iphoneos-arm64.deb' -print -quit)"
+          test -s "$DEB"
+          test "$(dpkg-deb -f "$DEB" Package)" = 'com.nightvibes33.gif2ani'
+          test "$(dpkg-deb -f "$DEB" Version)" = '3.5.6'
+          test "$(dpkg-deb -f "$DEB" Architecture)" = 'iphoneos-arm64'
+
+          rm -rf verify-root
+          dpkg-deb -x "$DEB" verify-root
+          BUNDLE='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle'
+          PREFS="$BUNDLE/Gif2AniPrefs"
+          TWEAK='verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib'
+          SNOWBOARD="$BUNDLE/SnowBoardCatalog.json"
+          SPRINGY="$BUNDLE/OpenThemeCatalog.json"
+          test -s "$PREFS" && test -s "$TWEAK" && test -s "$SNOWBOARD" && test -s "$SPRINGY"
+          file "$PREFS" | grep -Fq 'Mach-O 64-bit arm64'
+          strings -a "$PREFS" | grep -Fq 'verified-snowboard-respring'
+          strings -a "$PREFS" | grep -Fq 'The verified SnowBoard subtheme was not present'
+          grep -Fq 'GIF2ANI 3.5.6' "$BUNDLE/Root.plist"
+
+          python3 - "$SNOWBOARD" <<'PY'
+          import json, pathlib, sys
+          catalog = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          assert catalog['count'] == len(catalog['themes']) >= 10
+          assert catalog['packageCount'] >= 3
+          print(f"embedded_snowboard_themes={catalog['count']}")
+          print(f"embedded_snowboard_packages={catalog['packageCount']}")
+          PY
+
+          mkdir -p release-packages
+          cp "$DEB" release-packages/Gif2Ani-3.5.6-verified-snowboard-library.deb
+          sha256sum release-packages/Gif2Ani-3.5.6-verified-snowboard-library.deb \
+            | tee release-packages/Gif2Ani-3.5.6-verified-snowboard-library.sha256
+
+      - name: Upload package and verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gif2Ani-3.5.6-verified-snowboard-library
+          path: |
+            release-packages/Gif2Ani-3.5.6-verified-snowboard-library.deb
+            release-packages/Gif2Ani-3.5.6-verified-snowboard-library.sha256
+            gif2aniprefs/Resources/SnowBoardCatalog.json
+            status/snowboard-catalog-audit.txt
+            snowboard-catalog.log
+            source-patch.log
+            build.log
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Publish package, generated catalog, source changes, and status
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          mkdir -p status release-packages
+          {
+            echo 'Gif2Ani 3.5.6 Verified SnowBoard Respring Library'
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "source_commit=${GITHUB_SHA}"
+            echo "status=${JOB_STATUS}"
+            echo "completed_at_utc=$(date -u +%FT%TZ)"
+            cat release-packages/Gif2Ani-3.5.6-verified-snowboard-library.sha256 2>/dev/null || true
+            echo 'policy=free direct public original DEBs only; package files are never installed'
+            echo 'checks=HTTPS, published SHA-256, package ID, version, architecture, archive paths, .theme paths, media files'
+            echo 'legacy_import_prompt=removed'
+            echo 'download_cache_postinst_owner=mobile-recursive'
+            echo '--- SnowBoard catalog summary ---'
+            grep -E 'candidate_page_count=|snowboard_verified_package_count=|snowboard_verified_theme_count=|snowboard_rejected_count=' snowboard-catalog.log 2>/dev/null || true
+            echo '--- catalog audit tail ---'
+            tail -n 180 status/snowboard-catalog-audit.txt 2>/dev/null || true
+            echo '--- source patch ---'
+            cat source-patch.log 2>/dev/null || true
+            echo '--- build tail ---'
+            tail -n 220 build.log 2>/dev/null || true
+          } > status/gif2ani-356-snowboard-library.txt
+
+          if [ "$JOB_STATUS" = success ]; then
+            git add control packaging/postinst
+            git add gif2aniprefs/G2ThemeGalleryController.m
+            git add gif2aniprefs/G2OpenThemeLibrary.inc
+            git add gif2aniprefs/G2ThemeGalleryPart5.inc
+            git add gif2aniprefs/G2ThemeGalleryPart6.inc
+            git add gif2aniprefs/G2ModernGallery.inc
+            git add gif2aniprefs/Resources/Root.plist
+            git add gif2aniprefs/Resources/SnowBoardCatalog.json
+            git add status/snowboard-catalog-audit.txt
+            git add -f release-packages/Gif2Ani-3.5.6-verified-snowboard-library.deb
+            git add release-packages/Gif2Ani-3.5.6-verified-snowboard-library.sha256
+          fi
+          git add status/gif2ani-356-snowboard-library.txt
+          git commit -m "Publish Gif2Ani 3.5.6 SnowBoard library (${JOB_STATUS}) [skip ci]" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
