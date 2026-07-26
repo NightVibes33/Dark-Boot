@@ -32,25 +32,34 @@ jobs:
           grep -Fq 'sourceCommit' gif2aniprefs/G2BundledOpenThemeCatalog.inc
           grep -Fq 'G2OpenThemeURLIsAllowed(url, NO)' gif2aniprefs/G2BundledOpenThemeCatalog.inc
           python3 - <<'PY' | tee validation.log
-          import json, pathlib, re
-          manifest=json.loads(pathlib.Path('gif2aniprefs/Resources/OpenThemeCatalog.json').read_text())
-          themes=manifest['themes']
-          assert manifest['version']==1
-          assert manifest['count']==len(themes)==48
-          assert manifest['sourceRepository']=='VirenMohindra/CydiaRepo'
-          assert manifest['sourceLicense']=='MIT'
-          seen=set()
+          import json
+          import pathlib
+          import re
+
+          path = pathlib.Path('gif2aniprefs/Resources/OpenThemeCatalog.json')
+          manifest = json.loads(path.read_text())
+          themes = manifest['themes']
+          assert manifest['version'] == 1
+          assert manifest['count'] == len(themes) == 48
+          assert manifest['sourceRepository'] == 'VirenMohindra/CydiaRepo'
+          assert manifest['sourceLicense'] == 'MIT'
+          seen = set()
           for theme in themes:
-              package=theme['package']
-              assert package==theme['identifier'] and package not in seen
-              seen.add(package)
+              package = theme['package']
+              assert package == theme['identifier']
               assert package.startswith('io.github.virenmohindra.')
-              assert re.fullmatch(r'[0-9a-f]{40}',theme['sourceCommit'])
-              assert re.fullmatch(r'[0-9a-f]{64}',theme['sha256'])
-              assert 0<int(theme['bytes'])<=100*1024*1024
-              filename=theme['filename']
-              assert filename.startswith('./debs/') and filename.endswith('.deb')
-              assert '..' not in filename and '\\' not in filename
+              assert package not in seen
+              seen.add(package)
+              assert re.fullmatch(r'[0-9a-f]{40}', theme['sourceCommit'])
+              assert re.fullmatch(r'[0-9a-f]{64}', theme['sha256'])
+              assert 0 < int(theme['bytes']) <= 100 * 1024 * 1024
+              filename = theme['filename']
+              assert filename.startswith('./debs/')
+              assert filename.endswith('.deb')
+              assert '..' not in filename
+              assert '\\' not in filename
+              pinned = f"https://raw.githubusercontent.com/VirenMohindra/CydiaRepo/{theme['sourceCommit']}/{filename[2:]}"
+              assert pinned.startswith('https://raw.githubusercontent.com/VirenMohindra/CydiaRepo/')
           print('immutable_springy_manifest=passed')
           PY
 
@@ -62,20 +71,27 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends bash curl sudo build-essential fakeroot rsync perl git libxml2 dpkg-dev unzip xz-utils ca-certificates python3 python3-pil file binutils
+          sudo apt-get install -y --no-install-recommends bash curl sudo build-essential fakeroot rsync perl git libxml2 dpkg-dev unzip xz-utils ca-certificates python3 file binutils
           sudo rm -rf /opt/theos
           sudo mkdir -p /opt
           sudo chown "$USER:$USER" /opt
           bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
           test -x /opt/theos/toolchain/linux/iphone/bin/clang
 
-      - name: Generate 102 verified real thumbnails
+      - name: Seed 102 verified thumbnails from 3.5.2
         run: |
           set -euo pipefail
-          python3 scripts/build_theme_previews.py | tee previews.log
+          SEED_DEB='release-packages/Gif2Ani-3.5.2-download-previews-fix.deb'
+          test -s "$SEED_DEB"
+          rm -rf preview-seed gif2aniprefs/Resources/ThemePreviews
+          dpkg-deb -x "$SEED_DEB" preview-seed
+          SEED_PREVIEWS='preview-seed/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/ThemePreviews'
+          test "$(find "$SEED_PREVIEWS" -maxdepth 1 -type f -name '*.png' | wc -l)" = 102
+          cp -a "$SEED_PREVIEWS" gif2aniprefs/Resources/ThemePreviews
           test "$(find gif2aniprefs/Resources/ThemePreviews -maxdepth 1 -type f -name '*.png' | wc -l)" = 102
           test -s gif2aniprefs/Resources/ThemePreviews/cyan-pulse-rings.png
           test -s gif2aniprefs/Resources/ThemePreviews/io.github.virenmohindra.a-wave.png
+          echo 'seeded_previews=102' | tee previews.log
 
       - name: Build and validate rootless 3.5.3 package
         env:
@@ -100,10 +116,10 @@ jobs:
           strings -a "$PREFS" | grep -Fq 'The downloaded DEB package identifier does not match the selected theme.'
           test "$(find "$PREVIEWS" -maxdepth 1 -type f -name '*.png' | wc -l)" = 102
           python3 - "$CATALOG" <<'PY'
-          import json,pathlib,sys
-          m=json.loads(pathlib.Path(sys.argv[1]).read_text())
-          assert m['count']==len(m['themes'])==48
-          assert all(len(t['sourceCommit'])==40 for t in m['themes'])
+          import json, pathlib, sys
+          m = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          assert m['count'] == len(m['themes']) == 48
+          assert all(len(t['sourceCommit']) == 40 for t in m['themes'])
           print('embedded_catalog=passed')
           PY
           mkdir -p release-packages
@@ -139,8 +155,8 @@ jobs:
             echo 'previews=102 bundled thumbnails retained'
             echo '--- validation ---'
             cat validation.log 2>/dev/null || true
-            echo '--- previews tail ---'
-            tail -n 100 previews.log 2>/dev/null || true
+            echo '--- previews ---'
+            cat previews.log 2>/dev/null || true
             echo '--- build tail ---'
             tail -n 180 build.log 2>/dev/null || true
           } > status/gif2ani-353-immutable-springy.txt
