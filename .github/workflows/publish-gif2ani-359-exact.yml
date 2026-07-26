@@ -1,0 +1,140 @@
+name: Publish Exact Verified Gif2Ani 3.5.9
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-gif2ani-359-exact.yml
+      - triggers/publish-gif2ani-359-exact.txt
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: publish-gif2ani-359-exact
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download exact compiled artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: '8635526334'
+          EXPECTED_SHA: 'fa8b3c766684b5d6e22056611590e24b695175f020a845180092c45fa951e583'
+        run: |
+          set -euo pipefail
+          curl -fsSL -H "Authorization: Bearer ${GH_TOKEN}" -H 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip" -o artifact.zip
+          rm -rf artifact
+          mkdir artifact
+          unzip -q artifact.zip -d artifact
+          DEB='artifact/release-packages/Gif2Ani-3.5.9-archive-animated-previews.deb'
+          test -s "$DEB"
+          ACTUAL_SHA="$(sha256sum "$DEB" | awk '{print $1}')"
+          echo "artifact_sha256=$ACTUAL_SHA"
+          test "$ACTUAL_SHA" = "$EXPECTED_SHA"
+          test "$(dpkg-deb -f "$DEB" Package)" = 'com.nightvibes33.gif2ani'
+          test "$(dpkg-deb -f "$DEB" Version)" = '3.5.9'
+          test "$(dpkg-deb -f "$DEB" Architecture)" = 'iphoneos-arm64'
+          echo 'artifact_identity_gate=passed'
+
+      - name: Apply matching source and extract generated resources
+        env:
+          EXPECTED_SHA: 'fa8b3c766684b5d6e22056611590e24b695175f020a845180092c45fa951e583'
+        run: |
+          set -euo pipefail
+          git pull --rebase origin main
+          python3 scripts/run_gif2ani_359_patch.py | tee source-fix.log
+          grep -Fq 'gif2ani_359_rootless_archive_environment=success' source-fix.log
+          grep -Fq 'gif2ani_359_animated_preview_runtime=success' source-fix.log
+
+          DEB='artifact/release-packages/Gif2Ani-3.5.9-archive-animated-previews.deb'
+          rm -rf verify-root
+          dpkg-deb -x "$DEB" verify-root
+          BUNDLE='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle'
+          PREFS="$BUNDLE/Gif2AniPrefs"
+          test -s "$PREFS"
+          test -s "$BUNDLE/ThemePreviewAnimations.json"
+          test "$(find "$BUNDLE/ThemePreviewAnimations" -maxdepth 1 -type f -name '*.gif' | wc -l | tr -d ' ')" = '262'
+
+          strings -a "$PREFS" > prefs-ascii.txt
+          strings -el "$PREFS" > prefs-utf16.txt
+          grep -Fq '/var/jb/usr/bin:/var/jb/usr/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin' prefs-ascii.txt
+          grep -Fq 'bundled-262-animated-download-previews-v359' prefs-ascii.txt
+          grep -Fq 'Animated bounded preview' prefs-utf16.txt
+
+          python3 - "$BUNDLE/ThemePreviewAnimations.json" "$BUNDLE/ThemePreviewAnimations" <<'PY'
+          import hashlib,json,pathlib,sys
+          manifest=json.loads(pathlib.Path(sys.argv[1]).read_text())
+          root=pathlib.Path(sys.argv[2])
+          files=list(root.glob('*.gif'))
+          assert manifest['count']==262 and len(manifest['previews'])==262 and len(files)==262
+          assert manifest['totalBytes']==sum(path.stat().st_size for path in files)
+          for record in manifest['previews']:
+              path=root/f"{record['identifier']}.gif"
+              assert path.is_file()
+              assert path.stat().st_size==record['bytes']
+              assert hashlib.sha256(path.read_bytes()).hexdigest()==record['sha256']
+          print(f"embedded_preview_gate=passed|count={manifest['count']}|bytes={manifest['totalBytes']}")
+          PY
+
+          rm -rf gif2aniprefs/Resources/ThemePreviewAnimations
+          cp -a "$BUNDLE/ThemePreviewAnimations" gif2aniprefs/Resources/ThemePreviewAnimations
+          cp "$BUNDLE/ThemePreviewAnimations.json" gif2aniprefs/Resources/ThemePreviewAnimations.json
+          mkdir -p release-packages status
+          cp "$DEB" release-packages/Gif2Ani-3.5.9-archive-animated-previews.deb
+          printf '%s  %s\n' "$EXPECTED_SHA" 'release-packages/Gif2Ani-3.5.9-archive-animated-previews.deb' \
+            > release-packages/Gif2Ani-3.5.9-archive-animated-previews.sha256
+          {
+            echo 'Gif2Ani 3.5.9 Exact Verified Release'
+            echo 'status=success'
+            echo 'compiled_run_id=30214875882'
+            echo 'compiled_artifact_id=8635526334'
+            echo "published_at_utc=$(date -u +%FT%TZ)"
+            echo "$EXPECTED_SHA  release-packages/Gif2Ani-3.5.9-archive-animated-previews.deb"
+            echo 'archive_runtime_fix=rootless PATH HOME TMPDIR and LC_ALL before dpkg-deb inspection and extraction'
+            echo 'animated_previews=262'
+            echo 'cc0_previews=54'
+            echo 'springy_previews=48'
+            echo 'snowboard_previews=160'
+            echo 'gallery_total=274'
+            echo 'artifact_identity_gate=passed'
+            echo 'embedded_preview_gate=passed'
+            echo 'binary_runtime_marker_gate=passed'
+          } > status/gif2ani-359-exact-release.txt
+
+      - name: Commit and push conflict-safely
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add control
+          git add gif2aniprefs/G2ThemeGalleryPart3.inc
+          git add gif2aniprefs/G2RemoteThemePreviewOverride.inc
+          git add gif2aniprefs/Resources/Root.plist
+          git add gif2aniprefs/Resources/ThemePreviewAnimations.json
+          git add -f gif2aniprefs/Resources/ThemePreviewAnimations
+          git add -f release-packages/Gif2Ani-3.5.9-archive-animated-previews.deb
+          git add release-packages/Gif2Ani-3.5.9-archive-animated-previews.sha256
+          git add status/gif2ani-359-exact-release.txt
+          git commit -m 'Publish exact verified Gif2Ani 3.5.9 release [skip ci]'
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              echo 'exact_release_publish=success'
+              exit 0
+            fi
+            git rebase --abort >/dev/null 2>&1 || true
+            sleep $((attempt * 2))
+          done
+          echo 'exact_release_publish=failure'
+          exit 1
