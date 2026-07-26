@@ -41,7 +41,11 @@ jobs:
           data=json.loads(pathlib.Path('runs.json').read_text())
           runs=data.get('workflow_runs', [])
           selected=runs[0] if runs else None
-          lines=['Gif2Ani 3.5.6 Active Build Reporter']
+          lines=[
+              'Gif2Ani 3.5.6 Active Build Reporter',
+              f"report_workflow_run={os.environ.get('GITHUB_RUN_ID','')}",
+              f"report_sha={os.environ.get('GITHUB_SHA','')}",
+          ]
           if selected is None:
               lines.append('run=not_found')
           else:
@@ -70,7 +74,7 @@ jobs:
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.email '4189828+github-actions[bot]@users.noreply.github.com'
           git pull --rebase origin main
           git add status/gif2ani-356-active-run.txt
           git commit -m 'Report Gif2Ani 3.5.6 active build [skip ci]' || exit 0
