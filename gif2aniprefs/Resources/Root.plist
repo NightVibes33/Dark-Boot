@@ -8,8 +8,8 @@
   <array>
     <dict>
       <key>cell</key><string>PSGroupCell</string>
-      <key>label</key><string>GIF2ANI 3.4</string>
-      <key>footerText</key><string>Choose from 12 offline themes, 54 downloadable built-in themes, installed packs, or your own GIF. Staging preserves your settings; Apply verifies everything before restarting BackBoard.</string>
+      <key>label</key><string>GIF2ANI 3.4.1</string>
+      <key>footerText</key><string>114 first-class themes: 12 offline, 54 pinned CC0 downloads, and 48 original Springy pack downloads. Nothing contacts BackBoard until you explicitly tap Apply and Respring.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSButtonCell</string>
@@ -19,8 +19,8 @@
 
     <dict>
       <key>cell</key><string>PSGroupCell</string>
-      <key>label</key><string>ANIMATION GALLERY</string>
-      <key>footerText</key><string>Tap a downloadable built-in theme to download and preview its pinned CC0 GIF. Stage it, return here, choose scaling, background, repeat, and duration, then tap Apply and Respring.</string>
+      <key>label</key><string>114-THEME ANIMATION GALLERY</string>
+      <key>footerText</key><string>Tap any downloadable theme to fetch its verified original file, preview it, and stage it. Then return here to choose scaling, background, repeat, and duration before Apply. The 48 Springy DEBs are extracted for animation media only; the old packages are never installed.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSLinkCell</string>
@@ -31,8 +31,8 @@
 
     <dict>
       <key>cell</key><string>PSGroupCell</string>
-      <key>label</key><string>ANIMATION FILE</string>
-      <key>footerText</key><string>Safety limits for this 2 GB iPad: 25 MB input, 240 source frames, 24 decoded frames, 640 px maximum decoded dimension, and 48 MB estimated decoded memory.</string>
+      <key>label</key><string>YOUR ANIMATION FILE</string>
+      <key>footerText</key><string>Safety limits for this 2 GB iPad: 25 MB GIF input, 240 source frames, 24 decoded frames, 640 px maximum decoded dimension, and 48 MB estimated decoded memory. Downloaded DEBs and archives also have strict path, file-count, and extracted-size limits.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSButtonCell</string>
@@ -48,7 +48,7 @@
     <dict>
       <key>cell</key><string>PSGroupCell</string>
       <key>label</key><string>LAYOUT</string>
-      <key>footerText</key><string>Fit preserves the whole GIF. Fill crops to cover the display. Stretch changes its aspect ratio. Center keeps the decoded pixel size. Changes take effect on the next Apply and Respring.</string>
+      <key>footerText</key><string>Fit preserves the whole animation. Fill crops to cover the display. Stretch changes its aspect ratio. Center keeps the decoded pixel size. Changes take effect on the next Apply and Respring.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSLinkListCell</string>
@@ -71,7 +71,7 @@
     <dict>
       <key>cell</key><string>PSGroupCell</string>
       <key>label</key><string>PLAYBACK</string>
-      <key>footerText</key><string>Loop Forever matches the runtime behavior for -1. Play Once uses zero repeats. Original GIF Timing preserves the frame delays stored in the GIF.</string>
+      <key>footerText</key><string>Loop Forever repeats continuously. Play Once uses zero repeats. Original GIF Timing preserves the animation’s own timing; a custom duration scales playback to the selected total time.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSLinkListCell</string>
@@ -111,7 +111,7 @@
 
     <dict>
       <key>cell</key><string>PSGroupCell</string>
-      <key>footerText</key><string>Apply revalidates the staged or active GIF, normalizes every setting, keeps a rollback copy while promoting a new GIF, verifies isEnabled on disk, clears stale safety files, and restarts BackBoard. A failed runtime load is automatically quarantined.</string>
+      <key>footerText</key><string>Apply revalidates the staged or active GIF, normalizes every setting, keeps a rollback copy while promoting new media, verifies the enabled state on disk, clears stale safety files, and restarts BackBoard. A failed runtime load is automatically quarantined and Apple’s normal animation remains available.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSButtonCell</string>
