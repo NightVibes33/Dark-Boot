@@ -1,8 +1,8 @@
 Gif2Ani 3.4.0 Gallery Build
-run_id=30180669008
-commit=01c11c9c2bf71852bb96c5842bcf80f0277229cd
+run_id=30180678009
+commit=634595a3d0657ebb9d83c5a3480d59f28d2c2b54
 status=cancelled
-completed_at_utc=2026-07-26T00:09:47Z
+completed_at_utc=2026-07-26T00:10:34Z
 
 
 --- packaged binaries ---
