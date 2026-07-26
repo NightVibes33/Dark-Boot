@@ -1,2 +1,2 @@
-trigger=2026-07-26T04:20:00Z
-reason=Replace failing NSURLSession gallery downloads with verified curl and bundle 102 real thumbnails
+trigger=2026-07-26T04:28:00Z
+reason=Rebuild after declaring curl and preview helpers before the Springy implementation
