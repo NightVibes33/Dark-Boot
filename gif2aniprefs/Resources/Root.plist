@@ -8,8 +8,8 @@
   <array>
     <dict>
       <key>cell</key><string>PSGroupCell</string>
-      <key>label</key><string>GIF2ANI 3.5.9</string>
-      <key>footerText</key><string>Expanded verified gallery with animated previews: 12 offline animations, 54 pinned CC0 downloads, 48 original Springy packs, and 160 verified SnowBoard respring themes. Nothing contacts BackBoard until you explicitly tap Apply and Respring.</string>
+      <key>label</key><string>GIF2ANI 3.6.0</string>
+      <key>footerText</key><string>Expanded verified gallery with animated card previews: 12 offline animations, 54 pinned CC0 downloads, 48 original Springy packs, and 160 verified SnowBoard respring themes. Nothing contacts BackBoard until you explicitly tap Apply and Respring.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSButtonCell</string>

@@ -299,6 +299,8 @@ static BOOL G2MRestartProcess(NSString *processName) {
     return NO;
 }
 
+__attribute__((used)) static const char G2AnimatedCardPreviewMarker[] = "visible-card-bundled-animation-v360";
+
 @interface G2ModernThemeCell : UITableViewCell
 @property (nonatomic, strong) UIImageView *themeImageView;
 @property (nonatomic, strong) UILabel *themeTitleLabel;
@@ -307,6 +309,7 @@ static BOOL G2MRestartProcess(NSString *processName) {
 @property (nonatomic, strong) UILabel *themeBadgeLabel;
 @property (nonatomic, strong) UIButton *favoriteButton;
 @property (nonatomic, copy) void (^favoriteHandler)(void);
+@property (nonatomic, copy) NSString *previewIdentity;
 @end
 
 @implementation G2ModernThemeCell
@@ -394,6 +397,11 @@ static BOOL G2MRestartProcess(NSString *processName) {
 - (void)prepareForReuse {
     [super prepareForReuse];
     self.favoriteHandler = nil;
+    self.previewIdentity = nil;
+    [self.themeImageView stopAnimating];
+    self.themeImageView.animationImages = nil;
+    self.themeImageView.animationDuration = 0;
+    self.themeImageView.animationRepeatCount = 0;
     self.themeImageView.image = nil;
 }
 
@@ -1000,6 +1008,7 @@ static BOOL G2MRestartProcess(NSString *processName) {
 @property (nonatomic, strong) UILabel *g2mStorageLabel;
 @property (nonatomic, strong) NSMutableArray<UIButton *> *g2mCategoryButtons;
 @property (nonatomic, strong) NSMutableArray<UIButton *> *g2mFilterButtons;
+@property (nonatomic, strong) NSCache<NSString *, NSDictionary *> *g2mAnimatedCardPreviewCache;
 @end
 
 @implementation G2ModernThemeGalleryController
@@ -1013,6 +1022,9 @@ static BOOL G2MRestartProcess(NSString *processName) {
     self.tableView.sectionHeaderTopPadding = 12.0;
     self.g2mCategory = @"All";
     self.g2mFilter = @"All";
+    self.g2mAnimatedCardPreviewCache = [NSCache new];
+    self.g2mAnimatedCardPreviewCache.countLimit = 24;
+    self.g2mAnimatedCardPreviewCache.totalCostLimit = 12 * 1024 * 1024;
 
     self.g2mSearchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     self.g2mSearchController.searchResultsUpdater = self;
@@ -1268,6 +1280,67 @@ static BOOL G2MRestartProcess(NSString *processName) {
     return indexPath.row < (NSInteger)array.count ? array[indexPath.row] : nil;
 }
 
+- (void)g2m_applyAnimatedCardEntry:(NSDictionary *)entry toCell:(G2ModernThemeCell *)cell identity:(NSString *)identity {
+    if (![cell.previewIdentity isEqualToString:identity]) return;
+    NSArray<UIImage *> *frames = [entry[@"frames"] isKindOfClass:NSArray.class] ? entry[@"frames"] : @[];
+    if (frames.count < 2) return;
+    [cell.themeImageView stopAnimating];
+    cell.themeImageView.contentMode = UIViewContentModeScaleAspectFit;
+    cell.themeImageView.image = frames.firstObject;
+    cell.themeImageView.animationImages = frames;
+    cell.themeImageView.animationDuration = MAX(0.8, [entry[@"duration"] doubleValue]);
+    cell.themeImageView.animationRepeatCount = 0;
+    [cell.themeImageView startAnimating];
+}
+
+- (BOOL)g2m_configureBundledAnimatedCardForCell:(G2ModernThemeCell *)cell
+                                           pack:(NSDictionary *)pack
+                                       identity:(NSString *)identity
+                                      indexPath:(NSIndexPath *)indexPath {
+    NSString *previewPath = G2BundledThemePreviewAnimationPath(pack);
+    if (!previewPath.length) return NO;
+
+    cell.previewIdentity = identity;
+    [cell.themeImageView stopAnimating];
+    cell.themeImageView.animationImages = nil;
+    cell.themeImageView.animationDuration = 0;
+    cell.themeImageView.animationRepeatCount = 0;
+    cell.themeImageView.contentMode = UIViewContentModeScaleAspectFit;
+    UIImage *staticPreview = G2BundledThemePreview(pack);
+    cell.themeImageView.image = staticPreview ?: [UIImage systemImageNamed:@"photo.on.rectangle"];
+
+    NSDictionary *cached = [self.g2mAnimatedCardPreviewCache objectForKey:identity];
+    if (cached) {
+        [self g2m_applyAnimatedCardEntry:cached toCell:cell identity:identity];
+        return YES;
+    }
+
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+        @autoreleasepool {
+            NSArray<UIImage *> *frames = G2FramesFromGIF(previewPath, 176);
+            if (frames.count < 2) return;
+            NSTimeInterval duration = MAX(0.8, G2NaturalGIFDuration(previewPath));
+            NSUInteger cost = 0;
+            for (UIImage *frame in frames) {
+                CGSize size = frame.size;
+                CGFloat scale = MAX(1.0, frame.scale);
+                cost += (NSUInteger)ceil(size.width * scale) * (NSUInteger)ceil(size.height * scale) * 4;
+            }
+            NSDictionary *entry = @{@"frames":frames, @"duration":@(duration)};
+            dispatch_async(dispatch_get_main_queue(), ^{
+                typeof(self) strongSelf = weakSelf;
+                if (!strongSelf) return;
+                [strongSelf.g2mAnimatedCardPreviewCache setObject:entry forKey:identity cost:cost];
+                G2ModernThemeCell *visible = (G2ModernThemeCell *)[strongSelf.tableView cellForRowAtIndexPath:indexPath];
+                if (![visible isKindOfClass:G2ModernThemeCell.class]) return;
+                [strongSelf g2m_applyAnimatedCardEntry:entry toCell:visible identity:identity];
+            });
+        }
+    });
+    return YES;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *identifier = @"G2ModernThemeCell";
     G2ModernThemeCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
@@ -1297,18 +1370,25 @@ static BOOL G2MRestartProcess(NSString *processName) {
     };
 
     NSString *cacheKey = [NSString stringWithFormat:@"modern-%@-%@", G2MThemeIdentifier(pack), pack[@"sha256"] ?: @""];
-    UIImage *cached = [self.thumbnailCache objectForKey:cacheKey];
-    if (cached) {
-        cell.themeImageView.image = cached;
-    } else {
-        NSString *kind = pack[@"kind"];
-        if ([kind isEqualToString:@"legacy"]) cell.themeImageView.image = [UIImage systemImageNamed:@"archivebox"];
-        else if (([kind isEqualToString:@"remote"] || [kind isEqualToString:@"sourceDeb"]) && state != 1) {
-            UIImage *bundledPreview = G2BundledThemePreview(pack);
-            cell.themeImageView.contentMode = bundledPreview ? UIViewContentModeScaleAspectFill : UIViewContentModeCenter;
-            cell.themeImageView.image = bundledPreview ?: [UIImage systemImageNamed:state == 2 ? @"arrow.triangle.2.circlepath.icloud" : @"icloud.and.arrow.down"];
-        }
-        else {
+    NSString *kind = pack[@"kind"];
+    cell.previewIdentity = nil;
+    [cell.themeImageView stopAnimating];
+    cell.themeImageView.animationImages = nil;
+    cell.themeImageView.animationDuration = 0;
+    cell.themeImageView.animationRepeatCount = 0;
+
+    BOOL downloadable = [kind isEqualToString:@"remote"] || [kind isEqualToString:@"sourceDeb"];
+    BOOL animatedCard = downloadable && [self g2m_configureBundledAnimatedCardForCell:cell pack:pack identity:cacheKey indexPath:indexPath];
+    if (!animatedCard) {
+        UIImage *cached = [self.thumbnailCache objectForKey:cacheKey];
+        if (cached) {
+            cell.themeImageView.contentMode = UIViewContentModeScaleAspectFill;
+            cell.themeImageView.image = cached;
+        } else if ([kind isEqualToString:@"legacy"]) {
+            cell.themeImageView.contentMode = UIViewContentModeCenter;
+            cell.themeImageView.image = [UIImage systemImageNamed:@"archivebox"];
+        } else {
+            cell.themeImageView.contentMode = UIViewContentModeCenter;
             cell.themeImageView.image = [UIImage systemImageNamed:@"photo.on.rectangle"];
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
                 UIImage *thumb = nil;
@@ -1325,12 +1405,26 @@ static BOOL G2MRestartProcess(NSString *processName) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [weakSelf.thumbnailCache setObject:thumb forKey:cacheKey];
                     G2ModernThemeCell *visible = (G2ModernThemeCell *)[weakSelf.tableView cellForRowAtIndexPath:indexPath];
-                    if ([visible isKindOfClass:G2ModernThemeCell.class]) visible.themeImageView.image = thumb;
+                    if (![visible isKindOfClass:G2ModernThemeCell.class] || visible.previewIdentity.length) return;
+                    visible.themeImageView.contentMode = UIViewContentModeScaleAspectFill;
+                    visible.themeImageView.image = thumb;
                 });
             });
         }
     }
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    (void)tableView;
+    (void)indexPath;
+    if (![cell isKindOfClass:G2ModernThemeCell.class]) return;
+    G2ModernThemeCell *modernCell = (G2ModernThemeCell *)cell;
+    modernCell.previewIdentity = nil;
+    [modernCell.themeImageView stopAnimating];
+    modernCell.themeImageView.animationImages = nil;
+    modernCell.themeImageView.animationDuration = 0;
+    modernCell.themeImageView.animationRepeatCount = 0;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

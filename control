@@ -1,11 +1,11 @@
 Package: com.nightvibes33.gif2ani
 Name: Gif2Ani Rootless
-Version: 3.5.9
+Version: 3.6.0
 Architecture: iphoneos-arm64
 Depends: firmware (>= 15.0), mobilesubstrate
 Conflicts: com.nightvibes33.darkboot, com.wizage.gif2ani2, com.wizages.gif2ani
 Replaces: com.nightvibes33.darkboot
-Description: Crash-safe custom respring animations for BackBoard on rootless iOS 15 and 16. Gif2Ani 3.5.9 fixes the Settings-only archive rejection by giving every spawned jailbreak tool the complete rootless PATH, HOME, TMPDIR, and C locale before dpkg-deb inspection or extraction. It bundles 262 bounded animated previews for every downloadable catalog entry: 54 CC0 themes, 48 verified Springy packs, and 160 verified SnowBoard respring themes. Full packages remain protected by pinned HTTPS source, exact byte count, SHA-256, package identity, safe archive paths, extracted size, file count, and selected artwork checks. The gallery contains 274 themes total, including 12 offline animations.
+Description: Crash-safe custom respring animations for BackBoard on rootless iOS 15 and 16. Gif2Ani 3.6.0 makes every downloadable CC0, Springy, and SnowBoard gallery card display its bundled animated preview before the source package is downloaded. Only visible cards decode frames; off-screen cells stop and release their animations, while a 12 MB bounded cache keeps scrolling responsive on 2 GB devices. It retains the 3.5.9 rootless archive environment fix, all 262 bundled animated downloadable previews, the 274-theme gallery, and pinned source integrity verification.
 Maintainer: NightVibes33
 Author: wizages, rootless port by NightVibes33
 Section: Tweaks
