@@ -1,8 +1,8 @@
 Gif2Ani 3.5.0 Modern Gallery and BackBoard Reliability
-run_id=30185759356
-source_commit=fc285ffbb068366ae140e6e64c9de9ea3dc1d5a0
+run_id=30185855981
+source_commit=5037fff9a7297eabc3efce3cd0ec9c6859fca5f9
 status=failure
-completed_at_utc=2026-07-26T03:12:03Z
+completed_at_utc=2026-07-26T03:15:32Z
 gallery=search categories filters cards favorites recent delete download-all clear-cache storage update-indicator
 preview=actual-background scaling play-pause restart speed fullscreen device-frames apple-comparison
 apply=single-review apply-without-respring apply-and-respring five-rollbacks emergency-disable
@@ -10,6 +10,7 @@ backboard=serial-decode memory-pressure frame-release duration-cap telemetry asy
 --- modernization log ---
 Gif2Ani 3.5.0 modernization source applied
 --- build tail ---
++ make clean package FINALPACKAGE=1
 [0;36m==> [1;39mCleaning…[m
 [1;31m> [1;3;39mMaking clean in gif2aniprefs…[m
 [0;36m==> [1;39mCleaning…[m
@@ -36,3 +37,31 @@ Gif2Ani 3.5.0 modernization source applied
 [1;31m> [1;3;39mMaking stage for bundle Gif2AniPrefs…[m
 [0;36m==> [1;36mNotice:[m Neither plutil, ply, or libplist-utils are installed, so XML plist files were not optimized.
 dm.pl: building package `com.nightvibes33.gif2ani:iphoneos-arm64' in `./packages/com.nightvibes33.gif2ani_3.5.0_iphoneos-arm64.deb'
+++ find packages -maxdepth 1 -type f -name com.nightvibes33.gif2ani_3.5.0_iphoneos-arm64.deb -print -quit
++ DEB=packages/com.nightvibes33.gif2ani_3.5.0_iphoneos-arm64.deb
++ test -s packages/com.nightvibes33.gif2ani_3.5.0_iphoneos-arm64.deb
+++ dpkg-deb -f packages/com.nightvibes33.gif2ani_3.5.0_iphoneos-arm64.deb Package
++ test com.nightvibes33.gif2ani = com.nightvibes33.gif2ani
+++ dpkg-deb -f packages/com.nightvibes33.gif2ani_3.5.0_iphoneos-arm64.deb Version
++ test 3.5.0 = 3.5.0
+++ dpkg-deb -f packages/com.nightvibes33.gif2ani_3.5.0_iphoneos-arm64.deb Architecture
++ test iphoneos-arm64 = iphoneos-arm64
++ rm -rf verify-root
++ dpkg-deb -x packages/com.nightvibes33.gif2ani_3.5.0_iphoneos-arm64.deb verify-root
++ PREFS=verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
++ TWEAK=verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib
++ test -s verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
++ test -s verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib
++ file verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
++ grep -Fq 'Mach-O 64-bit arm64'
++ file verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib
++ grep -Fq 'Mach-O 64-bit arm64'
++ for marker in 'Search themes' 'Download All CC0' 'Clear Download Cache' 'Favorites' 'Recently Used' 'Apply Without Respring' 'Apply and Respring' 'Emergency Disable' 'Compare with Apple'
++ strings -a verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
++ grep -Fq 'Search themes'
++ for marker in 'Search themes' 'Download All CC0' 'Clear Download Cache' 'Favorites' 'Recently Used' 'Apply Without Respring' 'Apply and Respring' 'Emergency Disable' 'Compare with Apple'
++ grep -Fq 'Download All CC0'
++ strings -a verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
++ echo 'missing preference marker: Download All CC0'
+missing preference marker: Download All CC0
++ exit 41
