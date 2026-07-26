@@ -1,0 +1,116 @@
+name: Fix Gif2Ani 3.4.1 Open Library Build Validation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/fix-build-341-open-library.yml
+      - triggers/fix-build-341-open-library.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-341-build-validation-fix
+  cancel-in-progress: true
+
+jobs:
+  fix:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch deterministic manifest validation
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('.github/workflows/build-gif2ani-340.yml')
+          text = path.read_text()
+
+          text = text.replace(
+              '          test -f gif2aniprefs/G2OpenThemeLibrary.inc\n',
+              '          test -f gif2aniprefs/G2OpenThemeLibrary.inc\n'
+              '          test -f gif2aniprefs/G2BundledOpenThemeCatalog.inc\n')
+          text = text.replace(
+              '          test -f gif2aniprefs/Resources/ThemeCatalog.json\n',
+              '          test -f gif2aniprefs/Resources/ThemeCatalog.json\n'
+              '          test -f gif2aniprefs/Resources/OpenThemeCatalog.json\n')
+          text = text.replace(
+              "          manifest=json.loads(Path('gif2aniprefs/Resources/ThemeCatalog.json').read_text())\n"
+              "          assert len(manifest['themes']) == 54\n",
+              "          manifest=json.loads(Path('gif2aniprefs/Resources/ThemeCatalog.json').read_text())\n"
+              "          open_manifest=json.loads(Path('gif2aniprefs/Resources/OpenThemeCatalog.json').read_text())\n"
+              "          assert len(manifest['themes']) == 54\n"
+              "          assert open_manifest['count'] == len(open_manifest['themes']) == 48\n"
+              "          assert open_manifest['sourceRepository'] == 'VirenMohindra/CydiaRepo'\n"
+              "          assert open_manifest['sourceLicense'] == 'MIT'\n")
+          text = text.replace(
+              "          for name in ['G2RemoteThemeCatalog.inc','G2OpenThemeLibrary.inc','G2RemoteThemePreviewOverride.inc','G2RemoteGalleryPolish.inc']:\n",
+              "          for name in ['G2RemoteThemeCatalog.inc','G2OpenThemeLibrary.inc','G2BundledOpenThemeCatalog.inc','G2RemoteThemePreviewOverride.inc','G2RemoteGalleryPolish.inc']:\n")
+          text = text.replace(
+              "          print('source_backed_open_library_minimum=40')\n",
+              "          print('source_backed_open_library_themes=48')\n"
+              "          print('total_downloadable_built_ins=102')\n")
+          text = text.replace(
+              '          test -f "$BUNDLE/ThemeCatalog.json"\n',
+              '          test -f "$BUNDLE/ThemeCatalog.json"\n'
+              '          test -f "$BUNDLE/OpenThemeCatalog.json"\n')
+          old = '''          strings "$BUNDLE/Gif2AniPrefs" | grep -q 'SHA-256 does not match the pinned manifest'
+          strings "$BUNDLE/Gif2AniPrefs" | grep -q 'Open Source Pack Library'
+          python3 - "$BUNDLE/ThemeCatalog.json" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[1]))
+          assert data['count']==54 and len(data['themes'])==54
+          print('packaged_theme_manifest=success')
+          PY
+'''
+          new = '''          strings "$BUNDLE/Gif2AniPrefs" > bundle-strings-341.txt
+          grep -Fq 'SHA-256 does not match the pinned manifest' bundle-strings-341.txt
+          grep -Fq 'Open Source Pack Library' bundle-strings-341.txt
+          grep -Fq 'Original Springy pack' bundle-strings-341.txt
+          python3 - "$BUNDLE/ThemeCatalog.json" "$BUNDLE/OpenThemeCatalog.json" <<'PY'
+          import json,sys
+          built_in=json.load(open(sys.argv[1]))
+          open_source=json.load(open(sys.argv[2]))
+          assert built_in['count']==54 and len(built_in['themes'])==54
+          assert open_source['count']==48 and len(open_source['themes'])==48
+          assert len({item['package'] for item in open_source['themes']})==48
+          print('packaged_cc0_theme_manifest=54')
+          print('packaged_open_theme_manifest=48')
+          print('packaged_downloadable_total=102')
+          PY
+'''
+          if old not in text and new not in text:
+              raise SystemExit('packaged validation block was not found')
+          text = text.replace(old, new, 1)
+
+          required = [
+              'G2BundledOpenThemeCatalog.inc',
+              'OpenThemeCatalog.json',
+              'bundle-strings-341.txt',
+              'packaged_downloadable_total=102',
+              "open_manifest['count'] == len(open_manifest['themes']) == 48",
+          ]
+          missing = [item for item in required if item not in text]
+          if missing:
+              raise SystemExit(f'missing build contract tokens: {missing}')
+          path.write_text(text)
+          PY
+
+      - name: Commit build workflow fix
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/build-gif2ani-340.yml
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'Validate all 102 downloadable Gif2Ani themes'
+          git pull --rebase origin main
+          git push origin HEAD:main
