@@ -1,0 +1,166 @@
+name: Build Gif2Ani 3.5.8 SHA-Bound Identity
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-gif2ani-358-sha-bound-identity.yml
+      - scripts/apply_gif2ani_358_sha_bound_identity.py
+      - triggers/build-gif2ani-358-sha-bound-identity.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-358-sha-bound-identity
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies and Theos
+        env:
+          THEOS: /opt/theos
+          CI: '1'
+          SHELL: /bin/bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            bash curl sudo build-essential fakeroot rsync perl git libxml2 dpkg-dev \
+            unzip xz-utils ca-certificates python3 file binutils
+          sudo rm -rf /opt/theos
+          sudo mkdir -p /opt
+          sudo chown "$USER:$USER" /opt
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          test -x /opt/theos/toolchain/linux/iphone/bin/clang
+
+      - name: Apply SHA-bound package identity fix
+        run: |
+          set -euo pipefail
+          python3 scripts/apply_gif2ani_358_sha_bound_identity.py | tee source-fix.log
+          grep -Fq 'gif2ani_358_sha_bound_identity=success' source-fix.log
+          grep -Fq 'Version: 3.5.8' control
+          grep -Fq 'GIF2ANI 3.5.8' gif2aniprefs/Resources/Root.plist
+          grep -Fq '274-THEME ANIMATION GALLERY' gif2aniprefs/Resources/Root.plist
+          grep -Fq 'sha256-bound-package-identity-fallback-v358' gif2aniprefs/G2OpenThemeLibrary.inc
+          grep -Fq 'strict-package-id-mismatch' gif2aniprefs/G2OpenThemeLibrary.inc
+          grep -Fq 'LastPackageVerification.plist' gif2aniprefs/G2OpenThemeLibrary.inc
+          grep -Fq 'data.length != expectedBytes.unsignedLongLongValue' gif2aniprefs/G2OpenThemeLibrary.inc
+
+      - name: Validate catalogs and policy
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, pathlib
+          springy=json.loads(pathlib.Path('gif2aniprefs/Resources/OpenThemeCatalog.json').read_text())
+          snowboard=json.loads(pathlib.Path('gif2aniprefs/Resources/SnowBoardCatalog.json').read_text())
+          assert springy['count'] == len(springy['themes']) == 48
+          assert snowboard['packageCount'] == 7
+          assert snowboard['count'] == len(snowboard['themes']) == 160
+          assert all(x.get('bytes') and len(x.get('sha256','')) == 64 and x.get('package') for x in springy['themes'])
+          assert all(x.get('bytes') and len(x.get('sha256','')) == 64 and x.get('package') for x in snowboard['themes'])
+          print('source_backed_themes=208')
+          print('gallery_total=274')
+          PY
+
+      - name: Compile and verify rootless package
+        env:
+          THEOS: /opt/theos
+        run: |
+          set -euo pipefail
+          make clean package FINALPACKAGE=1 2>&1 | tee build.log
+          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.5.8_iphoneos-arm64.deb' -print -quit)"
+          test -s "$DEB"
+          test "$(dpkg-deb -f "$DEB" Package)" = 'com.nightvibes33.gif2ani'
+          test "$(dpkg-deb -f "$DEB" Version)" = '3.5.8'
+          test "$(dpkg-deb -f "$DEB" Architecture)" = 'iphoneos-arm64'
+
+          rm -rf verify-root
+          dpkg-deb -x "$DEB" verify-root
+          BUNDLE='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle'
+          PREFS="$BUNDLE/Gif2AniPrefs"
+          TWEAK='verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib'
+          test -s "$PREFS" && test -s "$TWEAK"
+          file "$PREFS" | grep -Fq 'Mach-O 64-bit arm64'
+          file "$TWEAK" | grep -Fq 'Mach-O 64-bit arm64'
+          grep -Fq 'GIF2ANI 3.5.8' "$BUNDLE/Root.plist"
+          grep -Fq '274-THEME ANIMATION GALLERY' "$BUNDLE/Root.plist"
+          strings -a "$PREFS" | grep -Fq 'sha256-bound-package-identity-fallback-v358'
+          strings -a "$PREFS" | grep -Fq 'strict-package-id-mismatch'
+          strings -a "$PREFS" | grep -Fq 'LastPackageVerification.plist'
+          strings -a "$PREFS" | grep -Fq 'The downloaded DEB byte count does not match the verified catalog.'
+
+          python3 - "$BUNDLE/OpenThemeCatalog.json" "$BUNDLE/SnowBoardCatalog.json" <<'PY'
+          import json, pathlib, sys
+          springy=json.loads(pathlib.Path(sys.argv[1]).read_text())
+          snowboard=json.loads(pathlib.Path(sys.argv[2]).read_text())
+          assert springy['count'] == 48
+          assert snowboard['packageCount'] == 7
+          assert snowboard['count'] == 160
+          print('embedded_source_backed_themes=208')
+          PY
+
+          mkdir -p release-packages
+          cp "$DEB" release-packages/Gif2Ani-3.5.8-sha-bound-identity.deb
+          sha256sum release-packages/Gif2Ani-3.5.8-sha-bound-identity.deb \
+            | tee release-packages/Gif2Ani-3.5.8-sha-bound-identity.sha256
+
+      - name: Upload package evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gif2Ani-3.5.8-sha-bound-identity
+          path: |
+            release-packages/Gif2Ani-3.5.8-sha-bound-identity.deb
+            release-packages/Gif2Ani-3.5.8-sha-bound-identity.sha256
+            source-fix.log
+            build.log
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Publish package and status
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          mkdir -p status release-packages
+          {
+            echo 'Gif2Ani 3.5.8 SHA-Bound Package Identity'
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "source_commit=${GITHUB_SHA}"
+            echo "status=${JOB_STATUS}"
+            echo "completed_at_utc=$(date -u +%FT%TZ)"
+            cat release-packages/Gif2Ani-3.5.8-sha-bound-identity.sha256 2>/dev/null || true
+            echo 'policy=exact URL plus exact byte count plus SHA-256 are authoritative; clean package-ID mismatch remains fatal; metadata-tool failure uses cryptographic fallback'
+            echo 'diagnostic=LastPackageVerification.plist'
+            echo 'springy_themes=48'
+            echo 'snowboard_themes=160'
+            echo 'gallery_total=274'
+            echo '--- source fix ---'
+            cat source-fix.log 2>/dev/null || true
+            echo '--- build tail ---'
+            tail -n 180 build.log 2>/dev/null || true
+          } > status/gif2ani-358-sha-bound-identity.txt
+
+          if [ "$JOB_STATUS" = success ]; then
+            git add control
+            git add gif2aniprefs/G2OpenThemeLibrary.inc
+            git add gif2aniprefs/Resources/Root.plist
+            git add -f release-packages/Gif2Ani-3.5.8-sha-bound-identity.deb
+            git add release-packages/Gif2Ani-3.5.8-sha-bound-identity.sha256
+          fi
+          git add status/gif2ani-358-sha-bound-identity.txt
+          git commit -m "Publish Gif2Ani 3.5.8 SHA-bound identity (${JOB_STATUS}) [skip ci]" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
