@@ -1,0 +1,4 @@
+requested_at_utc=2026-07-26T19:02:00Z
+artifact_id=8635526334
+sha256=fa8b3c766684b5d6e22056611590e24b695175f020a845180092c45fa951e583
+purpose=publish exact compiled 3.5.9 DEB plus matching source and 262 animated preview resources
