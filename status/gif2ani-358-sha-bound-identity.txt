@@ -1,0 +1,12 @@
+Gif2Ani 3.5.8 SHA-Bound Package Identity
+run_id=30212806977
+source_commit=2808a9dabec1b3173a4edd3348dd7e1c5d29f14f
+status=cancelled
+completed_at_utc=2026-07-26T17:33:21Z
+policy=exact URL plus exact byte count plus SHA-256 are authoritative; clean package-ID mismatch remains fatal; metadata-tool failure uses cryptographic fallback
+diagnostic=LastPackageVerification.plist
+springy_themes=48
+snowboard_themes=160
+gallery_total=274
+--- source fix ---
+--- build tail ---
