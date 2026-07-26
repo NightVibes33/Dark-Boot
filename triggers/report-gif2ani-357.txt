@@ -1,2 +1,2 @@
-requested_at_utc=2026-07-26T17:14:00Z
-purpose=report exact Gif2Ani 3.5.7 shared verifier build state
+requested_at_utc=2026-07-26T17:16:00Z
+purpose=poll exact Gif2Ani 3.5.7 shared verifier build after dependency installation
