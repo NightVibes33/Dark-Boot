@@ -1,0 +1,55 @@
+name: Report Gif2Ani 3.5.9 Failure
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/report-gif2ani-359-failure.yml
+      - triggers/report-gif2ani-359-failure.txt
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download failed job log and extract errors
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          JOB_ID: '89825590007'
+        run: |
+          set -euo pipefail
+          curl -fsSL -H "Authorization: Bearer ${GH_TOKEN}" -H 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/${REPO}/actions/jobs/${JOB_ID}/logs" -o failed-job.log
+          mkdir -p status
+          {
+            echo 'Gif2Ani 3.5.9 Failed Job Diagnostic'
+            echo "job_id=${JOB_ID}"
+            echo '--- traceback and errors ---'
+            grep -nE 'Traceback|RuntimeError|AssertionError|ERROR|Error:|##\[error\]|expected source block|not found|failed' failed-job.log | tail -n 120 || true
+            echo '--- apply step vicinity ---'
+            line="$(grep -n 'Apply 3.5.9 runtime fixes' failed-job.log | tail -n1 | cut -d: -f1 || true)"
+            if [ -n "$line" ]; then
+              start=$((line > 10 ? line - 10 : 1))
+              end=$((line + 100))
+              sed -n "${start},${end}p" failed-job.log
+            fi
+            echo '--- final 160 lines ---'
+            tail -n 160 failed-job.log
+          } > status/gif2ani-359-failure-diagnostic.txt
+      - name: Publish diagnostic
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add status/gif2ani-359-failure-diagnostic.txt
+          git commit -m 'Report Gif2Ani 3.5.9 failure diagnostic [skip ci]' || exit 0
+          git push origin HEAD:main
