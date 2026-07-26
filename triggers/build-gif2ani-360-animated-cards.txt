@@ -1,2 +1,2 @@
-requested_at_utc=2026-07-26T19:21:00Z
-purpose=build Gif2Ani 3.6.0 with animated bundled previews in visible gallery cards before download, off-screen cleanup, and bounded cache for 2 GB devices
+requested_at_utc=2026-07-26T19:31:00Z
+purpose=retry Gif2Ani 3.6.0 animated bundled previews in visible gallery cards using the fixed used-marker wrapper
