@@ -40,6 +40,7 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
     NSDictionary *pack = self.pack;
     NSString *kind = pack[@"kind"];
     NSString *remotePath = nil;
+    NSDictionary *openInfo = nil;
     if ([kind isEqualToString:@"remote"]) {
         if (!G2RemoteCachedThemeIsValid(pack)) {
             [self.activity stopAnimating];
@@ -54,6 +55,20 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
             return;
         }
         remotePath = G2RemoteThemeCachePath(pack);
+    } else if ([kind isEqualToString:@"sourceDeb"]) {
+        openInfo = G2OpenThemeCachedInfo(pack);
+        if (!openInfo) {
+            [self.activity stopAnimating];
+            self.frames = @[];
+            self.imageView.contentMode = UIViewContentModeCenter;
+            self.imageView.tintColor = self.view.tintColor;
+            self.imageView.image = [UIImage systemImageNamed:@"shippingbox.and.arrow.backward.fill"];
+            self.statusLabel.text = [NSString stringWithFormat:@"Original source pack • not downloaded yet\n%@\nTap Download & Preview. Gif2Ani verifies SHA-256 and package identity before extracting only the animation files.", pack[@"license"] ?: @"Original credits are preserved."];
+            [self.stageButton setTitle:@"Download & Preview" forState:UIControlStateNormal];
+            self.stageButton.enabled = YES;
+            self.stageButton.alpha = 1.0;
+            return;
+        }
     }
 
     __weak typeof(self) weakSelf = self;
@@ -61,18 +76,26 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
         @autoreleasepool {
             NSArray<UIImage *> *frames = nil;
             NSString *previewPath = nil;
+            BOOL previewIsGIF = NO;
             if ([kind isEqualToString:@"builtin"]) {
                 frames = G2BuiltInFrames(pack[@"style"], CGSizeMake(300,300));
             } else if ([kind isEqualToString:@"remote"]) {
                 previewPath = remotePath;
+                previewIsGIF = YES;
                 frames = G2FramesFromGIF(previewPath, 400);
+            } else if ([kind isEqualToString:@"sourceDeb"]) {
+                previewPath = openInfo[@"path"];
+                previewIsGIF = [openInfo[@"kind"] isEqualToString:@"gif"];
+                frames = previewIsGIF ? G2FramesFromGIF(previewPath, 400) : G2FramesFromDirectory(previewPath, 400);
             } else if ([kind isEqualToString:@"gif"]) {
                 previewPath = pack[@"path"];
+                previewIsGIF = YES;
                 frames = G2FramesFromGIF(previewPath, 400);
             } else if ([kind isEqualToString:@"frames"]) {
-                frames = G2FramesFromDirectory(pack[@"path"], 400);
+                previewPath = pack[@"path"];
+                frames = G2FramesFromDirectory(previewPath, 400);
             }
-            NSTimeInterval duration = previewPath.length ? G2NaturalGIFDuration(previewPath) : (frames.count * 0.08);
+            NSTimeInterval duration = previewIsGIF && previewPath.length ? G2NaturalGIFDuration(previewPath) : (frames.count * 0.08);
             dispatch_async(dispatch_get_main_queue(), ^{
                 typeof(self) strongSelf = weakSelf;
                 if (!strongSelf || generation != strongSelf.previewGeneration) return;
@@ -85,7 +108,9 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
                     strongSelf.imageView.animationRepeatCount = 0;
                     strongSelf.imageView.image = strongSelf.frames.firstObject;
                     [strongSelf.imageView startAnimating];
-                    NSString *source = [kind isEqualToString:@"remote"] ? @"downloaded and validated" : @"ready";
+                    NSString *source = @"ready";
+                    if ([kind isEqualToString:@"remote"]) source = @"downloaded CC0 theme verified";
+                    else if ([kind isEqualToString:@"sourceDeb"]) source = @"original DEB verified and safely extracted";
                     strongSelf.statusLabel.text = [NSString stringWithFormat:
                         @"%lu bounded preview frames • %@\nStage it, then choose scaling, background, repeat, and duration on the main Gif2Ani page before Apply.",
                         (unsigned long)strongSelf.frames.count, source];
@@ -98,6 +123,11 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
                     strongSelf.statusLabel.text = @"No safe animation frames were decoded.";
                     if ([kind isEqualToString:@"remote"] && remotePath.length) {
                         [[NSFileManager defaultManager] removeItemAtPath:remotePath error:nil];
+                        [strongSelf.stageButton setTitle:@"Download Again" forState:UIControlStateNormal];
+                        strongSelf.stageButton.enabled = YES;
+                        strongSelf.stageButton.alpha = 1.0;
+                    } else if ([kind isEqualToString:@"sourceDeb"]) {
+                        [[NSFileManager defaultManager] removeItemAtPath:G2OpenThemePackageDirectory(pack) error:nil];
                         [strongSelf.stageButton setTitle:@"Download Again" forState:UIControlStateNormal];
                         strongSelf.stageButton.enabled = YES;
                         strongSelf.stageButton.alpha = 1.0;
@@ -204,6 +234,10 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
         [self g2_downloadRemoteTheme];
         return;
     }
+    if ([kind isEqualToString:@"sourceDeb"] && !G2OpenThemeCachedInfo(self.pack)) {
+        [self g2_downloadOpenTheme];
+        return;
+    }
 
     self.stageButton.enabled = NO;
     self.stageButton.alpha = 0.45;
@@ -224,6 +258,10 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
         NSString *sourcePath = nil;
         if ([kind isEqualToString:@"remote"]) sourcePath = G2RemoteThemeCachePath(pack);
         else if ([kind isEqualToString:@"gif"]) sourcePath = pack[@"path"];
+        else if ([kind isEqualToString:@"sourceDeb"]) {
+            NSDictionary *info = G2OpenThemeCachedInfo(pack);
+            if ([info[@"kind"] isEqualToString:@"gif"]) sourcePath = info[@"path"];
+        }
 
         if (!error && sourcePath.length) {
             ready = G2StageGIFAtPath(sourcePath, pack, &error);
