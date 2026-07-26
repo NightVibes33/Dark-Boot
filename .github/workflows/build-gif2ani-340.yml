@@ -10,6 +10,8 @@ on:
       - control
       - Makefile
       - Tweak.xm
+      - scripts/apply_open_theme_live_snapshot.py
+      - status/open-theme-live-diagnostic.json
       - gif2aniprefs/**
 
 permissions:
@@ -53,6 +55,13 @@ jobs:
             'https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/manifest.json' \
             -o gif2aniprefs/Resources/ThemeCatalog.json
 
+      - name: Apply verified 48-pack Springy payload snapshot
+        run: |
+          set -euo pipefail
+          python3 scripts/apply_open_theme_live_snapshot.py
+          grep -Fq 'verified_pack_count=48' status/open-theme-live-audit.txt
+          grep -Fq 'immutable_source_fallback_count=1' status/open-theme-live-audit.txt
+
       - name: Validate 114-theme source contract
         run: |
           set -euo pipefail
@@ -72,6 +81,7 @@ jobs:
           grep -Fq 'G2RemoteDataMatchesManifest(data, pack, &error)' gif2aniprefs/G2RemoteThemePreviewOverride.inc
           grep -Fq 'The downloaded theme SHA-256 does not match the pinned manifest.' gif2aniprefs/G2RemoteThemePreviewOverride.inc
           grep -Fq 'Original Springy pack' gif2aniprefs/G2BundledOpenThemeCatalog.inc
+          grep -Fq 'G2OpenThemePinnedRawPrefix' gif2aniprefs/G2OpenThemeLibrary.inc
           python3 - <<'PY'
           import json, re
           from pathlib import Path
@@ -103,16 +113,26 @@ jobs:
           assert springy['count'] == len(springy['themes']) == 48
           assert springy['sourceRepository'] == 'VirenMohindra/CydiaRepo'
           assert springy['sourceLicense'] == 'MIT'
+          assert springy['liveSnapshotCount'] == 48
+          assert springy['repositoryIndexMismatchCount'] == 47
+          assert springy['missingPagesPayloadFallbackCount'] == 1
           packages = set()
+          swish = []
           for item in springy['themes']:
               assert item['package'] == item['identifier']
               assert item['package'].startswith('io.github.virenmohindra.')
               assert item['package'] not in packages
               packages.add(item['package'])
-              assert item['downloadURL'].startswith('https://virenmohindra.github.io/debs/')
+              allowed = item['downloadURL'].startswith('https://virenmohindra.github.io/debs/')
+              if item['package'] == 'io.github.virenmohindra.swish':
+                  allowed = item['downloadURL'] == 'https://raw.githubusercontent.com/VirenMohindra/CydiaRepo/c507a391f193c2bb362ff77fc1c1673c0da2dcae/debs/io.github.virenmohindra.swish_2.0_iphoneos-arm.deb'
+                  swish.append(item)
+              assert allowed
               assert re.fullmatch(r'[0-9a-f]{64}', item['sha256'])
               assert 0 < int(item['bytes']) <= 100 * 1024 * 1024
+              assert int(item['verifiedMediaFiles']) >= 1
               assert item['sourceLicense'] == 'MIT'
+          assert len(swish) == 1
 
           required_includes = [
               'G2RemoteThemeCatalog.inc',
@@ -129,6 +149,7 @@ jobs:
           assert 'G2OpenThemePacksFromIndexData' in openlib
           assert 'G2PreflightArchive' in openlib and 'G2ValidateExtractedTree' in openlib
           assert 'SHA-256 verification failed' in openlib
+          assert 'G2OpenThemePinnedRawPrefix' in openlib
           assert 'G2BundledOpenThemeCatalog' in bundled
           assert 'G2WriteGalleryPreferences(@{@"pendingReady":@YES}' in stage
           assert 12 + cc0['count'] + springy['count'] == 114
@@ -179,10 +200,14 @@ jobs:
           assert cc0['count'] == len(cc0['themes']) == 54
           assert springy['count'] == len(springy['themes']) == 48
           assert len({item['package'] for item in springy['themes']}) == 48
+          assert springy['liveSnapshotCount'] == 48
+          assert springy['repositoryIndexMismatchCount'] == 47
+          assert springy['missingPagesPayloadFallbackCount'] == 1
           assert cc0['count'] + springy['count'] == 102
           print('packaged_cc0_theme_manifest=54')
           print('packaged_open_theme_manifest=48')
           print('packaged_downloadable_total=102')
+          print('packaged_verified_open_snapshot=48')
           PY
 
           file "$BUNDLE/Gif2AniPrefs" "$DYLIB" | tee packaged-binaries-341.txt
@@ -195,15 +220,19 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Commit pinned CC0 manifest
+      - name: Commit verified manifests and open-library contract
         if: success()
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add gif2aniprefs/Resources/ThemeCatalog.json
+          git add gif2aniprefs/Resources/OpenThemeCatalog.json
+          git add gif2aniprefs/G2OpenThemeLibrary.inc
+          git add status/open-theme-live-audit.txt
+          git add .github/workflows/build-gif2ani-340.yml
           if ! git diff --cached --quiet; then
-            git commit -m "Bundle verified 54-theme CC0 manifest [skip ci]"
+            git commit -m "Bundle verified 54-theme CC0 and 48-pack Springy snapshots [skip ci]"
           fi
           git pull --rebase origin main
           git push origin HEAD:main
@@ -227,6 +256,7 @@ jobs:
             echo "offline_themes=12"
             echo "cc0_downloadable_themes=54"
             echo "source_backed_springy_themes=48"
+            echo "verified_springy_snapshot=48"
             echo "downloadable_theme_total=102"
             echo "first_class_theme_total=114"
             echo
