@@ -1,2 +1,2 @@
-requested_at_utc=2026-07-26T19:31:00Z
-purpose=regenerate all 262 pre-download animations with one shared 256-color palette per theme, enforce color-error limits, verify Stranger Things fidelity, compile Gif2Ani 3.6.1, and publish the rootless DEB
+requested_at_utc=2026-07-26T19:39:00Z
+purpose=retry all 262 shared-palette previews after allowing legal duplicate-frame coalescing while preserving strict color-error gates and Stranger Things verification
