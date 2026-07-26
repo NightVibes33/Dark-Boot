@@ -1,27 +1,32 @@
 Gif2Ani SnowBoard Source Probe
-run_id=30210520183
-source_commit=aa3fb4488991d5293a7c61bc001fb08152f3ce05
-status=cancelled
-completed_at_utc=2026-07-26T16:30:13Z
-candidate_page_count=18
-candidate_failure_001=https://www.ios-repo-updates.com/repository/basepack/package/com.project.brooklyn/|could not fetch https://repo.basepack.co/download/com.project.brooklyn.deb: HTTP Error 404: Not Found
-candidate_failure_002=https://www.ios-repo-updates.com/repository/hende/package/beta.hende.megapack/|unsafe archive path /
-candidate_failure_003=https://www.ios-repo-updates.com/repository/iospackix/package/com.rkycyku.allin1.respring/|unsafe archive path /
-candidate_failure_004=https://www.ios-repo-updates.com/repository/iospackix/package/com.shadows.respringmix/|unsafe archive path /
-candidate_failure_005=https://www.ios-repo-updates.com/repository/iospackix/package/respring.hende.megapack/|unsafe archive path /Library
-candidate_failure_006=https://www.ios-repo-updates.com/repository/packix/package/beta.hende.megapack/|could not fetch https://www.ios-repo-updates.com/repository/packix/package/beta.hende.megapack/: HTTP Error 404: Not Found
-candidate_failure_007=https://www.ios-repo-updates.com/repository/packix/package/com.bluspark.pixeliosrespringpack1/|could not fetch https://www.ios-repo-updates.com/repository/packix/package/com.bluspark.pixeliosrespringpack1/: HTTP Error 404: Not Found
-candidate_failure_008=https://www.ios-repo-updates.com/repository/packix/package/com.shadows.checkra1nrespring/|could not fetch https://www.ios-repo-updates.com/repository/packix/package/com.shadows.checkra1nrespring/: HTTP Error 404: Not Found
-candidate_failure_009=https://www.ios-repo-updates.com/repository/packix/package/respring.hende.megapack/|could not fetch https://www.ios-repo-updates.com/repository/packix/package/respring.hende.megapack/: HTTP Error 404: Not Found
+run_id=30210561508
+source_commit=3c7255e39e1eecdca01a8349a311fb114cf83725
+status=failure
+completed_at_utc=2026-07-26T16:31:01Z
+candidate_page_count=17
 --- audit tail ---
 --- log tail ---
-candidate_page_count=18
-candidate_failure_001=https://www.ios-repo-updates.com/repository/basepack/package/com.project.brooklyn/|could not fetch https://repo.basepack.co/download/com.project.brooklyn.deb: HTTP Error 404: Not Found
-candidate_failure_002=https://www.ios-repo-updates.com/repository/hende/package/beta.hende.megapack/|unsafe archive path /
-candidate_failure_003=https://www.ios-repo-updates.com/repository/iospackix/package/com.rkycyku.allin1.respring/|unsafe archive path /
-candidate_failure_004=https://www.ios-repo-updates.com/repository/iospackix/package/com.shadows.respringmix/|unsafe archive path /
-candidate_failure_005=https://www.ios-repo-updates.com/repository/iospackix/package/respring.hende.megapack/|unsafe archive path /Library
-candidate_failure_006=https://www.ios-repo-updates.com/repository/packix/package/beta.hende.megapack/|could not fetch https://www.ios-repo-updates.com/repository/packix/package/beta.hende.megapack/: HTTP Error 404: Not Found
-candidate_failure_007=https://www.ios-repo-updates.com/repository/packix/package/com.bluspark.pixeliosrespringpack1/|could not fetch https://www.ios-repo-updates.com/repository/packix/package/com.bluspark.pixeliosrespringpack1/: HTTP Error 404: Not Found
-candidate_failure_008=https://www.ios-repo-updates.com/repository/packix/package/com.shadows.checkra1nrespring/|could not fetch https://www.ios-repo-updates.com/repository/packix/package/com.shadows.checkra1nrespring/: HTTP Error 404: Not Found
-candidate_failure_009=https://www.ios-repo-updates.com/repository/packix/package/respring.hende.megapack/|could not fetch https://www.ios-repo-updates.com/repository/packix/package/respring.hende.megapack/: HTTP Error 404: Not Found
+candidate_page_count=17
+candidate_001=rejected|com.shadows.respringmix|unsafe archive path /
+candidate_002=rejected|com.redenticdev.respringpack|could not fetch https://redentic.dev/debs/com.redenticdev.respringpack_1.2.0_iphoneos-arm.deb: <urlopen error [Errno -2] Name or service not known>
+candidate_003=rejected|com.redenticdev.swrespringpack|could not fetch https://redentic.dev/debs/com.redenticdev.swrespringpack_1.1.0_iphoneos-arm.deb: <urlopen error [Errno -2] Name or service not known>
+candidate_004=rejected|com.project.brooklyn|could not fetch https://repo.basepack.co/download/com.project.brooklyn.deb: HTTP Error 404: Not Found
+candidate_005=rejected|com.twickd.rilind-kycyku.all-in-one-respring-pack|could not fetch https://repo.twickd.com/files/com.twickd.rilind-kycyku.all-in-one-respring-pack/versions/8f34db0578bfb0db13468753d2c1e3c8.deb: HTTP Error 401: Unauthorized
+candidate_006=rejected|com.yourepo.easytoast.daithidenoglarespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.daithidenoglarespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_007=rejected|com.yourepo.easytoast.hollowapplerespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.hollowapplerespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_008=rejected|com.yourepo.easytoast.lopezrespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.lopezrespringlogo_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_009=rejected|com.yourepo.easytoast.cincinnatirespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.cincinnatirespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_010=rejected|com.yourepo.easytoast.rlogorespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.rlogorespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_011=rejected|com.yourepo.easytoast.tsmrespringlogo|could not fetch https://www.yourepo.com/private/com.yourepo.easytoast.tsmrespringlogo_1_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_012=rejected|com.yourepo.soda-ldz.doughnuts|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.doughnuts_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_013=rejected|com.yourepo.soda-ldz.respringfxxk|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringfxxk_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_014=rejected|com.yourepo.soda-ldz.respringrespringpack2|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringrespringpack2_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_015=rejected|com.yourepo.soda-ldz.respringrespringpack3|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringrespringpack3_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_016=rejected|com.yourepo.soda-ldz.spacerespring|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.spacerespring_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+candidate_017=rejected|com.yourepo.soda-ldz.respringpack|could not fetch https://www.yourepo.com/private/com.yourepo.soda-ldz.respringpack_1.0_iphoneos-arm.deb: HTTP Error 404: Not Found
+Traceback (most recent call last):
+  File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/build_snowboard_catalog_seeded.py", line 170, in <module>
+    main()
+  File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/build_snowboard_catalog_seeded.py", line 120, in main
+    raise RuntimeError(f"verified SnowBoard inventory is too small: {len(packages)} packages / {len(records)} themes")
+RuntimeError: verified SnowBoard inventory is too small: 0 packages / 0 themes
