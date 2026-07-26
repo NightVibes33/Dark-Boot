@@ -7,6 +7,15 @@
 
 static NSArray<NSDictionary *> *G2OfflineBuiltInPacks(void);
 static BOOL G2StageGIFAtPath(NSString *sourcePath, NSDictionary *recommended, NSError **error);
+static NSArray<NSDictionary *> *G2LoadCachedOpenThemeCatalog(void);
+
+@interface G2ThemeGalleryController (G2OpenThemeLibraryRefresh)
+- (void)refreshOpenThemeLibrary;
+@end
+
+@interface G2ThemePreviewController (G2OpenThemeLibraryDownload)
+- (void)g2_downloadOpenTheme;
+@end
 
 #include "G2RemoteThemeCatalog.inc"
 
@@ -28,5 +37,6 @@ static BOOL G2StageGIFAtPath(NSString *sourcePath, NSDictionary *recommended, NS
 #include "G2ThemeGalleryPart6.inc"
 
 #include "G2ThemeStageOverride.inc"
+#include "G2OpenThemeLibrary.inc"
 #include "G2RemoteThemePreviewOverride.inc"
 #include "G2RemoteGalleryPolish.inc"
