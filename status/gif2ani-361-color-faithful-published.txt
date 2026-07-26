@@ -2,7 +2,7 @@ Gif2Ani 3.6.1 Color-Faithful Previews
 status=success
 compiled_run_id=30217070782
 compiled_artifact_id=8636123103
-published_at_utc=2026-07-26T19:36:48Z
+published_at_utc=2026-07-26T19:36:58Z
 4ebea83c86820fd776dd9abfbfd70bf57658d51c0709809031b87f9cc8672044  release-packages/Gif2Ani-3.6.1-color-faithful-previews.deb
 preview_count=262
 palette_colors=256
