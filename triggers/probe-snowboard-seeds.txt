@@ -1,0 +1,2 @@
+triggered_at_utc=2026-07-26T16:30:00Z
+purpose=download all deterministic candidate DEBs concurrently, verify published SHA-256 and package metadata, enumerate real .theme subpacks, and publish exact accepted and rejected inventory before the full Gif2Ani build
