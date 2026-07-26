@@ -7,7 +7,6 @@ import hashlib
 import json
 from pathlib import Path
 import re
-import shutil
 import subprocess
 import tempfile
 
@@ -35,6 +34,16 @@ def pinned_url(record: dict) -> str:
     if ".." in filename or "\\" in filename:
         raise RuntimeError(f"unsafe filename for {record.get('identifier')}: {filename!r}")
     return f"https://raw.githubusercontent.com/VirenMohindra/CydiaRepo/{commit}/{filename[2:]}"
+
+
+def normalized_display_name(raw_name: str, identifier: str) -> str:
+    # Preserve actual package qualifiers such as "(DankerThings)" while removing
+    # only the repository's generic product suffix.
+    value = re.sub(r"\s*-\s*Springy BootLogo\b", "", raw_name, flags=re.IGNORECASE)
+    value = re.sub(r"\s+", " ", value).strip()
+    if not value or len(value) > 120 or any(ch in value for ch in "\r\n\t"):
+        raise RuntimeError(f"invalid DEB Name field for {identifier}: {raw_name!r}")
+    return value
 
 
 def inspect_record(record: dict, work_root: Path) -> tuple[str, dict]:
@@ -68,6 +77,11 @@ def inspect_record(record: dict, work_root: Path) -> tuple[str, dict]:
     if actual_package != package:
         raise RuntimeError(f"package mismatch for {identifier}: {actual_package!r}")
 
+    raw_name = subprocess.check_output(
+        ["dpkg-deb", "-f", str(deb_path), "Name"], text=True
+    ).strip()
+    display_name = normalized_display_name(raw_name, identifier)
+
     architecture = subprocess.check_output(
         ["dpkg-deb", "-f", str(deb_path), "Architecture"], text=True
     ).strip()
@@ -89,6 +103,8 @@ def inspect_record(record: dict, work_root: Path) -> tuple[str, dict]:
         updated["legacyPagesBytes"] = old_bytes
     if re.fullmatch(r"[0-9a-f]{64}", old_sha) and old_sha != sha256:
         updated["legacyPagesSHA256"] = old_sha
+    updated["name"] = display_name
+    updated["sourcePackageName"] = raw_name
     updated["downloadURL"] = url
     updated["sha256"] = sha256
     updated["bytes"] = size
@@ -119,7 +135,7 @@ def main() -> None:
                 completed_count += 1
                 print(
                     f"verified {completed_count:02d}/48 {identifier} "
-                    f"bytes={updated['bytes']} sha256={updated['sha256']}",
+                    f"name={updated['name']!r} bytes={updated['bytes']} sha256={updated['sha256']}",
                     flush=True,
                 )
 
@@ -129,8 +145,9 @@ def main() -> None:
 
     verified_at = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     manifest["count"] = 48
-    manifest["downloadPolicy"] = "Immutable raw Git commit URL; SHA-256, byte count, package identity, and extracted artwork verified"
+    manifest["downloadPolicy"] = "Immutable raw Git commit URL; SHA-256, byte count, package identity, exact package name, and extracted artwork verified"
     manifest["immutableCatalogVerifiedAtUTC"] = verified_at
+    manifest["namesDerivedFromDEBMetadata"] = True
     manifest["themes"] = updated_records
     MANIFEST_PATH.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
 
@@ -139,6 +156,7 @@ def main() -> None:
     print("immutable_manifest_count=48")
     print(f"immutable_manifest_total_bytes={total_bytes}")
     print(f"records_changed_from_pages_snapshot={changed}")
+    print("names_derived_from_deb_metadata=48")
     print(f"immutable_catalog_verified_at_utc={verified_at}")
 
 
