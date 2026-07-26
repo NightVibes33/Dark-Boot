@@ -25,6 +25,7 @@
     <dict>
       <key>cell</key><string>PSLinkCell</string>
       <key>label</key><string>Browse and Preview Animations</string>
+      <key>id</key><string>G2ThemeGallery</string>
       <key>detail</key><string>G2ThemeGalleryController</string>
       <key>isController</key><true/>
     </dict>
