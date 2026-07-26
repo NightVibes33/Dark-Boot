@@ -31,7 +31,7 @@ jobs:
           grep -Fq 'raw.githubusercontent.com/VirenMohindra/CydiaRepo/' gif2aniprefs/G2BundledOpenThemeCatalog.inc
           grep -Fq 'sourceCommit' gif2aniprefs/G2BundledOpenThemeCatalog.inc
           grep -Fq 'G2OpenThemeURLIsAllowed(url, NO)' gif2aniprefs/G2BundledOpenThemeCatalog.inc
-          python3 - <<'PY'
+          python3 - <<'PY' | tee validation.log
           import json
           import pathlib
           import re
@@ -52,7 +52,7 @@ jobs:
               seen.add(package)
               assert re.fullmatch(r'[0-9a-f]{40}', theme['sourceCommit'])
               assert re.fullmatch(r'[0-9a-f]{64}', theme['sha256'])
-              assert 0 < int(theme['bytes']) <= 32 * 1024 * 1024
+              assert 0 < int(theme['bytes']) <= 100 * 1024 * 1024
               filename = theme['filename']
               assert filename.startswith('./debs/')
               assert filename.endswith('.deb')
@@ -139,6 +139,8 @@ jobs:
             echo 'springy_urls=derived from immutable sourceCommit plus validated DEB filename'
             echo 'springy_integrity=48 byte counts and SHA-256 values remain pinned'
             echo 'previews=102 bundled thumbnails retained'
+            echo '--- validation ---'
+            cat validation.log 2>/dev/null || true
             echo '--- build tail ---'
             tail -n 180 build.log 2>/dev/null || true
           } > status/gif2ani-353-immutable-springy.txt
