@@ -1,0 +1,4 @@
+requested_at_utc=2026-07-26T17:45:00Z
+artifact_id=8634957206
+sha256=0d2953840e63191e221ac0bf9bd682c001ac77c064a40cf41c7808504b3a2d44
+purpose=publish the exact green Gif2Ani 3.5.8 SHA-bound identity artifact and matching source changes conflict-safely
