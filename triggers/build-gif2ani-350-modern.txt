@@ -1,0 +1,1 @@
+Trigger Gif2Ani 3.5.0 modern gallery build after workflow registration.
