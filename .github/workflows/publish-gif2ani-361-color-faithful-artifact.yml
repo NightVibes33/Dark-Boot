@@ -1,0 +1,126 @@
+name: Publish Gif2Ani 3.6.1 Color-Faithful Artifact
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-gif2ani-361-color-faithful-artifact.yml
+      - triggers/publish-gif2ani-361-color-faithful-artifact.txt
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: publish-gif2ani-361-color-faithful-artifact
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download and verify exact green artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: '8636123103'
+          EXPECTED_SHA: '4ebea83c86820fd776dd9abfbfd70bf57658d51c0709809031b87f9cc8672044'
+        run: |
+          set -euo pipefail
+          curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip" \
+            -o artifact.zip
+          rm -rf artifact verify-root
+          mkdir artifact verify-root
+          unzip -q artifact.zip -d artifact
+          DEB='artifact/release-packages/Gif2Ani-3.6.1-color-faithful-previews.deb'
+          test -s "$DEB"
+          test "$(sha256sum "$DEB" | awk '{print $1}')" = "$EXPECTED_SHA"
+          test "$(dpkg-deb -f "$DEB" Package | tr -d '\r\n')" = 'com.nightvibes33.gif2ani'
+          test "$(dpkg-deb -f "$DEB" Version | tr -d '\r\n')" = '3.6.1'
+          test "$(dpkg-deb -f "$DEB" Architecture | tr -d '\r\n')" = 'iphoneos-arm64'
+          dpkg-deb -x "$DEB" verify-root
+          echo 'artifact_identity=passed'
+
+      - name: Restore exact generated resources and source version
+        env:
+          EXPECTED_SHA: '4ebea83c86820fd776dd9abfbfd70bf57658d51c0709809031b87f9cc8672044'
+        run: |
+          set -euo pipefail
+          git pull --rebase origin main
+          python3 scripts/apply_gif2ani_361_color_fidelity.py | tee source-fix.log
+          BUNDLE='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle'
+          test -d "$BUNDLE/ThemePreviewAnimations"
+          test -s "$BUNDLE/ThemePreviewAnimations.json"
+          rm -rf gif2aniprefs/Resources/ThemePreviewAnimations
+          cp -a "$BUNDLE/ThemePreviewAnimations" gif2aniprefs/Resources/ThemePreviewAnimations
+          cp "$BUNDLE/ThemePreviewAnimations.json" gif2aniprefs/Resources/ThemePreviewAnimations.json
+
+          python3 - <<'PY' | tee publish-fidelity-report.txt
+          import json,pathlib
+          root=pathlib.Path('gif2aniprefs/Resources/ThemePreviewAnimations')
+          manifest=json.loads(pathlib.Path('gif2aniprefs/Resources/ThemePreviewAnimations.json').read_text())
+          records=manifest['previews']
+          assert manifest['count']==len(records)==262
+          assert len(list(root.glob('*.gif')))==262
+          assert all(x.get('paletteColors')==256 for x in records)
+          assert max(x['meanAbsoluteColorError'] for x in records) <= 10.0
+          assert max(x['maximumFrameColorError'] for x in records) <= 18.0
+          stranger=next(x for x in records if x['identifier']=='io.github.virenmohindra.stranger-things')
+          assert stranger['meanAbsoluteColorError']==0.0828
+          assert stranger['maximumFrameColorError']==0.0901
+          print(f"preview_count={len(records)}")
+          print(f"total_bytes={manifest['totalBytes']}")
+          print(f"stranger_things_mean_error={stranger['meanAbsoluteColorError']}")
+          print(f"stranger_things_max_frame_error={stranger['maximumFrameColorError']}")
+          print('restored_color_fidelity_resources=passed')
+          PY
+
+          mkdir -p release-packages status
+          cp artifact/release-packages/Gif2Ani-3.6.1-color-faithful-previews.deb release-packages/Gif2Ani-3.6.1-color-faithful-previews.deb
+          printf '%s  %s\n' "$EXPECTED_SHA" 'release-packages/Gif2Ani-3.6.1-color-faithful-previews.deb' \
+            > release-packages/Gif2Ani-3.6.1-color-faithful-previews.sha256
+          {
+            echo 'Gif2Ani 3.6.1 Color-Faithful Previews'
+            echo 'status=success'
+            echo 'compiled_run_id=30217070782'
+            echo 'compiled_artifact_id=8636123103'
+            echo "published_at_utc=$(date -u +%FT%TZ)"
+            echo "$EXPECTED_SHA  release-packages/Gif2Ani-3.6.1-color-faithful-previews.deb"
+            echo 'preview_count=262'
+            echo 'palette_colors=256'
+            echo 'gallery_total=274'
+            echo 'worst_mean_color_error=1.9641'
+            echo 'worst_frame_color_error=2.433'
+            echo 'stranger_things_mean_error=0.0828'
+            echo 'stranger_things_max_frame_error=0.0901'
+            echo 'artifact_identity_gate=passed'
+            echo 'regenerated_resource_gate=passed'
+          } > status/gif2ani-361-color-faithful-published.txt
+
+      - name: Commit and push conflict-safely
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add control gif2aniprefs/Resources/Root.plist
+          git add gif2aniprefs/Resources/ThemePreviewAnimations.json
+          git add -f gif2aniprefs/Resources/ThemePreviewAnimations
+          git add -f release-packages/Gif2Ani-3.6.1-color-faithful-previews.deb
+          git add release-packages/Gif2Ani-3.6.1-color-faithful-previews.sha256
+          git add status/gif2ani-361-color-faithful-published.txt
+          git commit -m 'Publish Gif2Ani 3.6.1 color-faithful previews [skip ci]'
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              echo 'gif2ani_361_publish=success'
+              exit 0
+            fi
+            git rebase --abort >/dev/null 2>&1 || true
+            sleep $((attempt * 3))
+          done
+          exit 1
