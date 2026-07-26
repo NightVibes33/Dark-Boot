@@ -15,6 +15,10 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack);
 - (void)refreshOpenThemeLibrary;
 @end
 
+@interface NSObject (G2OpenThemeLibraryDownloadDeclaration)
+- (void)g2_downloadOpenTheme;
+@end
+
 #include "G2RemoteThemeCatalog.inc"
 
 #define G2BuiltInPacks G2OfflineBuiltInPacks
@@ -31,11 +35,6 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack);
 #pragma clang diagnostic pop
 
 #include "G2ThemeGalleryPart4.inc"
-
-@interface G2ThemePreviewController (G2OpenThemeLibraryDownload)
-- (void)g2_downloadOpenTheme;
-@end
-
 #include "G2ThemeGalleryPart5.inc"
 #include "G2ThemeGalleryPart6.inc"
 
