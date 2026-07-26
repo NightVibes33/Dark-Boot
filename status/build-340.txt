@@ -1,8 +1,8 @@
 Gif2Ani 3.4.0 Gallery Build
-run_id=30180604737
-commit=2a10fa32c6c472e4d76962c27d11b19b975078d2
+run_id=30180634471
+commit=2b48c1569f95efc9e2a59884f601e6a4f429093e
 status=failure
-completed_at_utc=2026-07-26T00:08:03Z
+completed_at_utc=2026-07-26T00:08:49Z
 
 
 --- packaged binaries ---
@@ -15,8 +15,8 @@ completed_at_utc=2026-07-26T00:08:03Z
 [0;36m==> [1;39mCleaning…[m
 [1;31m> [1;3;39mMaking all for tweak Gif2Ani…[m
 [0;31m==> [1;39mPreprocessing Tweak.xm…[m
-[0;32m==> [1;39mCompiling UIImage+animatedGIF.m (arm64)…[m
 [0;32m==> [1;39mCompiling G2PreferencesManager.m (arm64)…[m
+[0;32m==> [1;39mCompiling UIImage+animatedGIF.m (arm64)…[m
 [0;32m==> [1;39mCompiling Tweak.xm (arm64)…[m
 [0;33m==> [1;39mLinking tweak Gif2Ani (arm64)…[m
 [0;34m==> [1;39mGenerating debug symbols for Gif2Ani…[m
@@ -25,6 +25,7 @@ completed_at_utc=2026-07-26T00:08:03Z
 [1;31m> [1;3;39mMaking all in gif2aniprefs…[m
 [1;31m> [1;3;39mMaking all for bundle Gif2AniPrefs…[m
 [0;35m==> [1;39mCopying resource directories into the bundle wrapper…[m
+[0;32m==> [1;39mCompiling gif2ani2RootListController.m (arm64)…[m
 [0;32m==> [1;39mCompiling G2ThemeGalleryController.m (arm64)…[m
 [1mG2ThemeGalleryController.m:16:12: [0m[0;1;31merror: [0m[1mcannot find interface declaration for 'G2ThemePreviewController'; did you mean 'G2ThemeGalleryController'?[0m
 @interface G2ThemePreviewController (G2OpenThemeLibraryDownload)
@@ -37,29 +38,8 @@ completed_at_utc=2026-07-26T00:08:03Z
 [1m./G2RemoteThemeCatalog.inc:84:120: [0m[0;1;31merror: [0m[1muse of undeclared identifier 'G2MaximumInputBytes'[0m
         if (![bytes isKindOfClass:NSNumber.class] || bytes.unsignedLongLongValue == 0 || bytes.unsignedLongLongValue > G2MaximumInputBytes) return @[];
 [0;1;32m                                                                                                                       ^
-[0mIn file included from G2ThemeGalleryController.m:40:
-[1m./G2OpenThemeLibrary.inc:299:14: [0m[0;1;31merror: [0m[1mproperty 'openLibraryLoading' not found on object of type 'G2ThemeGalleryController *'[0m
-    if (self.openLibraryLoading) return;
-[0;1;32m             ^
-[0m[1m./G2OpenThemeLibrary.inc:300:10: [0m[0;1;31merror: [0m[1mproperty 'openLibraryLoading' not found on object of type 'G2ThemeGalleryController *'[0m
-    self.openLibraryLoading = YES;
-[0;1;32m         ^
-[0m[1m./G2OpenThemeLibrary.inc:301:10: [0m[0;1;31merror: [0m[1mproperty 'openLibraryError' not found on object of type 'G2ThemeGalleryController *'[0m
-    self.openLibraryError = nil;
-[0;1;32m         ^
-[0m[1m./G2OpenThemeLibrary.inc:324:41: [0m[0;1;31merror: [0m[1mproperty 'openThemes' not found on object of type 'G2ThemeGalleryController *'[0m
-            if (packs.count) strongSelf.openThemes = packs;
-[0;1;32m                                        ^
-[0m[1m./G2OpenThemeLibrary.inc:325:24: [0m[0;1;31merror: [0m[1mproperty 'openLibraryLoading' not found on object of type 'G2ThemeGalleryController *'[0m
-            strongSelf.openLibraryLoading = NO;
-[0;1;32m                       ^
-[0m[1m./G2OpenThemeLibrary.inc:326:24: [0m[0;1;31merror: [0m[1mproperty 'openLibraryError' not found on object of type 'G2ThemeGalleryController *'[0m
-            strongSelf.openLibraryError = packs.count ? nil : (error.localizedDescription ?: @"The original theme library could not be refreshed.");
-[0;1;32m                       ^
-[0m8 errors generated.
-make[4]: *** [/opt/theos/makefiles/instance/rules.mk:305: /home/runner/work/Dark-Boot/Dark-Boot/.theos/obj/arm64/G2ThemeGalleryController.m.73f945e1.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-[0;32m==> [1;39mCompiling gif2ani2RootListController.m (arm64)…[m
+[0m2 errors generated.
+make[4]: *** [/opt/theos/makefiles/instance/rules.mk:304: /home/runner/work/Dark-Boot/Dark-Boot/.theos/obj/arm64/G2ThemeGalleryController.m.73f945e1.o] Error 1
 make[3]: *** [/opt/theos/makefiles/instance/bundle.mk:37: /home/runner/work/Dark-Boot/Dark-Boot/.theos/obj/arm64/Gif2AniPrefs.bundle/Gif2AniPrefs] Error 2
 make[2]: *** [/opt/theos/makefiles/instance/bundle.mk:26: internal-bundle-all_] Error 2
 make[1]: *** [/opt/theos/makefiles/master/rules.mk:146: Gif2AniPrefs.all.bundle.variables] Error 2
