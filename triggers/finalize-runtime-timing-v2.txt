@@ -1,0 +1,2 @@
+run=2026-07-25T19:45:00-05:00
+reason=Patch and compile actual Tweak.xm with frame keyTimes, main-thread reloads, and Apple loader restoration.
