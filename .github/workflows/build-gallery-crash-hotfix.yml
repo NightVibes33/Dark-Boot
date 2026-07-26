@@ -1,0 +1,114 @@
+name: Build Gallery Crash Hotfix
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-gallery-crash-hotfix.yml
+      - triggers/build-gallery-crash-hotfix.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-gallery-crash-hotfix-final
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Theos toolchain
+        env:
+          THEOS: /opt/theos
+          CI: '1'
+          SHELL: /bin/bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends bash curl sudo build-essential fakeroot rsync perl git libxml2 dpkg-dev unzip xz-utils ca-certificates python3 file
+          sudo rm -rf /opt/theos
+          sudo mkdir -p /opt
+          sudo chown "$USER:$USER" /opt
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          test -x /opt/theos/toolchain/linux/iphone/bin/clang
+
+      - name: Validate gallery navigation hotfix source
+        run: |
+          set -euo pipefail
+          grep -Fq 'G2ThemeGalleryController : PSListController' gif2aniprefs/G2ThemeGalleryController.h
+          grep -Fq 'openAnimationGallery' gif2aniprefs/G2ThemeGalleryController.m
+          grep -Fq 'initForContentSize:self.view.bounds.size' gif2aniprefs/G2ThemeGalleryController.m
+          grep -Fq '<string>PSButtonCell</string>' gif2aniprefs/Resources/Root.plist
+          grep -Fq '<string>openAnimationGallery</string>' gif2aniprefs/Resources/Root.plist
+          if grep -A8 -F 'Browse and Preview Animations' gif2aniprefs/Resources/Root.plist | grep -Fq '<key>detail</key>'; then
+            echo 'Unsafe PSLinkCell detail navigation remains.' >&2
+            exit 1
+          fi
+
+      - name: Build exact rootless package
+        env:
+          THEOS: /opt/theos
+        run: |
+          set -euo pipefail
+          make clean package FINALPACKAGE=1 2>&1 | tee gallery-hotfix-build.log
+          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.4.1_iphoneos-arm64.deb' -print -quit)"
+          test -s "$DEB"
+          test "$(dpkg-deb -f "$DEB" Package)" = 'com.nightvibes33.gif2ani'
+          test "$(dpkg-deb -f "$DEB" Version)" = '3.4.1'
+          test "$(dpkg-deb -f "$DEB" Architecture)" = 'iphoneos-arm64'
+          rm -rf gallery-hotfix-root
+          dpkg-deb -x "$DEB" gallery-hotfix-root
+          BUNDLE='gallery-hotfix-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle'
+          test -s "$BUNDLE/Gif2AniPrefs"
+          grep -Fq '<string>PSButtonCell</string>' "$BUNDLE/Root.plist"
+          grep -Fq '<string>openAnimationGallery</string>' "$BUNDLE/Root.plist"
+          file "$BUNDLE/Gif2AniPrefs" | grep -Fq 'Mach-O 64-bit arm64'
+          mkdir -p release-packages
+          cp "$DEB" release-packages/Gif2Ani-3.4.1-gallery-crash-hotfix.deb
+          sha256sum release-packages/Gif2Ani-3.4.1-gallery-crash-hotfix.deb | tee release-packages/Gif2Ani-3.4.1-gallery-crash-hotfix.sha256
+
+      - name: Upload hotfix DEB
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gif2Ani-3.4.1-gallery-crash-hotfix
+          path: release-packages/Gif2Ani-3.4.1-gallery-crash-hotfix.deb
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish stable hotfix payload and status
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          mkdir -p status release-packages
+          {
+            echo 'Gif2Ani 3.4.1 Gallery Crash Hotfix'
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "commit=${GITHUB_SHA}"
+            echo "status=${JOB_STATUS}"
+            echo "completed_at_utc=$(date -u +%FT%TZ)"
+            cat release-packages/Gif2Ani-3.4.1-gallery-crash-hotfix.sha256 2>/dev/null || true
+            echo 'navigation=PSButtonCell action openAnimationGallery'
+            echo 'controller_superclass=PSListController'
+            echo 'legacy_controllerForSpecifier_path=removed'
+            echo '--- build tail ---'
+            tail -n 120 gallery-hotfix-build.log 2>/dev/null || true
+          } > status/gallery-crash-hotfix.txt
+          git add status/gallery-crash-hotfix.txt
+          if [ -s release-packages/Gif2Ani-3.4.1-gallery-crash-hotfix.deb ]; then
+            git add -f release-packages/Gif2Ani-3.4.1-gallery-crash-hotfix.deb
+            git add release-packages/Gif2Ani-3.4.1-gallery-crash-hotfix.sha256
+          fi
+          git commit -m 'Publish Gif2Ani gallery crash hotfix [skip ci]' || exit 0
+          git push origin HEAD:main
