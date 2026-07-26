@@ -81,7 +81,7 @@ static NSArray<NSDictionary *> *G2DownloadableBuiltInPacks(void) {
         if (![name isKindOfClass:NSString.class] || !name.length) return @[];
         if (![file isEqualToString:[identifier stringByAppendingPathExtension:@"gif"]]) return @[];
         if (!G2RemoteThemeStringIsLowerHex(sha256, 64)) return @[];
-        if (![bytes isKindOfClass:NSNumber.class] || bytes.unsignedLongLongValue == 0 || bytes.unsignedLongLongValue > G2MaximumInputBytes) return @[];
+        if (![bytes isKindOfClass:NSNumber.class] || bytes.unsignedLongLongValue == 0 || bytes.unsignedLongLongValue > (25ULL * 1024ULL * 1024ULL)) return @[];
         if (sourceFrames.unsignedIntegerValue != 24 || width.unsignedIntegerValue != 360 || height.unsignedIntegerValue != 360) return @[];
         if (![license isEqualToString:@"CC0-1.0"] || ![author isKindOfClass:NSString.class] || !author.length) return @[];
 
