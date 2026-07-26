@@ -1,0 +1,6 @@
+Gif2Ani 3.5.7 immutable install pin
+package=release-packages/Gif2Ani-3.5.7-shared-verifier-fix.deb
+sha256=7b02279eb5a6146cd5a3835b723cf6bb2d4434b5327f4bb51af17cf46fd4b04f
+springy_themes=48
+snowboard_themes=160
+gallery_total=274
