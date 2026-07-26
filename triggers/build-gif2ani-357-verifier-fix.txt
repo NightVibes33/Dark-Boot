@@ -1,0 +1,2 @@
+requested_at_utc=2026-07-26T17:12:00Z
+purpose=build Gif2Ani 3.5.7 with shared Springy and SnowBoard package identifier verifier fix; separate dpkg-deb stderr warnings from stdout, retain real package-field comparison, update gallery total to 274, and publish an immutable rootless DEB
