@@ -1,39 +1,39 @@
 Gif2Ani 3.4.1 Gallery Build
-run_id=30181785566
-commit=0628ddd43689fe01558db80661318771daacf5d0
+run_id=30181865196
+commit=1ecf8fb8b1aef9050c28058d21a2e7a7e5b1fb91
 status=success
-completed_at_utc=2026-07-26T00:49:03Z
+completed_at_utc=2026-07-26T00:51:46Z
 offline_themes=12
 cc0_downloadable_themes=54
 source_backed_springy_themes=48
 downloadable_theme_total=102
 first_class_theme_total=114
 
-aa4691278f17938d77eb0f086e61e580115d3602c5686566f378ac4fa2b435eb  packages/com.nightvibes33.gif2ani_3.4.1_iphoneos-arm64.deb
+8630968515447a307af76ff53bf07ee93ce64421449021eae22a18acf26f3415  packages/com.nightvibes33.gif2ani_3.4.1_iphoneos-arm64.deb
 
 --- packaged binaries ---
 package-root-341/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs: Mach-O 64-bit arm64 dynamically linked shared library, flags:<NOUNDEFS|DYLDLINK|TWOLEVEL|NO_REEXPORTED_DYLIBS>
 package-root-341/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib:     Mach-O 64-bit arm64 dynamically linked shared library, flags:<NOUNDEFS|DYLDLINK|TWOLEVEL|NO_REEXPORTED_DYLIBS>
 
 --- package contents ---
-drwxr-xr-x 0/root            0 2026-07-26 00:49 .
-drwxr-xr-x 0/root            0 2026-07-26 00:49 var
-drwxr-xr-x 0/root            0 2026-07-26 00:49 var/jb
-drwxr-xr-x 0/root            0 2026-07-26 00:49 var/jb/Library
-drwxr-xr-x 0/root            0 2026-07-26 00:49 var/jb/Library/MobileSubstrate
-drwxr-xr-x 0/root            0 2026-07-26 00:49 var/jb/Library/MobileSubstrate/DynamicLibraries
--rwxr-xr-x 0/root        90128 2026-07-26 00:49 var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib
--rw-r--r-- 0/root          313 2026-07-26 00:49 var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.plist
-drwxr-xr-x 0/root            0 2026-07-26 00:49 var/jb/Library/PreferenceBundles
-drwxr-xr-x 0/root            0 2026-07-26 00:49 var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle
--rwxr-xr-x 0/root       245856 2026-07-26 00:49 var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
--rw-r--r-- 0/root          699 2026-07-26 00:48 var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Info.plist
--rw-r--r-- 0/root        43061 2026-07-26 00:48 var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/OpenThemeCatalog.json
--rw-r--r-- 0/root         6394 2026-07-26 00:48 var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Root.plist
--rw-r--r-- 0/root        31634 2026-07-26 00:48 var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/ThemeCatalog.json
-drwxr-xr-x 0/root            0 2026-07-26 00:49 var/jb/Library/PreferenceLoader
-drwxr-xr-x 0/root            0 2026-07-26 00:49 var/jb/Library/PreferenceLoader/Preferences
--rw-r--r-- 0/root          513 2026-07-26 00:49 var/jb/Library/PreferenceLoader/Preferences/Gif2Ani.plist
+drwxr-xr-x 0/root            0 2026-07-26 00:51 .
+drwxr-xr-x 0/root            0 2026-07-26 00:51 var
+drwxr-xr-x 0/root            0 2026-07-26 00:51 var/jb
+drwxr-xr-x 0/root            0 2026-07-26 00:51 var/jb/Library
+drwxr-xr-x 0/root            0 2026-07-26 00:51 var/jb/Library/MobileSubstrate
+drwxr-xr-x 0/root            0 2026-07-26 00:51 var/jb/Library/MobileSubstrate/DynamicLibraries
+-rwxr-xr-x 0/root        90288 2026-07-26 00:51 var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib
+-rw-r--r-- 0/root          313 2026-07-26 00:51 var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.plist
+drwxr-xr-x 0/root            0 2026-07-26 00:51 var/jb/Library/PreferenceBundles
+drwxr-xr-x 0/root            0 2026-07-26 00:51 var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle
+-rwxr-xr-x 0/root       245856 2026-07-26 00:51 var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
+-rw-r--r-- 0/root          699 2026-07-26 00:50 var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Info.plist
+-rw-r--r-- 0/root        43061 2026-07-26 00:50 var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/OpenThemeCatalog.json
+-rw-r--r-- 0/root         6394 2026-07-26 00:50 var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Root.plist
+-rw-r--r-- 0/root        31634 2026-07-26 00:51 var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/ThemeCatalog.json
+drwxr-xr-x 0/root            0 2026-07-26 00:51 var/jb/Library/PreferenceLoader
+drwxr-xr-x 0/root            0 2026-07-26 00:51 var/jb/Library/PreferenceLoader/Preferences
+-rw-r--r-- 0/root          513 2026-07-26 00:51 var/jb/Library/PreferenceLoader/Preferences/Gif2Ani.plist
 
 --- build log tail ---
 [0;36m==> [1;39mCleaning…[m
