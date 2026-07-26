@@ -1,0 +1,12 @@
+Gif2Ani 3.6.1 Color-Faithful Previews
+run_id=30216902042
+source_commit=1d1b7032ba7da2feb34591ec57446c510c8f3698
+status=cancelled
+completed_at_utc=2026-07-26T19:28:20Z
+preview_count=262
+palette_colors_per_animation=256
+mean_color_error_limit=10
+maximum_frame_color_error_limit=18
+gallery_total=274
+--- fidelity ---
+--- build tail ---
