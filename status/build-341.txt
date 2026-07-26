@@ -1,8 +1,14 @@
-Gif2Ani 3.4.1 Deterministic Build
-run_id=30181443352
-source_commit=cf44593dbb55d1e6da4e24ef739a641554b3bb18
+Gif2Ani 3.4.1 Gallery Build
+run_id=30181459302
+commit=8778e7e02ca8ea9d787f9e3994368fb5c71c4fca
 status=failure
-completed_at_utc=2026-07-26T00:37:02Z
+completed_at_utc=2026-07-26T00:37:35Z
+offline_themes=12
+cc0_downloadable_themes=54
+source_backed_springy_themes=48
+downloadable_theme_total=102
+first_class_theme_total=114
+
 
 --- packaged binaries ---
 
