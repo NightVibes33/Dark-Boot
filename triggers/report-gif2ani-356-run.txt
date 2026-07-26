@@ -1,0 +1,2 @@
+requested_at_utc=2026-07-26T16:44:00Z
+purpose=report the latest Gif2Ani 3.5.6 SnowBoard build after Objective-C escape fix
