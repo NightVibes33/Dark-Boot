@@ -1,8 +1,8 @@
 Gif2Ani 3.6.1 Color-Faithful Previews
-run_id=30216902042
-source_commit=1d1b7032ba7da2feb34591ec57446c510c8f3698
+run_id=30217058160
+source_commit=78f79ab24b23fc7e4e636c1f04c735d900a59db5
 status=cancelled
-completed_at_utc=2026-07-26T19:28:20Z
+completed_at_utc=2026-07-26T19:32:52Z
 preview_count=262
 palette_colors_per_animation=256
 mean_color_error_limit=10
