@@ -1,0 +1,76 @@
+name: Probe Verified SnowBoard Sources
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/probe-snowboard-seeds.yml
+      - triggers/probe-snowboard-seeds.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: probe-snowboard-seeds
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install probe dependencies
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends dpkg-dev python3 python3-pip ca-certificates
+          python3 -m pip install --break-system-packages requests beautifulsoup4
+
+      - name: Download and inspect original source DEBs
+        id: verify
+        run: |
+          set -o pipefail
+          python3 scripts/build_snowboard_catalog_seeded.py 2>&1 | tee snowboard-seed-probe.log
+
+      - name: Upload probe evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: snowboard-seed-probe-${{ github.run_id }}
+          path: |
+            snowboard-seed-probe.log
+            status/snowboard-catalog-audit.txt
+            gif2aniprefs/Resources/SnowBoardCatalog.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Publish probe status
+        if: always()
+        env:
+          PROBE_STATUS: ${{ steps.verify.outcome }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          mkdir -p status
+          {
+            echo 'Gif2Ani SnowBoard Source Probe'
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "source_commit=${GITHUB_SHA}"
+            echo "status=${PROBE_STATUS}"
+            echo "completed_at_utc=$(date -u +%FT%TZ)"
+            grep -E 'candidate_page_count=|verified_package_|candidate_failure_|snowboard_verified_package_count=|snowboard_verified_theme_count=|snowboard_rejected_count=' snowboard-seed-probe.log 2>/dev/null || true
+            echo '--- audit tail ---'
+            tail -n 220 status/snowboard-catalog-audit.txt 2>/dev/null || true
+            echo '--- log tail ---'
+            tail -n 260 snowboard-seed-probe.log 2>/dev/null || true
+          } > status/snowboard-seed-probe.txt
+          git add status/snowboard-seed-probe.txt
+          git commit -m "Record SnowBoard source probe (${PROBE_STATUS}) [skip ci]" || exit 0
+          git push origin HEAD:main
