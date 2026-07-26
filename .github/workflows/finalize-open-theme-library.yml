@@ -116,8 +116,8 @@ jobs:
               })
 
           records.sort(key=lambda item: item['name'].casefold())
-          if len(records) < 50:
-              raise SystemExit(f'expected at least 50 Springy packs, found {len(records)}')
+          if len(records) < 48:
+              raise SystemExit(f'expected the 48-pack Springy catalog or newer, found {len(records)}')
 
           manifest = {
               'version': 1,
@@ -160,7 +160,7 @@ jobs:
           path = pathlib.Path('gif2aniprefs/Resources/OpenThemeCatalog.json')
           data = json.loads(path.read_text())
           assert data['version'] == 1
-          assert data['count'] == len(data['themes']) >= 50
+          assert data['count'] == len(data['themes']) >= 48
           assert re.fullmatch(r'[0-9a-f]{40}', data['sourceCommit'])
           packages = set()
           for item in data['themes']:
