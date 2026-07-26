@@ -27,13 +27,6 @@ static BOOL G2OpenThemeURLIsAllowed(NSURL *url, BOOL indexURL);
 #undef G2BuiltInPacks
 #include "G2ThemeGalleryPart1Tail.inc"
 #include "G2ThemeGalleryPart2.inc"
-#include "G2BundledOpenThemeCatalog.inc"
-
-static NSArray<NSDictionary *> *G2PreferredOpenThemeCatalog(void) {
-    NSArray<NSDictionary *> *cached = G2LoadCachedOpenThemeCatalog();
-    if (cached.count >= 48) return cached;
-    return G2BundledOpenThemeCatalog();
-}
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
@@ -41,6 +34,14 @@ static NSArray<NSDictionary *> *G2PreferredOpenThemeCatalog(void) {
 #include "G2ThemeGalleryPart3.inc"
 #undef G2StageGIFAtPath
 #pragma clang diagnostic pop
+
+#include "G2BundledOpenThemeCatalog.inc"
+
+static NSArray<NSDictionary *> *G2PreferredOpenThemeCatalog(void) {
+    NSArray<NSDictionary *> *cached = G2LoadCachedOpenThemeCatalog();
+    if (cached.count >= 48) return cached;
+    return G2BundledOpenThemeCatalog();
+}
 
 #include "G2ThemeGalleryPart4.inc"
 #define G2LoadCachedOpenThemeCatalog G2PreferredOpenThemeCatalog
