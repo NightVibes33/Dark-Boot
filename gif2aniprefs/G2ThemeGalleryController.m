@@ -8,6 +8,8 @@
 static NSArray<NSDictionary *> *G2OfflineBuiltInPacks(void);
 static BOOL G2StageGIFAtPath(NSString *sourcePath, NSDictionary *recommended, NSError **error);
 static NSArray<NSDictionary *> *G2LoadCachedOpenThemeCatalog(void);
+static NSDictionary *G2OpenThemeCachedInfo(NSDictionary *pack);
+static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack);
 
 @interface G2ThemeGalleryController (G2OpenThemeLibraryRefresh)
 - (void)refreshOpenThemeLibrary;
