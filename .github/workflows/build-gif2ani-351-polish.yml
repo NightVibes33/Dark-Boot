@@ -1,0 +1,119 @@
+name: Build Gif2Ani 3.5.1 Gallery Polish
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-gif2ani-351-polish.yml
+      - triggers/build-gif2ani-351-polish.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-351-polish-final
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply 3.5.1 source polish
+        run: |
+          set -euo pipefail
+          python3 scripts/apply_351_polish.py | tee polish.log
+          grep -Fq 'BOOL downloadable' gif2aniprefs/G2ModernGallery.inc
+          grep -Fq 'bounded-ephemeral-download-all' gif2aniprefs/G2ModernGallery.inc
+          grep -Fq 'G2MDownloadPinnedRemoteData' gif2aniprefs/G2ModernGallery.inc
+          grep -Fq 'Version: 3.5.1' control
+
+      - name: Install Theos toolchain
+        env:
+          THEOS: /opt/theos
+          CI: '1'
+          SHELL: /bin/bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends bash curl sudo build-essential fakeroot rsync perl git libxml2 dpkg-dev unzip xz-utils ca-certificates python3 file binutils
+          sudo rm -rf /opt/theos
+          sudo mkdir -p /opt
+          sudo chown "$USER:$USER" /opt
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          test -x /opt/theos/toolchain/linux/iphone/bin/clang
+
+      - name: Build and validate rootless 3.5.1 package
+        env:
+          THEOS: /opt/theos
+        run: |
+          set -euo pipefail
+          set -x
+          make clean package FINALPACKAGE=1 2>&1 | tee gif2ani-351-build.log
+          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.5.1_iphoneos-arm64.deb' -print -quit)"
+          test -s "$DEB"
+          test "$(dpkg-deb -f "$DEB" Package)" = 'com.nightvibes33.gif2ani'
+          test "$(dpkg-deb -f "$DEB" Version)" = '3.5.1'
+          test "$(dpkg-deb -f "$DEB" Architecture)" = 'iphoneos-arm64'
+          rm -rf verify-root
+          dpkg-deb -x "$DEB" verify-root
+          PREFS='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs'
+          TWEAK='verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib'
+          test -s "$PREFS" && test -s "$TWEAK"
+          file "$PREFS" | grep -Fq 'Mach-O 64-bit arm64'
+          file "$TWEAK" | grep -Fq 'Mach-O 64-bit arm64'
+          strings -a "$PREFS" | grep -Fq 'bounded-ephemeral-download-all'
+          strings -a "$PREFS" | grep -Fq 'Download All 54 CC0 Themes'
+          strings -a "$PREFS" | grep -Fq 'Not Downloaded'
+          mkdir -p release-packages
+          cp "$DEB" release-packages/Gif2Ani-3.5.1-gallery-polish.deb
+          sha256sum release-packages/Gif2Ani-3.5.1-gallery-polish.deb | tee release-packages/Gif2Ani-3.5.1-gallery-polish.sha256
+
+      - name: Upload 3.5.1 DEB
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gif2Ani-3.5.1-gallery-polish
+          path: release-packages/Gif2Ani-3.5.1-gallery-polish.deb
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish source, DEB, and status
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          mkdir -p status release-packages
+          {
+            echo 'Gif2Ani 3.5.1 Gallery Filter and Bounded Download Polish'
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "source_commit=${GITHUB_SHA}"
+            echo "status=${JOB_STATUS}"
+            echo "completed_at_utc=$(date -u +%FT%TZ)"
+            cat release-packages/Gif2Ani-3.5.1-gallery-polish.sha256 2>/dev/null || true
+            echo 'filter=offline-only-builtin downloaded-only-cached-downloadables not-downloaded-only-uncached-downloadables'
+            echo 'download_all=ephemeral-session 30s-request 60s-resource pinned-final-url sha256 gif-validation'
+            echo '--- polish log ---'
+            cat polish.log 2>/dev/null || true
+            echo '--- build tail ---'
+            tail -n 180 gif2ani-351-build.log 2>/dev/null || true
+          } > status/gif2ani-351-polish.txt
+          if [ "$JOB_STATUS" = success ]; then
+            git add control gif2aniprefs/G2ModernGallery.inc
+            git rm scripts/apply_351_polish.py
+            git add -f release-packages/Gif2Ani-3.5.1-gallery-polish.deb
+            git add release-packages/Gif2Ani-3.5.1-gallery-polish.sha256
+          else
+            git restore control gif2aniprefs/G2ModernGallery.inc 2>/dev/null || true
+          fi
+          git add status/gif2ani-351-polish.txt
+          git commit -m "Publish Gif2Ani 3.5.1 gallery polish (${JOB_STATUS}) [skip ci]" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
