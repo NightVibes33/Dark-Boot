@@ -2,7 +2,7 @@ Gif2Ani 3.5.8 SHA-Bound Identity
 status=success
 compiled_run_id=30212812686
 compiled_artifact_id=8634957206
-published_at_utc=2026-07-26T17:36:42Z
+published_at_utc=2026-07-26T17:37:53Z
 0d2953840e63191e221ac0bf9bd682c001ac77c064a40cf41c7808504b3a2d44  release-packages/Gif2Ani-3.5.8-sha-bound-identity.deb
 identity=exact URL, byte count, and SHA-256 authoritative; clean mismatch fatal; metadata-tool failure uses fallback
 diagnostic=LastPackageVerification.plist
