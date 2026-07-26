@@ -1,0 +1,168 @@
+name: Build Gif2Ani 3.5.7 Shared Verifier Fix
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-gif2ani-357-verifier-fix.yml
+      - scripts/apply_gif2ani_357_verifier_fix.py
+      - triggers/build-gif2ani-357-verifier-fix.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-357-verifier-fix
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies and Theos
+        env:
+          THEOS: /opt/theos
+          CI: '1'
+          SHELL: /bin/bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            bash curl sudo build-essential fakeroot rsync perl git libxml2 dpkg-dev \
+            unzip xz-utils ca-certificates python3 file binutils
+          sudo rm -rf /opt/theos
+          sudo mkdir -p /opt
+          sudo chown "$USER:$USER" /opt
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          test -x /opt/theos/toolchain/linux/iphone/bin/clang
+
+      - name: Apply shared Springy and SnowBoard verifier fix
+        run: |
+          set -euo pipefail
+          python3 scripts/apply_gif2ani_357_verifier_fix.py | tee source-fix.log
+          grep -Fq 'gif2ani_357_shared_package_verifier_fix=success' source-fix.log
+          grep -Fq 'Version: 3.5.7' control
+          grep -Fq 'GIF2ANI 3.5.7' gif2aniprefs/Resources/Root.plist
+          grep -Fq '274-THEME ANIMATION GALLERY' gif2aniprefs/Resources/Root.plist
+          grep -Fq 'posix_spawn_file_actions_addopen(&actions, STDERR_FILENO' gif2aniprefs/G2ThemeGalleryPart3.inc
+          ! grep -Fq 'posix_spawn_file_actions_adddup2(&actions, STDOUT_FILENO, STDERR_FILENO)' gif2aniprefs/G2ThemeGalleryPart3.inc
+          grep -Fq 'Expected %@, received %@' gif2aniprefs/G2OpenThemeLibrary.inc
+
+      - name: Validate embedded catalogs
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, pathlib
+          springy=json.loads(pathlib.Path('gif2aniprefs/Resources/OpenThemeCatalog.json').read_text())
+          snowboard=json.loads(pathlib.Path('gif2aniprefs/Resources/SnowBoardCatalog.json').read_text())
+          assert springy['count'] == len(springy['themes']) == 48
+          assert snowboard['packageCount'] == 7
+          assert snowboard['count'] == len(snowboard['themes']) == 160
+          assert len({x['identifier'] for x in snowboard['themes']}) == 160
+          assert all(x.get('package') for x in springy['themes'])
+          assert all(x.get('package') for x in snowboard['themes'])
+          print('springy_catalog=48')
+          print('snowboard_packages=7')
+          print('snowboard_catalog=160')
+          print('combined_gallery=274')
+          PY
+
+      - name: Compile and verify rootless package
+        env:
+          THEOS: /opt/theos
+        run: |
+          set -euo pipefail
+          make clean package FINALPACKAGE=1 2>&1 | tee build.log
+          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.5.7_iphoneos-arm64.deb' -print -quit)"
+          test -s "$DEB"
+          test "$(dpkg-deb -f "$DEB" Package)" = 'com.nightvibes33.gif2ani'
+          test "$(dpkg-deb -f "$DEB" Version)" = '3.5.7'
+          test "$(dpkg-deb -f "$DEB" Architecture)" = 'iphoneos-arm64'
+
+          rm -rf verify-root
+          dpkg-deb -x "$DEB" verify-root
+          BUNDLE='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle'
+          PREFS="$BUNDLE/Gif2AniPrefs"
+          TWEAK='verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib'
+          test -s "$PREFS" && test -s "$TWEAK"
+          file "$PREFS" | grep -Fq 'Mach-O 64-bit arm64'
+          file "$TWEAK" | grep -Fq 'Mach-O 64-bit arm64'
+          grep -Fq 'GIF2ANI 3.5.7' "$BUNDLE/Root.plist"
+          grep -Fq '274-THEME ANIMATION GALLERY' "$BUNDLE/Root.plist"
+          strings -a "$PREFS" | grep -Fq 'The downloaded DEB package identifier does not match the selected theme.'
+          strings -a "$PREFS" | grep -Fq 'Expected %@, received %@.'
+
+          python3 - "$BUNDLE/OpenThemeCatalog.json" "$BUNDLE/SnowBoardCatalog.json" <<'PY'
+          import json, pathlib, sys
+          springy=json.loads(pathlib.Path(sys.argv[1]).read_text())
+          snowboard=json.loads(pathlib.Path(sys.argv[2]).read_text())
+          assert springy['count'] == 48
+          assert snowboard['packageCount'] == 7
+          assert snowboard['count'] == 160
+          print('embedded_source_backed_themes=208')
+          PY
+
+          mkdir -p release-packages
+          cp "$DEB" release-packages/Gif2Ani-3.5.7-shared-verifier-fix.deb
+          sha256sum release-packages/Gif2Ani-3.5.7-shared-verifier-fix.deb \
+            | tee release-packages/Gif2Ani-3.5.7-shared-verifier-fix.sha256
+
+      - name: Upload package evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gif2Ani-3.5.7-shared-verifier-fix
+          path: |
+            release-packages/Gif2Ani-3.5.7-shared-verifier-fix.deb
+            release-packages/Gif2Ani-3.5.7-shared-verifier-fix.sha256
+            source-fix.log
+            build.log
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Publish package and status
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          mkdir -p status release-packages
+          {
+            echo 'Gif2Ani 3.5.7 Shared Springy and SnowBoard Verifier Fix'
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "source_commit=${GITHUB_SHA}"
+            echo "status=${JOB_STATUS}"
+            echo "completed_at_utc=$(date -u +%FT%TZ)"
+            cat release-packages/Gif2Ani-3.5.7-shared-verifier-fix.sha256 2>/dev/null || true
+            echo 'root_cause=dpkg-deb stderr warnings were merged into stdout and compared as part of the package identifier'
+            echo 'fix=stdout and stderr captured separately; real catalog package field remains the comparison target'
+            echo 'springy_themes=48'
+            echo 'snowboard_packages=7'
+            echo 'snowboard_themes=160'
+            echo 'gallery_total=274'
+            echo '--- source fix ---'
+            cat source-fix.log 2>/dev/null || true
+            echo '--- build tail ---'
+            tail -n 180 build.log 2>/dev/null || true
+          } > status/gif2ani-357-shared-verifier-fix.txt
+
+          if [ "$JOB_STATUS" = success ]; then
+            git add control
+            git add gif2aniprefs/G2ThemeGalleryPart3.inc
+            git add gif2aniprefs/G2OpenThemeLibrary.inc
+            git add gif2aniprefs/Resources/Root.plist
+            git add -f release-packages/Gif2Ani-3.5.7-shared-verifier-fix.deb
+            git add release-packages/Gif2Ani-3.5.7-shared-verifier-fix.sha256
+          fi
+          git add status/gif2ani-357-shared-verifier-fix.txt
+          git commit -m "Publish Gif2Ani 3.5.7 shared verifier fix (${JOB_STATUS}) [skip ci]" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
