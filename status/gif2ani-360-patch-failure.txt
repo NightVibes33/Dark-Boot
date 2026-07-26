@@ -1,0 +1,257 @@
+2026-07-26T19:09:35.3261706Z AppleTVOS12.4.sdk/usr/lib/libxml2.tbd
+2026-07-26T19:09:35.3262022Z AppleTVOS12.4.sdk/SDKSettings.plist
+2026-07-26T19:09:35.3262273Z AppleTVOS12.4.sdk/Entitlements.plist
+2026-07-26T19:09:35.3284801Z 
+2026-07-26T19:09:35.3285368Z [0;36m==> [1;36mSDKs successfully installed![m
+2026-07-26T19:09:35.3285953Z [0;34m==> [1;34mTheos Installer:[m Theos has been successfully installed! Restart your shell and then run $THEOS/bin/nic.pl to get started.
+2026-07-26T19:09:35.3318278Z ##[group]Run set -euo pipefail
+2026-07-26T19:09:35.3318560Z [36;1mset -euo pipefail[0m
+2026-07-26T19:09:35.3318845Z [36;1mpython3 scripts/apply_gif2ani_360_animated_gallery_cards.py | tee source-fix.log[0m
+2026-07-26T19:09:35.3319220Z [36;1mgrep -Fq 'gif2ani_360_animated_gallery_cards=success' source-fix.log[0m
+2026-07-26T19:09:35.3319538Z [36;1mgrep -Fq 'visible_only_animation=enabled' source-fix.log[0m
+2026-07-26T19:09:35.3319880Z [36;1mgrep -Fq 'Version: 3.6.0' control[0m
+2026-07-26T19:09:35.3320131Z [36;1mgrep -Fq 'GIF2ANI 3.6.0' gif2aniprefs/Resources/Root.plist[0m
+2026-07-26T19:09:35.3320485Z [36;1mgrep -Fq 'visible-card-bundled-animation-v360' gif2aniprefs/G2ModernGallery.inc[0m
+2026-07-26T19:09:35.3320865Z [36;1mgrep -Fq 'didEndDisplayingCell' gif2aniprefs/G2ModernGallery.inc[0m
+2026-07-26T19:09:35.3321216Z [36;1mgrep -Fq 'totalCostLimit = 12 * 1024 * 1024' gif2aniprefs/G2ModernGallery.inc[0m
+2026-07-26T19:09:35.3321552Z [36;1mecho 'animated_card_source_gate=passed'[0m
+2026-07-26T19:09:35.3344770Z shell: /usr/bin/bash -e {0}
+2026-07-26T19:09:35.3344973Z ##[endgroup]
+2026-07-26T19:09:35.4968615Z Traceback (most recent call last):
+2026-07-26T19:09:35.4969192Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 326, in <module>
+2026-07-26T19:09:35.4969552Z     main()
+2026-07-26T19:09:35.4969852Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 322, in main
+2026-07-26T19:09:35.4970205Z     verify()
+2026-07-26T19:09:35.4970515Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 311, in verify
+2026-07-26T19:09:35.4970871Z     assert marker in text, marker
+2026-07-26T19:09:35.3319880Z [36;1mgrep -Fq 'Version: 3.6.0' control[0m
+2026-07-26T19:09:35.3320131Z [36;1mgrep -Fq 'GIF2ANI 3.6.0' gif2aniprefs/Resources/Root.plist[0m
+2026-07-26T19:09:35.3320485Z [36;1mgrep -Fq 'visible-card-bundled-animation-v360' gif2aniprefs/G2ModernGallery.inc[0m
+2026-07-26T19:09:35.3320865Z [36;1mgrep -Fq 'didEndDisplayingCell' gif2aniprefs/G2ModernGallery.inc[0m
+2026-07-26T19:09:35.3321216Z [36;1mgrep -Fq 'totalCostLimit = 12 * 1024 * 1024' gif2aniprefs/G2ModernGallery.inc[0m
+2026-07-26T19:09:35.3321552Z [36;1mecho 'animated_card_source_gate=passed'[0m
+2026-07-26T19:09:35.3344770Z shell: /usr/bin/bash -e {0}
+2026-07-26T19:09:35.3344973Z ##[endgroup]
+2026-07-26T19:09:35.4968615Z Traceback (most recent call last):
+2026-07-26T19:09:35.4969192Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 326, in <module>
+2026-07-26T19:09:35.4969552Z     main()
+2026-07-26T19:09:35.4969852Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 322, in main
+2026-07-26T19:09:35.4970205Z     verify()
+2026-07-26T19:09:35.4970515Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 311, in verify
+2026-07-26T19:09:35.4970871Z     assert marker in text, marker
+2026-07-26T19:09:35.4971049Z            ^^^^^^^^^^^^^^
+2026-07-26T19:09:35.4971277Z AssertionError: visible-card-bundled-animation-v360
+2026-07-26T19:09:35.5102488Z ##[error]Process completed with exit code 1.
+2026-07-26T19:09:35.5162692Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-07-26T19:09:35.5163782Z ##[group]Run actions/upload-artifact@v4
+2026-07-26T19:09:35.5163987Z with:
+2026-07-26T19:09:35.5164172Z   name: Gif2Ani-3.6.0-animated-gallery-cards
+2026-07-26T19:09:35.5164730Z   path: release-packages/Gif2Ani-3.6.0-animated-gallery-cards.deb
+release-packages/Gif2Ani-3.6.0-animated-gallery-cards.sha256
+source-fix.log
+build.log
+2026-07-26T19:09:35.3320131Z [36;1mgrep -Fq 'GIF2ANI 3.6.0' gif2aniprefs/Resources/Root.plist[0m
+2026-07-26T19:09:35.3320485Z [36;1mgrep -Fq 'visible-card-bundled-animation-v360' gif2aniprefs/G2ModernGallery.inc[0m
+2026-07-26T19:09:35.3320865Z [36;1mgrep -Fq 'didEndDisplayingCell' gif2aniprefs/G2ModernGallery.inc[0m
+2026-07-26T19:09:35.3321216Z [36;1mgrep -Fq 'totalCostLimit = 12 * 1024 * 1024' gif2aniprefs/G2ModernGallery.inc[0m
+2026-07-26T19:09:35.3321552Z [36;1mecho 'animated_card_source_gate=passed'[0m
+2026-07-26T19:09:35.3344770Z shell: /usr/bin/bash -e {0}
+2026-07-26T19:09:35.3344973Z ##[endgroup]
+2026-07-26T19:09:35.4968615Z Traceback (most recent call last):
+2026-07-26T19:09:35.4969192Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 326, in <module>
+2026-07-26T19:09:35.4969552Z     main()
+2026-07-26T19:09:35.4969852Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 322, in main
+2026-07-26T19:09:35.4970205Z     verify()
+2026-07-26T19:09:35.4970515Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 311, in verify
+2026-07-26T19:09:35.4970871Z     assert marker in text, marker
+2026-07-26T19:09:35.4971049Z            ^^^^^^^^^^^^^^
+2026-07-26T19:09:35.4971277Z AssertionError: visible-card-bundled-animation-v360
+2026-07-26T19:09:35.5102488Z ##[error]Process completed with exit code 1.
+2026-07-26T19:09:35.5162692Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-07-26T19:09:35.5163782Z ##[group]Run actions/upload-artifact@v4
+2026-07-26T19:09:35.5163987Z with:
+2026-07-26T19:09:35.5164172Z   name: Gif2Ani-3.6.0-animated-gallery-cards
+2026-07-26T19:09:35.5164730Z   path: release-packages/Gif2Ani-3.6.0-animated-gallery-cards.deb
+release-packages/Gif2Ani-3.6.0-animated-gallery-cards.sha256
+source-fix.log
+build.log
+prefs-strings.txt
+2026-07-26T19:09:35.3320865Z [36;1mgrep -Fq 'didEndDisplayingCell' gif2aniprefs/G2ModernGallery.inc[0m
+2026-07-26T19:09:35.3321216Z [36;1mgrep -Fq 'totalCostLimit = 12 * 1024 * 1024' gif2aniprefs/G2ModernGallery.inc[0m
+2026-07-26T19:09:35.3321552Z [36;1mecho 'animated_card_source_gate=passed'[0m
+2026-07-26T19:09:35.3344770Z shell: /usr/bin/bash -e {0}
+2026-07-26T19:09:35.3344973Z ##[endgroup]
+2026-07-26T19:09:35.4968615Z Traceback (most recent call last):
+2026-07-26T19:09:35.4969192Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 326, in <module>
+2026-07-26T19:09:35.4969552Z     main()
+2026-07-26T19:09:35.4969852Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 322, in main
+2026-07-26T19:09:35.4970205Z     verify()
+2026-07-26T19:09:35.4970515Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 311, in verify
+2026-07-26T19:09:35.4970871Z     assert marker in text, marker
+2026-07-26T19:09:35.4971049Z            ^^^^^^^^^^^^^^
+2026-07-26T19:09:35.4971277Z AssertionError: visible-card-bundled-animation-v360
+2026-07-26T19:09:35.5102488Z ##[error]Process completed with exit code 1.
+2026-07-26T19:09:35.5162692Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-07-26T19:09:35.5163782Z ##[group]Run actions/upload-artifact@v4
+2026-07-26T19:09:35.5163987Z with:
+2026-07-26T19:09:35.5164172Z   name: Gif2Ani-3.6.0-animated-gallery-cards
+2026-07-26T19:09:35.5164730Z   path: release-packages/Gif2Ani-3.6.0-animated-gallery-cards.deb
+release-packages/Gif2Ani-3.6.0-animated-gallery-cards.sha256
+source-fix.log
+build.log
+prefs-strings.txt
+
+2026-07-26T19:09:35.5165270Z   if-no-files-found: warn
+2026-07-26T19:09:35.3321552Z [36;1mecho 'animated_card_source_gate=passed'[0m
+2026-07-26T19:09:35.3344770Z shell: /usr/bin/bash -e {0}
+2026-07-26T19:09:35.3344973Z ##[endgroup]
+2026-07-26T19:09:35.4968615Z Traceback (most recent call last):
+2026-07-26T19:09:35.4969192Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 326, in <module>
+2026-07-26T19:09:35.4969552Z     main()
+2026-07-26T19:09:35.4969852Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 322, in main
+2026-07-26T19:09:35.4970205Z     verify()
+2026-07-26T19:09:35.4970515Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 311, in verify
+2026-07-26T19:09:35.4970871Z     assert marker in text, marker
+2026-07-26T19:09:35.4971049Z            ^^^^^^^^^^^^^^
+2026-07-26T19:09:35.4971277Z AssertionError: visible-card-bundled-animation-v360
+2026-07-26T19:09:35.5102488Z ##[error]Process completed with exit code 1.
+2026-07-26T19:09:35.5162692Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-07-26T19:09:35.5163782Z ##[group]Run actions/upload-artifact@v4
+2026-07-26T19:09:35.5163987Z with:
+2026-07-26T19:09:35.5164172Z   name: Gif2Ani-3.6.0-animated-gallery-cards
+2026-07-26T19:09:35.5164730Z   path: release-packages/Gif2Ani-3.6.0-animated-gallery-cards.deb
+release-packages/Gif2Ani-3.6.0-animated-gallery-cards.sha256
+source-fix.log
+build.log
+prefs-strings.txt
+
+2026-07-26T19:09:35.5165270Z   if-no-files-found: warn
+2026-07-26T19:09:35.5165449Z   retention-days: 30
+2026-07-26T19:09:35.5165619Z   compression-level: 6
+2026-07-26T19:09:35.4968615Z Traceback (most recent call last):
+2026-07-26T19:09:35.4969192Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 326, in <module>
+2026-07-26T19:09:35.4969552Z     main()
+2026-07-26T19:09:35.4969852Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 322, in main
+2026-07-26T19:09:35.4970205Z     verify()
+2026-07-26T19:09:35.4970515Z   File "/home/runner/work/Dark-Boot/Dark-Boot/scripts/apply_gif2ani_360_animated_gallery_cards.py", line 311, in verify
+2026-07-26T19:09:35.4970871Z     assert marker in text, marker
+2026-07-26T19:09:35.4971049Z            ^^^^^^^^^^^^^^
+2026-07-26T19:09:35.4971277Z AssertionError: visible-card-bundled-animation-v360
+2026-07-26T19:09:35.5102488Z ##[error]Process completed with exit code 1.
+2026-07-26T19:09:35.5162692Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-07-26T19:09:35.5163782Z ##[group]Run actions/upload-artifact@v4
+2026-07-26T19:09:35.5163987Z with:
+2026-07-26T19:09:35.5164172Z   name: Gif2Ani-3.6.0-animated-gallery-cards
+2026-07-26T19:09:35.5164730Z   path: release-packages/Gif2Ani-3.6.0-animated-gallery-cards.deb
+release-packages/Gif2Ani-3.6.0-animated-gallery-cards.sha256
+source-fix.log
+build.log
+prefs-strings.txt
+
+2026-07-26T19:09:35.5165270Z   if-no-files-found: warn
+2026-07-26T19:09:35.5165449Z   retention-days: 30
+2026-07-26T19:09:35.5165619Z   compression-level: 6
+2026-07-26T19:09:35.5165785Z   overwrite: false
+2026-07-26T19:09:35.5165956Z   include-hidden-files: false
+2026-07-26T19:09:35.5166177Z ##[endgroup]
+--- final 100 lines ---
+2026-07-26T19:09:36.2341942Z [36;1m  git add release-packages/Gif2Ani-3.6.0-animated-gallery-cards.sha256[0m
+2026-07-26T19:09:36.2342211Z [36;1mfi[0m
+2026-07-26T19:09:36.2342417Z [36;1mgit add status/gif2ani-360-animated-gallery-cards.txt[0m
+2026-07-26T19:09:36.2342787Z [36;1mgit commit -m "Publish Gif2Ani 3.6.0 animated gallery cards (${JOB_STATUS}) [skip ci]" || true[0m
+2026-07-26T19:09:36.2343101Z [36;1mgit reset --hard HEAD[0m
+2026-07-26T19:09:36.2343289Z [36;1mfor attempt in 1 2 3 4 5; do[0m
+2026-07-26T19:09:36.2343551Z [36;1m  if git pull --rebase origin main && git push origin HEAD:main; then[0m
+2026-07-26T19:09:36.2343808Z [36;1m    exit 0[0m
+2026-07-26T19:09:36.2343972Z [36;1m  fi[0m
+2026-07-26T19:09:36.2344155Z [36;1m  git rebase --abort >/dev/null 2>&1 || true[0m
+2026-07-26T19:09:36.2344374Z [36;1m  sleep $((attempt * 3))[0m
+2026-07-26T19:09:36.2344557Z [36;1mdone[0m
+2026-07-26T19:09:36.2344704Z [36;1mexit 1[0m
+2026-07-26T19:09:36.2367766Z shell: /usr/bin/bash -e {0}
+2026-07-26T19:09:36.2367963Z env:
+2026-07-26T19:09:36.2368117Z   JOB_STATUS: failure
+2026-07-26T19:09:36.2368281Z ##[endgroup]
+2026-07-26T19:09:36.2811894Z [main 92cbd78] Publish Gif2Ani 3.6.0 animated gallery cards (failure) [skip ci]
+2026-07-26T19:09:36.2812293Z  1 file changed, 12 insertions(+)
+2026-07-26T19:09:36.2812625Z  create mode 100644 status/gif2ani-360-animated-gallery-cards.txt
+2026-07-26T19:09:36.2842123Z HEAD is now at 92cbd78 Publish Gif2Ani 3.6.0 animated gallery cards (failure) [skip ci]
+2026-07-26T19:09:36.6987090Z From https://github.com/NightVibes33/Dark-Boot
+2026-07-26T19:09:36.6987505Z  * branch            main       -> FETCH_HEAD
+2026-07-26T19:09:36.6987802Z    94f6679..4050d25  main       -> origin/main
+2026-07-26T19:09:36.7071133Z Auto-merging status/gif2ani-360-animated-gallery-cards.txt
+2026-07-26T19:09:36.7071560Z CONFLICT (add/add): Merge conflict in status/gif2ani-360-animated-gallery-cards.txt
+2026-07-26T19:09:36.7252756Z Rebasing (1/1)
+2026-07-26T19:09:36.7253268Z error: could not apply 92cbd78... Publish Gif2Ani 3.6.0 animated gallery cards (failure) [skip ci]
+2026-07-26T19:09:36.7253653Z hint: Resolve all conflicts manually, mark them as resolved with
+2026-07-26T19:09:36.7254112Z hint: "git add/rm <conflicted_files>", then run "git rebase --continue".
+2026-07-26T19:09:36.7254548Z hint: You can instead skip this commit: run "git rebase --skip".
+2026-07-26T19:09:36.7254979Z hint: To abort and get back to the state before "git rebase", run "git rebase --abort".
+2026-07-26T19:09:36.7255442Z hint: Disable this message with "git config set advice.mergeConflict false"
+2026-07-26T19:09:36.7255929Z Could not apply 92cbd78... # Publish Gif2Ani 3.6.0 animated gallery cards (failure) [skip ci]
+2026-07-26T19:09:40.2545829Z From https://github.com/NightVibes33/Dark-Boot
+2026-07-26T19:09:40.2546137Z  * branch            main       -> FETCH_HEAD
+2026-07-26T19:09:40.2648142Z Auto-merging status/gif2ani-360-animated-gallery-cards.txt
+2026-07-26T19:09:40.2648647Z CONFLICT (add/add): Merge conflict in status/gif2ani-360-animated-gallery-cards.txt
+2026-07-26T19:09:40.2650300Z Rebasing (1/1)
+2026-07-26T19:09:40.2650675Z error: could not apply 92cbd78... Publish Gif2Ani 3.6.0 animated gallery cards (failure) [skip ci]
+2026-07-26T19:09:40.2651088Z hint: Resolve all conflicts manually, mark them as resolved with
+2026-07-26T19:09:40.2651392Z hint: "git add/rm <conflicted_files>", then run "git rebase --continue".
+2026-07-26T19:09:40.2651834Z hint: You can instead skip this commit: run "git rebase --skip".
+2026-07-26T19:09:40.2652233Z hint: To abort and get back to the state before "git rebase", run "git rebase --abort".
+2026-07-26T19:09:40.2652629Z hint: Disable this message with "git config set advice.mergeConflict false"
+2026-07-26T19:09:40.2653000Z Could not apply 92cbd78... # Publish Gif2Ani 3.6.0 animated gallery cards (failure) [skip ci]
+2026-07-26T19:09:46.5823855Z From https://github.com/NightVibes33/Dark-Boot
+2026-07-26T19:09:46.5824338Z  * branch            main       -> FETCH_HEAD
+2026-07-26T19:09:46.5920587Z Auto-merging status/gif2ani-360-animated-gallery-cards.txt
+2026-07-26T19:09:46.5921038Z CONFLICT (add/add): Merge conflict in status/gif2ani-360-animated-gallery-cards.txt
+2026-07-26T19:09:46.5923298Z Rebasing (1/1)
+2026-07-26T19:09:46.5923707Z error: could not apply 92cbd78... Publish Gif2Ani 3.6.0 animated gallery cards (failure) [skip ci]
+2026-07-26T19:09:46.5924205Z hint: Resolve all conflicts manually, mark them as resolved with
+2026-07-26T19:09:46.5924608Z hint: "git add/rm <conflicted_files>", then run "git rebase --continue".
+2026-07-26T19:09:46.5925077Z hint: You can instead skip this commit: run "git rebase --skip".
+2026-07-26T19:09:46.5925540Z hint: To abort and get back to the state before "git rebase", run "git rebase --abort".
+2026-07-26T19:09:46.5926042Z hint: Disable this message with "git config set advice.mergeConflict false"
+2026-07-26T19:09:46.5927240Z Could not apply 92cbd78... # Publish Gif2Ani 3.6.0 animated gallery cards (failure) [skip ci]
+2026-07-26T19:09:55.9382947Z From https://github.com/NightVibes33/Dark-Boot
+2026-07-26T19:09:55.9383357Z  * branch            main       -> FETCH_HEAD
+2026-07-26T19:09:56.0192728Z Auto-merging status/gif2ani-360-animated-gallery-cards.txt
+2026-07-26T19:09:56.0193148Z CONFLICT (add/add): Merge conflict in status/gif2ani-360-animated-gallery-cards.txt
+2026-07-26T19:09:56.0194556Z Rebasing (1/1)
+2026-07-26T19:09:56.0194905Z error: could not apply 92cbd78... Publish Gif2Ani 3.6.0 animated gallery cards (failure) [skip ci]
+2026-07-26T19:09:56.0195359Z hint: Resolve all conflicts manually, mark them as resolved with
+2026-07-26T19:09:56.0195823Z hint: "git add/rm <conflicted_files>", then run "git rebase --continue".
+2026-07-26T19:09:56.0196641Z hint: You can instead skip this commit: run "git rebase --skip".
+2026-07-26T19:09:56.0196967Z hint: To abort and get back to the state before "git rebase", run "git rebase --abort".
+2026-07-26T19:09:56.0197431Z hint: Disable this message with "git config set advice.mergeConflict false"
+2026-07-26T19:09:56.0197807Z Could not apply 92cbd78... # Publish Gif2Ani 3.6.0 animated gallery cards (failure) [skip ci]
+2026-07-26T19:10:08.2627791Z From https://github.com/NightVibes33/Dark-Boot
+2026-07-26T19:10:08.2628166Z  * branch            main       -> FETCH_HEAD
+2026-07-26T19:10:08.2954203Z Auto-merging status/gif2ani-360-animated-gallery-cards.txt
+2026-07-26T19:10:08.2954628Z CONFLICT (add/add): Merge conflict in status/gif2ani-360-animated-gallery-cards.txt
+2026-07-26T19:10:08.2956829Z Rebasing (1/1)
+2026-07-26T19:10:08.2957179Z error: could not apply 92cbd78... Publish Gif2Ani 3.6.0 animated gallery cards (failure) [skip ci]
+2026-07-26T19:10:08.2957614Z hint: Resolve all conflicts manually, mark them as resolved with
+2026-07-26T19:10:08.2957952Z hint: "git add/rm <conflicted_files>", then run "git rebase --continue".
+2026-07-26T19:10:08.2958412Z hint: You can instead skip this commit: run "git rebase --skip".
+2026-07-26T19:10:08.2958828Z hint: To abort and get back to the state before "git rebase", run "git rebase --abort".
+2026-07-26T19:10:08.2959265Z hint: Disable this message with "git config set advice.mergeConflict false"
+2026-07-26T19:10:08.2959716Z Could not apply 92cbd78... # Publish Gif2Ani 3.6.0 animated gallery cards (failure) [skip ci]
+2026-07-26T19:10:23.3020042Z ##[error]Process completed with exit code 1.
+2026-07-26T19:10:23.3105744Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-07-26T19:10:23.3106796Z Post job cleanup.
+2026-07-26T19:10:23.3758148Z [command]/usr/bin/git version
+2026-07-26T19:10:23.3785347Z git version 2.54.0
+2026-07-26T19:10:23.3809869Z Temporarily overriding HOME='/home/runner/work/_temp/874c11dc-1a51-44ec-ab6f-6b5764ea2e41' before making global git config changes
+2026-07-26T19:10:23.3810702Z Adding repository directory to the temporary git global config as a safe directory
+2026-07-26T19:10:23.3813519Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Dark-Boot/Dark-Boot
+2026-07-26T19:10:23.3842117Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-07-26T19:10:23.3866665Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-07-26T19:10:23.4026829Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-07-26T19:10:23.4041855Z http.https://github.com/.extraheader
+2026-07-26T19:10:23.4050105Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-07-26T19:10:23.4071818Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-07-26T19:10:23.4237485Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-07-26T19:10:23.4266938Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-07-26T19:10:23.4560637Z Cleaning up orphan processes
+2026-07-26T19:10:23.4730246Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
