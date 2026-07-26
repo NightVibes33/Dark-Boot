@@ -1,0 +1,152 @@
+name: Build Gif2Ani 3.5.3 Immutable Springy Downloads
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-gif2ani-353-immutable-springy.yml
+      - triggers/build-gif2ani-353-immutable-springy.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-353-immutable-springy
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate 3.5.3 immutable catalog source
+        run: |
+          set -euo pipefail
+          grep -Fq 'Version: 3.5.3' control
+          grep -Fq 'raw.githubusercontent.com/VirenMohindra/CydiaRepo/' gif2aniprefs/G2BundledOpenThemeCatalog.inc
+          grep -Fq 'sourceCommit' gif2aniprefs/G2BundledOpenThemeCatalog.inc
+          grep -Fq 'G2OpenThemeURLIsAllowed(url, NO)' gif2aniprefs/G2BundledOpenThemeCatalog.inc
+          python3 - <<'PY'
+          import json
+          import pathlib
+          import re
+
+          path = pathlib.Path('gif2aniprefs/Resources/OpenThemeCatalog.json')
+          manifest = json.loads(path.read_text())
+          themes = manifest['themes']
+          assert manifest['version'] == 1
+          assert manifest['count'] == len(themes) == 48
+          assert manifest['sourceRepository'] == 'VirenMohindra/CydiaRepo'
+          assert manifest['sourceLicense'] == 'MIT'
+          seen = set()
+          for theme in themes:
+              package = theme['package']
+              assert package == theme['identifier']
+              assert package.startswith('io.github.virenmohindra.')
+              assert package not in seen
+              seen.add(package)
+              assert re.fullmatch(r'[0-9a-f]{40}', theme['sourceCommit'])
+              assert re.fullmatch(r'[0-9a-f]{64}', theme['sha256'])
+              assert 0 < int(theme['bytes']) <= 32 * 1024 * 1024
+              filename = theme['filename']
+              assert filename.startswith('./debs/')
+              assert filename.endswith('.deb')
+              assert '..' not in filename
+              assert '\\' not in filename
+              pinned = f"https://raw.githubusercontent.com/VirenMohindra/CydiaRepo/{theme['sourceCommit']}/{filename[2:]}"
+              assert pinned.startswith('https://raw.githubusercontent.com/VirenMohindra/CydiaRepo/')
+          print('immutable_springy_manifest=passed')
+          PY
+          test "$(find gif2aniprefs/Resources/ThemePreviews -maxdepth 1 -type f -name '*.png' | wc -l)" = 102
+
+      - name: Install build dependencies
+        env:
+          THEOS: /opt/theos
+          CI: '1'
+          SHELL: /bin/bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends bash curl sudo build-essential fakeroot rsync perl git libxml2 dpkg-dev unzip xz-utils ca-certificates python3 file binutils
+          sudo rm -rf /opt/theos
+          sudo mkdir -p /opt
+          sudo chown "$USER:$USER" /opt
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          test -x /opt/theos/toolchain/linux/iphone/bin/clang
+
+      - name: Build and validate rootless 3.5.3 package
+        env:
+          THEOS: /opt/theos
+        run: |
+          set -euo pipefail
+          make clean package FINALPACKAGE=1 2>&1 | tee build.log
+          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.5.3_iphoneos-arm64.deb' -print -quit)"
+          test -s "$DEB"
+          test "$(dpkg-deb -f "$DEB" Package)" = 'com.nightvibes33.gif2ani'
+          test "$(dpkg-deb -f "$DEB" Version)" = '3.5.3'
+          test "$(dpkg-deb -f "$DEB" Architecture)" = 'iphoneos-arm64'
+          rm -rf verify-root
+          dpkg-deb -x "$DEB" verify-root
+          PREFS='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs'
+          TWEAK='verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib'
+          CATALOG='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/OpenThemeCatalog.json'
+          PREVIEWS='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/ThemePreviews'
+          test -s "$PREFS" && test -s "$TWEAK" && test -s "$CATALOG"
+          file "$PREFS" | grep -Fq 'Mach-O 64-bit arm64'
+          strings -a "$PREFS" | grep -Fq 'raw.githubusercontent.com/VirenMohindra/CydiaRepo/'
+          strings -a "$PREFS" | grep -Fq 'The downloaded DEB package identifier does not match the selected theme.'
+          test "$(find "$PREVIEWS" -maxdepth 1 -type f -name '*.png' | wc -l)" = 102
+          python3 - "$CATALOG" <<'PY'
+          import json, pathlib, sys
+          m = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          assert m['count'] == len(m['themes']) == 48
+          assert all(len(t['sourceCommit']) == 40 for t in m['themes'])
+          print('embedded_catalog=passed')
+          PY
+          mkdir -p release-packages
+          cp "$DEB" release-packages/Gif2Ani-3.5.3-immutable-springy-fix.deb
+          sha256sum release-packages/Gif2Ani-3.5.3-immutable-springy-fix.deb | tee release-packages/Gif2Ani-3.5.3-immutable-springy-fix.sha256
+
+      - name: Upload DEB
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gif2Ani-3.5.3-immutable-springy-fix
+          path: release-packages/Gif2Ani-3.5.3-immutable-springy-fix.deb
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish DEB and status
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          mkdir -p status release-packages
+          {
+            echo 'Gif2Ani 3.5.3 Immutable Springy Download Fix'
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "source_commit=${GITHUB_SHA}"
+            echo "status=${JOB_STATUS}"
+            echo "completed_at_utc=$(date -u +%FT%TZ)"
+            cat release-packages/Gif2Ani-3.5.3-immutable-springy-fix.sha256 2>/dev/null || true
+            echo 'springy_urls=derived from immutable sourceCommit plus validated DEB filename'
+            echo 'springy_integrity=48 byte counts and SHA-256 values remain pinned'
+            echo 'previews=102 bundled thumbnails retained'
+            echo '--- build tail ---'
+            tail -n 180 build.log 2>/dev/null || true
+          } > status/gif2ani-353-immutable-springy.txt
+          if [ "$JOB_STATUS" = success ]; then
+            git add -f release-packages/Gif2Ani-3.5.3-immutable-springy-fix.deb
+            git add release-packages/Gif2Ani-3.5.3-immutable-springy-fix.sha256
+          fi
+          git add status/gif2ani-353-immutable-springy.txt
+          git commit -m "Publish Gif2Ani 3.5.3 immutable Springy fix (${JOB_STATUS}) [skip ci]" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
