@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/build-gif2ani-360-animated-cards.yml
       - scripts/apply_gif2ani_360_animated_gallery_cards.py
+      - scripts/run_gif2ani_360_animated_gallery_cards_v2.py
       - triggers/build-gif2ani-360-animated-cards.txt
 
 permissions:
@@ -45,8 +46,9 @@ jobs:
       - name: Apply animated card patch
         run: |
           set -euo pipefail
-          python3 scripts/apply_gif2ani_360_animated_gallery_cards.py | tee source-fix.log
+          python3 scripts/run_gif2ani_360_animated_gallery_cards_v2.py | tee source-fix.log
           grep -Fq 'gif2ani_360_animated_gallery_cards=success' source-fix.log
+          grep -Fq 'gif2ani_360_marker_insertion=success' source-fix.log
           grep -Fq 'visible_only_animation=enabled' source-fix.log
           grep -Fq 'Version: 3.6.0' control
           grep -Fq 'GIF2ANI 3.6.0' gif2aniprefs/Resources/Root.plist
