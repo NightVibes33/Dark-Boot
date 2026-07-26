@@ -1,2 +1,3 @@
-run=2026-07-25T19:30:00-05:00
+run=2026-07-26T00:24:00-05:00
 reason=Preserve sampled GIF frame delays, restore Apple loader opacity, and serialize reload layer mutations onto the main thread.
+retry=workflow-registered
