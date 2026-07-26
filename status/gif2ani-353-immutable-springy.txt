@@ -1,9 +1,11 @@
 Gif2Ani 3.5.3 Immutable Springy Download Fix
-run_id=30207767578
-source_commit=078cab72e2a1e75f6d265ee45b65b495f03360fc
+run_id=30207854636
+source_commit=bc0ee5f270e0e091e8491d628b97afacedcb9578
 status=failure
-completed_at_utc=2026-07-26T15:14:22Z
+completed_at_utc=2026-07-26T15:16:47Z
 springy_urls=derived from immutable sourceCommit plus validated DEB filename
 springy_integrity=48 byte counts and SHA-256 values remain pinned
 previews=102 bundled thumbnails retained
+--- validation ---
+immutable_springy_manifest=passed
 --- build tail ---
