@@ -1,0 +1,910 @@
+{
+  "diagnosedAtUTC": "2026-07-26T01:24:44Z",
+  "expectedCount": 48,
+  "successCount": 47,
+  "failureCount": 1,
+  "changedPayloadCount": 47,
+  "successes": [
+    {
+      "index": 1,
+      "name": "A Wave",
+      "package": "io.github.virenmohindra.a-wave",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.a-wave_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 2971666,
+      "catalog_sha256": "93525b61259e64cc0a42ff2393935c337cfbb35d0116fd5af6c48178ec89566e",
+      "actual_bytes": 2971658,
+      "actual_sha256": "853d01e5a41092561d47dc6ccfc87b9e547dd926b7ba1daa9980fe148e276279",
+      "changed": true,
+      "media_count": 96,
+      "sample_media": [
+        "Library/Springy/A Wave/19.png",
+        "Library/Springy/A Wave/2.png",
+        "Library/Springy/A Wave/1.png",
+        "Library/Springy/A Wave/58.png",
+        "Library/Springy/A Wave/9.png"
+      ]
+    },
+    {
+      "index": 2,
+      "name": "Alone",
+      "package": "io.github.virenmohindra.alone",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.alone_1.0_iphoneos-arm.deb",
+      "catalog_bytes": 2427982,
+      "catalog_sha256": "226c158022947c6d430726e24300277293cb9841da69e98950fb48947dcc43d1",
+      "actual_bytes": 2426184,
+      "actual_sha256": "a699643d4d100853e44f33ee7d8ba530b29e18ea76326b3cd0c5ec8085df2ec7",
+      "changed": true,
+      "media_count": 66,
+      "sample_media": [
+        "Library/Springy/Alone/19.png",
+        "Library/Springy/Alone/2.png",
+        "Library/Springy/Alone/1.png",
+        "Library/Springy/Alone/58.png",
+        "Library/Springy/Alone/9.png"
+      ]
+    },
+    {
+      "index": 3,
+      "name": "Bipolar Balls",
+      "package": "io.github.virenmohindra.bipolar-balls",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.bipolar-balls_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 12971146,
+      "catalog_sha256": "ea11c646296cfaf272fb6f2082ea299da2d9bde1e04c40f5333f8b91ae77e9b4",
+      "actual_bytes": 12971150,
+      "actual_sha256": "2917d32d3a532a3e5bfc0d66e6c15f9043ea1504f9896ed79f46825b9d9170e0",
+      "changed": true,
+      "media_count": 44,
+      "sample_media": [
+        "Library/Springy/Bipolar Balls/19.png",
+        "Library/Springy/Bipolar Balls/2.png",
+        "Library/Springy/Bipolar Balls/1.png",
+        "Library/Springy/Bipolar Balls/9.png",
+        "Library/Springy/Bipolar Balls/22.png"
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Black Hole",
+      "package": "io.github.virenmohindra.black-hole",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.black-hole_1.0_iphoneos-arm.deb",
+      "catalog_bytes": 22081110,
+      "catalog_sha256": "5aa1956c3be2c4f022bad9d595f95d933c6bf20733a252b827697f33e64c9e16",
+      "actual_bytes": 22080514,
+      "actual_sha256": "ca472de7470b077b05fb894d5d1fcf72bf26342cbcc22b391a71fc0ca9c94a67",
+      "changed": true,
+      "media_count": 30,
+      "sample_media": [
+        "Library/Springy/Black Hole/19.png",
+        "Library/Springy/Black Hole/2.png",
+        "Library/Springy/Black Hole/1.png",
+        "Library/Springy/Black Hole/9.png",
+        "Library/Springy/Black Hole/22.png"
+      ]
+    },
+    {
+      "index": 5,
+      "name": "Boo",
+      "package": "io.github.virenmohindra.boo",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.boo_1.0_iphoneos-arm.deb",
+      "catalog_bytes": 4679192,
+      "catalog_sha256": "a9ff2a73348e570c7362d853533c949458772fea71a4abd11d8eea8a36293d87",
+      "actual_bytes": 4678464,
+      "actual_sha256": "7831abc6aa2018336139fda246d02d8a4dd3e39b46d77f9f36eed42baa32bb36",
+      "changed": true,
+      "media_count": 60,
+      "sample_media": [
+        "Library/Springy/Boo/19.png",
+        "Library/Springy/Boo/2.png",
+        "Library/Springy/Boo/1.png",
+        "Library/Springy/Boo/58.png",
+        "Library/Springy/Boo/9.png"
+      ]
+    },
+    {
+      "index": 6,
+      "name": "Bubbles",
+      "package": "io.github.virenmohindra.bubbles",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.bubbles_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 4775942,
+      "catalog_sha256": "89dc75d9f9b39150c15f0031f238ad6c145bc307effaacd890b61a549560d677",
+      "actual_bytes": 4775930,
+      "actual_sha256": "ba3ccba41ebee25ff9860c204e94ffe9684223d90da1760950ff5812f5993e73",
+      "changed": true,
+      "media_count": 96,
+      "sample_media": [
+        "Library/Springy/Bubbles/19.png",
+        "Library/Springy/Bubbles/2.png",
+        "Library/Springy/Bubbles/1.png",
+        "Library/Springy/Bubbles/58.png",
+        "Library/Springy/Bubbles/9.png"
+      ]
+    },
+    {
+      "index": 7,
+      "name": "Colorful Stars In Space",
+      "package": "io.github.virenmohindra.colorful-stars-in-space",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.colorful-stars-in-space_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 2098926,
+      "catalog_sha256": "52d4475f04b3e01d4718db630a22853ac563157e645b1f4dc7d25aab7cd72e04",
+      "actual_bytes": 2098890,
+      "actual_sha256": "f0cda6842ff3ca6b99ed2c1ecc443b6ffc1d763f7df879dc557d5ecee7d2afc7",
+      "changed": true,
+      "media_count": 60,
+      "sample_media": [
+        "Library/Springy/Colorful Stars In Space/19.png",
+        "Library/Springy/Colorful Stars In Space/2.png",
+        "Library/Springy/Colorful Stars In Space/1.png",
+        "Library/Springy/Colorful Stars In Space/58.png",
+        "Library/Springy/Colorful Stars In Space/9.png"
+      ]
+    },
+    {
+      "index": 8,
+      "name": "Columns",
+      "package": "io.github.virenmohindra.columns",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.columns_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 3588428,
+      "catalog_sha256": "6168269071b56227806d1a6be8ed5e2683309b1c79cc7451164e038c492236dd",
+      "actual_bytes": 3588408,
+      "actual_sha256": "a632e756397d99d299341af1fb2ff8086d7f147d8c7fbbcae93d166db3c90607",
+      "changed": true,
+      "media_count": 54,
+      "sample_media": [
+        "Library/Springy/Columns/19.png",
+        "Library/Springy/Columns/2.png",
+        "Library/Springy/Columns/1.png",
+        "Library/Springy/Columns/9.png",
+        "Library/Springy/Columns/22.png"
+      ]
+    },
+    {
+      "index": 9,
+      "name": "Complicated",
+      "package": "io.github.virenmohindra.complicated",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.complicated_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 6293850,
+      "catalog_sha256": "d1688e8a7eca355ca5d825450c5b43273710e4249d8aad6c7cd57119fe780078",
+      "actual_bytes": 6293790,
+      "actual_sha256": "e2e84a6d93a22403211cddedb43fe2a3fd65f2c37a43868dcab076c58550a713",
+      "changed": true,
+      "media_count": 60,
+      "sample_media": [
+        "Library/Springy/Complicated/19.png",
+        "Library/Springy/Complicated/2.png",
+        "Library/Springy/Complicated/1.png",
+        "Library/Springy/Complicated/58.png",
+        "Library/Springy/Complicated/9.png"
+      ]
+    },
+    {
+      "index": 10,
+      "name": "Echo",
+      "package": "io.github.virenmohindra.echo",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.echo_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 5357912,
+      "catalog_sha256": "a55e1cfd23f4421f251b8d9b572c4b92fc3b0c5d575d899825db6bc461154598",
+      "actual_bytes": 5357838,
+      "actual_sha256": "05c16fd7e7789ec4d45ae56d2f5d08a58a618cb7d34adc2ad7a44b1707e55d0c",
+      "changed": true,
+      "media_count": 168,
+      "sample_media": [
+        "Library/Springy/Echo/19.png",
+        "Library/Springy/Echo/2.png",
+        "Library/Springy/Echo/135.png",
+        "Library/Springy/Echo/1.png",
+        "Library/Springy/Echo/165.png"
+      ]
+    },
+    {
+      "index": 11,
+      "name": "Fall Leaves",
+      "package": "io.github.virenmohindra.fall-leaves",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.fall-leaves_1.0_iphoneos-arm.deb",
+      "catalog_bytes": 2904484,
+      "catalog_sha256": "fbcdf8c373f1240c0224f1dd02f5cab00fc3e938af2d7350efaec3da966607aa",
+      "actual_bytes": 2903760,
+      "actual_sha256": "78185380b8d8529fa825f3d6349adc3b94f099e688f97a216e1883f5a192714f",
+      "changed": true,
+      "media_count": 11,
+      "sample_media": [
+        "Library/Springy/Fall Leaves/2.png",
+        "Library/Springy/Fall Leaves/1.png",
+        "Library/Springy/Fall Leaves/9.png",
+        "Library/Springy/Fall Leaves/7.png",
+        "Library/Springy/Fall Leaves/3.png"
+      ]
+    },
+    {
+      "index": 12,
+      "name": "Flower",
+      "package": "io.github.virenmohindra.flower",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.flower_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 3313438,
+      "catalog_sha256": "428dfc9e73ad09cbfc37ffca3079f922368b0922a3a5c7929d4663097ca42b2f",
+      "actual_bytes": 3313368,
+      "actual_sha256": "90c420f4505784300dafa8e18b7163d933958952659781ad6614e8651e0ab9b6",
+      "changed": true,
+      "media_count": 72,
+      "sample_media": [
+        "Library/Springy/Flower/19.png",
+        "Library/Springy/Flower/2.png",
+        "Library/Springy/Flower/1.png",
+        "Library/Springy/Flower/58.png",
+        "Library/Springy/Flower/9.png"
+      ]
+    },
+    {
+      "index": 13,
+      "name": "Fluid",
+      "package": "io.github.virenmohindra.fluid",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.fluid_1.0_iphoneos-arm.deb",
+      "catalog_bytes": 883832,
+      "catalog_sha256": "90ee46f893a2b720e116f6ba793eb457bfdd4e45993ae4d07a9484b6f0f3b7d2",
+      "actual_bytes": 882230,
+      "actual_sha256": "4a0a93d5be171a63c899d6bca93cbac97b2778b096e96294c362f347158fde67",
+      "changed": true,
+      "media_count": 38,
+      "sample_media": [
+        "Library/Springy/Fluid/19.png",
+        "Library/Springy/Fluid/2.png",
+        "Library/Springy/Fluid/1.png",
+        "Library/Springy/Fluid/9.png",
+        "Library/Springy/Fluid/22.png"
+      ]
+    },
+    {
+      "index": 14,
+      "name": "Fragments",
+      "package": "io.github.virenmohindra.fragments",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.fragments_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 8658140,
+      "catalog_sha256": "ea554cd8604e0746516e6ff58c14b86b816d1d301f47b1826abdba75a80d72b4",
+      "actual_bytes": 8657894,
+      "actual_sha256": "730c3fbbf9d9442514479b8aaf2997ae11f605b68ff8671338322ac052fe528b",
+      "changed": true,
+      "media_count": 92,
+      "sample_media": [
+        "Library/Springy/Fragments/19.png",
+        "Library/Springy/Fragments/2.png",
+        "Library/Springy/Fragments/1.png",
+        "Library/Springy/Fragments/58.png",
+        "Library/Springy/Fragments/9.png"
+      ]
+    },
+    {
+      "index": 15,
+      "name": "Funny Computer",
+      "package": "io.github.virenmohindra.funny-computer",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.funny-computer_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 7708912,
+      "catalog_sha256": "b5379dbc81113b788dbc91c7ab86c161e8c2cbf7c3f59bdcd62856384e9387ed",
+      "actual_bytes": 7708706,
+      "actual_sha256": "156331dd36f99e418dd70588cbab71fa3ee233ef308db5934932ed7b95db6d2c",
+      "changed": true,
+      "media_count": 64,
+      "sample_media": [
+        "Library/Springy/Funny Computer/19.png",
+        "Library/Springy/Funny Computer/2.png",
+        "Library/Springy/Funny Computer/1.png",
+        "Library/Springy/Funny Computer/58.png",
+        "Library/Springy/Funny Computer/9.png"
+      ]
+    },
+    {
+      "index": 16,
+      "name": "Gameboy Advance",
+      "package": "io.github.virenmohindra.gameboy-advance",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.gameboy-advance_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 3313038,
+      "catalog_sha256": "6cb23ec7a5087de45fc2ce1be01b8bd1e14ae5ca0c5cc72cb6c11e4b0bae6a18",
+      "actual_bytes": 3312970,
+      "actual_sha256": "c5585f54418544f5583a2a6c856c0e2817c3b155f30860c40809bbfd716a6ad5",
+      "changed": true,
+      "media_count": 63,
+      "sample_media": [
+        "Library/Springy/Gameboy Advance/19.png",
+        "Library/Springy/Gameboy Advance/2.png",
+        "Library/Springy/Gameboy Advance/1.png",
+        "Library/Springy/Gameboy Advance/58.png",
+        "Library/Springy/Gameboy Advance/9.png"
+      ]
+    },
+    {
+      "index": 17,
+      "name": "Gamecube Logo",
+      "package": "io.github.virenmohindra.gamecube-logo",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.gamecube-logo_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 1418168,
+      "catalog_sha256": "7c569d87b9dc3b0ab85e93adb141e357cb218cf5ca068e0ba9ec61551f4f1cc6",
+      "actual_bytes": 1418126,
+      "actual_sha256": "7906c0da2ab96708ff950488e5bc779c3e68847bc316faedcce240d464c5bdc6",
+      "changed": true,
+      "media_count": 41,
+      "sample_media": [
+        "Library/Springy/Gamecube Logo/19.png",
+        "Library/Springy/Gamecube Logo/2.png",
+        "Library/Springy/Gamecube Logo/1.png",
+        "Library/Springy/Gamecube Logo/9.png",
+        "Library/Springy/Gamecube Logo/22.png"
+      ]
+    },
+    {
+      "index": 18,
+      "name": "Hello Again",
+      "package": "io.github.virenmohindra.hello-again",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.hello-again_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 14487054,
+      "catalog_sha256": "bb6505d022a2234f315fae0fb876cad36f775fc8a13bf59de27d5e6b2e80e238",
+      "actual_bytes": 14486844,
+      "actual_sha256": "cfa898b4f97a21711001e5cacc8a7cc976638e1699f7193877fd3499c5be838b",
+      "changed": true,
+      "media_count": 144,
+      "sample_media": [
+        "Library/Springy/Hello Again/19.png",
+        "Library/Springy/Hello Again/2.png",
+        "Library/Springy/Hello Again/135.png",
+        "Library/Springy/Hello Again/1.png",
+        "Library/Springy/Hello Again/101.png"
+      ]
+    },
+    {
+      "index": 19,
+      "name": "Hypnotoad",
+      "package": "io.github.virenmohindra.hypnotoad",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.hypnotoad_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 25036082,
+      "catalog_sha256": "0063649fb458208270a6c6c457ce349b5f2bff7034b007355abdab5ac93746ef",
+      "actual_bytes": 25035954,
+      "actual_sha256": "3c384d5b8808e8a2b85d135714b7e75e83d8025c00523f46a26bbe2f861f5020",
+      "changed": true,
+      "media_count": 72,
+      "sample_media": [
+        "Library/Springy/Hypnotoad/19.png",
+        "Library/Springy/Hypnotoad/2.png",
+        "Library/Springy/Hypnotoad/1.png",
+        "Library/Springy/Hypnotoad/58.png",
+        "Library/Springy/Hypnotoad/9.png"
+      ]
+    },
+    {
+      "index": 20,
+      "name": "Lines",
+      "package": "io.github.virenmohindra.lines",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.lines_1.0_iphoneos-arm.deb",
+      "catalog_bytes": 3904316,
+      "catalog_sha256": "b1eec7182ec3809fd7bb22239ec130b6f640b0149530420947e72b7170b93615",
+      "actual_bytes": 3902510,
+      "actual_sha256": "d8d5dfeaae0efae6c593dbea65ea09856d4cb356acdfc2a41627e5170fa91960",
+      "changed": true,
+      "media_count": 60,
+      "sample_media": [
+        "Library/Springy/Lines/19.png",
+        "Library/Springy/Lines/2.png",
+        "Library/Springy/Lines/1.png",
+        "Library/Springy/Lines/58.png",
+        "Library/Springy/Lines/9.png"
+      ]
+    },
+    {
+      "index": 21,
+      "name": "Mograph",
+      "package": "io.github.virenmohindra.mograph",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.mograph_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 4300166,
+      "catalog_sha256": "24605d54f1a91ec163fc9aad68cc8465c014f9f4828e1ec28dd0ea601f5ada4a",
+      "actual_bytes": 4300018,
+      "actual_sha256": "06afe71b55dc81a16c91076753a3d9a3d7616b0e36f179bf696ce92634a7d4a3",
+      "changed": true,
+      "media_count": 62,
+      "sample_media": [
+        "Library/Springy/Mograph/19.png",
+        "Library/Springy/Mograph/2.png",
+        "Library/Springy/Mograph/1.png",
+        "Library/Springy/Mograph/58.png",
+        "Library/Springy/Mograph/9.png"
+      ]
+    },
+    {
+      "index": 22,
+      "name": "Only Human",
+      "package": "io.github.virenmohindra.only-human",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.only-human_1.0_iphoneos-arm.deb",
+      "catalog_bytes": 6522934,
+      "catalog_sha256": "26c3cd436ec6f748c1d956b99f5b1048f6343e8633a4fa41042123484240bb7c",
+      "actual_bytes": 6521044,
+      "actual_sha256": "df84408a01c5c576d6ab2a01b9bd95a039d4cf347df4d8032e6b60321c897c60",
+      "changed": true,
+      "media_count": 69,
+      "sample_media": [
+        "Library/Springy/Only Human/19.png",
+        "Library/Springy/Only Human/2.png",
+        "Library/Springy/Only Human/1.png",
+        "Library/Springy/Only Human/58.png",
+        "Library/Springy/Only Human/9.png"
+      ]
+    },
+    {
+      "index": 23,
+      "name": "Pepe Matrix",
+      "package": "io.github.virenmohindra.pepe-matrix",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.pepe-matrix_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 2938872,
+      "catalog_sha256": "c24786a12980b162c51ae726b5ae6032a8311a145e728aa42421444140c98ee2",
+      "actual_bytes": 2938812,
+      "actual_sha256": "0f887081a73ae82ae5bfab9306da4cac358d5832754182be29ac214641badcb8",
+      "changed": true,
+      "media_count": 20,
+      "sample_media": [
+        "Library/Springy/Pepe Matrix/19.png",
+        "Library/Springy/Pepe Matrix/2.png",
+        "Library/Springy/Pepe Matrix/1.png",
+        "Library/Springy/Pepe Matrix/9.png",
+        "Library/Springy/Pepe Matrix/7.png"
+      ]
+    },
+    {
+      "index": 24,
+      "name": "Pizza",
+      "package": "io.github.virenmohindra.pizza",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.pizza_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 1343942,
+      "catalog_sha256": "cf89e99886cfc6e567222ae7241ba30d244d0db1356558c9c0d1172b50570b32",
+      "actual_bytes": 1343924,
+      "actual_sha256": "8adea730e0957be1ac6b131b0b2a87bcbefe3cd50415592a789803b2b66d57ed",
+      "changed": true,
+      "media_count": 23,
+      "sample_media": [
+        "Library/Springy/Pizza/19.png",
+        "Library/Springy/Pizza/2.png",
+        "Library/Springy/Pizza/1.png",
+        "Library/Springy/Pizza/9.png",
+        "Library/Springy/Pizza/22.png"
+      ]
+    },
+    {
+      "index": 25,
+      "name": "Pizza Hi",
+      "package": "io.github.virenmohindra.pizza-hi",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.pizza-hi_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 2713888,
+      "catalog_sha256": "45abdb46309c408b209248d3f377039ba36f158ed43c9c4bde65f512a85b0862",
+      "actual_bytes": 2713814,
+      "actual_sha256": "376a6dc7972a0dc71de5fc1d4f9e17896c9a88f98f5346168ce9744f2162c0d1",
+      "changed": true,
+      "media_count": 23,
+      "sample_media": [
+        "Library/Springy/PizzaHi/19.png",
+        "Library/Springy/PizzaHi/2.png",
+        "Library/Springy/PizzaHi/1.png",
+        "Library/Springy/PizzaHi/9.png",
+        "Library/Springy/PizzaHi/22.png"
+      ]
+    },
+    {
+      "index": 26,
+      "name": "Pokemon",
+      "package": "io.github.virenmohindra.pokemon",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.pokemon_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 4229932,
+      "catalog_sha256": "4ba4460a43e09a4e93039bdabab883f99beac928382125d10e1eb83c2f9a4f13",
+      "actual_bytes": 4229866,
+      "actual_sha256": "c0223f1839626db484fbc6be443e3fadab6da479bb15cd59eb5c6712ef208ee1",
+      "changed": true,
+      "media_count": 30,
+      "sample_media": [
+        "Library/Springy/Pokemon/19.png",
+        "Library/Springy/Pokemon/2.png",
+        "Library/Springy/Pokemon/1.png",
+        "Library/Springy/Pokemon/9.png",
+        "Library/Springy/Pokemon/22.png"
+      ]
+    },
+    {
+      "index": 27,
+      "name": "Pulse",
+      "package": "io.github.virenmohindra.pulse",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.pulse_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 1168182,
+      "catalog_sha256": "70bac1bc39b9b9e3b92c5b03b32c5e0e3530a4ea220594c645d02b3e9ff9c6ca",
+      "actual_bytes": 1168094,
+      "actual_sha256": "9173108b1cd0eabad2efc16831f80a73bd18a13e037659754a179019f2568896",
+      "changed": true,
+      "media_count": 60,
+      "sample_media": [
+        "Library/Springy/Pulse/19.png",
+        "Library/Springy/Pulse/2.png",
+        "Library/Springy/Pulse/1.png",
+        "Library/Springy/Pulse/58.png",
+        "Library/Springy/Pulse/9.png"
+      ]
+    },
+    {
+      "index": 28,
+      "name": "Rainbow 8",
+      "package": "io.github.virenmohindra.rainbow-8",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.rainbow-8_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 313540,
+      "catalog_sha256": "272e0315606711bb63a7fcba544fd11aac07cb7473e2d912c2bbdc29d0e34e31",
+      "actual_bytes": 313520,
+      "actual_sha256": "a5c057c0c328b1ddb1f65e84e90f8bb8cd916ca8e2f253e2fc24039c45fadec6",
+      "changed": true,
+      "media_count": 19,
+      "sample_media": [
+        "Library/Springy/Rainbow 8/2.png",
+        "Library/Springy/Rainbow 8/1.png",
+        "Library/Springy/Rainbow 8/9.png",
+        "Library/Springy/Rainbow 8/7.png",
+        "Library/Springy/Rainbow 8/15.png"
+      ]
+    },
+    {
+      "index": 29,
+      "name": "Rainy",
+      "package": "io.github.virenmohindra.rainy",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.rainy_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 5127646,
+      "catalog_sha256": "6e1b82f6805524627f93ea695a17f8cf8249f895a458f6d005136ec5d6143e86",
+      "actual_bytes": 5127604,
+      "actual_sha256": "c3d0acdee177b5f040bd5d63bda0b227cbfdf00550cf3ce4d6aedf8cafb2f4e8",
+      "changed": true,
+      "media_count": 9,
+      "sample_media": [
+        "Library/Springy/Rainy/2.png",
+        "Library/Springy/Rainy/1.png",
+        "Library/Springy/Rainy/7.png",
+        "Library/Springy/Rainy/3.png",
+        "Library/Springy/Rainy/5.png"
+      ]
+    },
+    {
+      "index": 30,
+      "name": "Rolling Circles",
+      "package": "io.github.virenmohindra.rolling-circles",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.rolling-circles_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 4297702,
+      "catalog_sha256": "4dfc9f5f0ef47ac622cbdc3c6d4abeb6150c5e28313a37271b2871509dc25134",
+      "actual_bytes": 4297622,
+      "actual_sha256": "ab8bf6f880ba5c57b1384d3e41e5ccf2be939003f187b71b626712107c5b5054",
+      "changed": true,
+      "media_count": 73,
+      "sample_media": [
+        "Library/Springy/Rolling Circles/19.png",
+        "Library/Springy/Rolling Circles/2.png",
+        "Library/Springy/Rolling Circles/1.png",
+        "Library/Springy/Rolling Circles/58.png",
+        "Library/Springy/Rolling Circles/9.png"
+      ]
+    },
+    {
+      "index": 31,
+      "name": "Routine",
+      "package": "io.github.virenmohindra.routine",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.routine_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 5599302,
+      "catalog_sha256": "d6653b6b9dd615b7e285c7920d42518040a6dcb292b0fdb9ce166762a1939e2f",
+      "actual_bytes": 5599266,
+      "actual_sha256": "4a33a5e29caba8ca5bd694d23b9eff28d67c7d182daa998979de9ac51e033f13",
+      "changed": true,
+      "media_count": 40,
+      "sample_media": [
+        "Library/Springy/Routine/19.png",
+        "Library/Springy/Routine/2.png",
+        "Library/Springy/Routine/1.png",
+        "Library/Springy/Routine/9.png",
+        "Library/Springy/Routine/22.png"
+      ]
+    },
+    {
+      "index": 32,
+      "name": "Sonic Running",
+      "package": "io.github.virenmohindra.sonic-running",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.sonic-running_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 264870,
+      "catalog_sha256": "e099101ca35b7e827e21cc32ae1b47fe5322cf053390427f80c9798957cef472",
+      "actual_bytes": 264842,
+      "actual_sha256": "1dddf53611aa1694b776922721513a546ac88ee68ce63cb1d0d9c5ea25db62a7",
+      "changed": true,
+      "media_count": 4,
+      "sample_media": [
+        "Library/Springy/Sonic Running/2.png",
+        "Library/Springy/Sonic Running/1.png",
+        "Library/Springy/Sonic Running/3.png",
+        "Library/Springy/Sonic Running/0.png"
+      ]
+    },
+    {
+      "index": 33,
+      "name": "Soup",
+      "package": "io.github.virenmohindra.soup",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.soup_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 2531792,
+      "catalog_sha256": "5f468621e705b4a3e7a1fee792733a8b08524324d8f2a13ed715c2e5255d202f",
+      "actual_bytes": 2531718,
+      "actual_sha256": "4ad2cf7822bca26b59637d4a7c7a8658ae24e5bf0481de9731552c30258ea19a",
+      "changed": true,
+      "media_count": 31,
+      "sample_media": [
+        "Library/Springy/Soup/19.png",
+        "Library/Springy/Soup/2.png",
+        "Library/Springy/Soup/1.png",
+        "Library/Springy/Soup/9.png",
+        "Library/Springy/Soup/22.png"
+      ]
+    },
+    {
+      "index": 34,
+      "name": "Spikey",
+      "package": "io.github.virenmohindra.spikey",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.spikey_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 6630608,
+      "catalog_sha256": "2abb8cc8f538cf926eacea9dcc77415abff537842dd7912ff32fba036faa31eb",
+      "actual_bytes": 6630576,
+      "actual_sha256": "d4674f387119e8a512651f0f05899ca92fe5e86dd781eaea4d974ab3e8bd4205",
+      "changed": true,
+      "media_count": 10,
+      "sample_media": [
+        "Library/Springy/Spikey/2.png",
+        "Library/Springy/Spikey/1.png",
+        "Library/Springy/Spikey/9.png",
+        "Library/Springy/Spikey/7.png",
+        "Library/Springy/Spikey/3.png"
+      ]
+    },
+    {
+      "index": 35,
+      "name": "Sploosh",
+      "package": "io.github.virenmohindra.sploosh",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.sploosh_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 2311362,
+      "catalog_sha256": "0370876debddf3f35f581f46589e16a9820b50f9987fa72b66a5e45d92b146cc",
+      "actual_bytes": 2311316,
+      "actual_sha256": "cd0741f54cb99311c86198ba3b67b46bef853d79377922026e19e6212294a005",
+      "changed": true,
+      "media_count": 30,
+      "sample_media": [
+        "Library/Springy/Sploosh/19.png",
+        "Library/Springy/Sploosh/2.png",
+        "Library/Springy/Sploosh/1.png",
+        "Library/Springy/Sploosh/9.png",
+        "Library/Springy/Sploosh/22.png"
+      ]
+    },
+    {
+      "index": 36,
+      "name": "Stay In Lane",
+      "package": "io.github.virenmohindra.stay-in-lane",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.stay-in-lane_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 4858468,
+      "catalog_sha256": "45256616acfaed07eb8dd9b24d2f688ed1fb5edfbf9ea2c0808c89c57b1de37e",
+      "actual_bytes": 4858370,
+      "actual_sha256": "0c1205b1ed326f254e7274e3033e3b4013b9cf1ea7e70eda74ab6cead326e723",
+      "changed": true,
+      "media_count": 50,
+      "sample_media": [
+        "Library/Springy/Stay In Lane/19.png",
+        "Library/Springy/Stay In Lane/2.png",
+        "Library/Springy/Stay In Lane/1.png",
+        "Library/Springy/Stay In Lane/9.png",
+        "Library/Springy/Stay In Lane/22.png"
+      ]
+    },
+    {
+      "index": 37,
+      "name": "Stranger Things",
+      "package": "io.github.virenmohindra.stranger-things",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.stranger-things_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 3568518,
+      "catalog_sha256": "37793745f2f9214cd35ca8c1f27a2974d1a4c4262941bb03e9d0e4f4bd2fed03",
+      "actual_bytes": 3568396,
+      "actual_sha256": "34a8a99b7d9f497c3a0697cdeb65a1cced7b37c90480fab2067b756446622f9f",
+      "changed": true,
+      "media_count": 70,
+      "sample_media": [
+        "Library/Springy/Stranger Things/19.png",
+        "Library/Springy/Stranger Things/2.png",
+        "Library/Springy/Stranger Things/1.png",
+        "Library/Springy/Stranger Things/58.png",
+        "Library/Springy/Stranger Things/9.png"
+      ]
+    },
+    {
+      "index": 38,
+      "name": "Super Mario",
+      "package": "io.github.virenmohindra.super-mario",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.super-mario_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 3506820,
+      "catalog_sha256": "9d2deb4cbaa164444ff8919213c3c92847431a56070e89e03c3dc523fa60c6ab",
+      "actual_bytes": 3506774,
+      "actual_sha256": "0ffa6044272c4607412b5be788d545d8178901538219040e86493cf5666e85b9",
+      "changed": true,
+      "media_count": 35,
+      "sample_media": [
+        "Library/Springy/Super Mario/19.png",
+        "Library/Springy/Super Mario/2.png",
+        "Library/Springy/Super Mario/1.png",
+        "Library/Springy/Super Mario/9.png",
+        "Library/Springy/Super Mario/22.png"
+      ]
+    },
+    {
+      "index": 39,
+      "name": "Swimmer",
+      "package": "io.github.virenmohindra.swimmer",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.swimmer_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 1573504,
+      "catalog_sha256": "00717e2df111de2420bf6110526146d3035b5f45f53dce7491f6c7fadb564424",
+      "actual_bytes": 1573426,
+      "actual_sha256": "f804829e6c80172e8cc5fbeebcdfd0f3b9e197e3829d820d6dea34065adf0263",
+      "changed": true,
+      "media_count": 70,
+      "sample_media": [
+        "Library/Springy/Swimmer/19.png",
+        "Library/Springy/Swimmer/2.png",
+        "Library/Springy/Swimmer/1.png",
+        "Library/Springy/Swimmer/58.png",
+        "Library/Springy/Swimmer/9.png"
+      ]
+    },
+    {
+      "index": 41,
+      "name": "Tesseract",
+      "package": "io.github.virenmohindra.tesseract",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.tesseract_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 3522024,
+      "catalog_sha256": "020828c3db79c55c8b838869734062b610ec78811a6a294316166aa86f8d2cf3",
+      "actual_bytes": 3521998,
+      "actual_sha256": "b1b4e2dbc013319a085cb716dda9d05ac78a5ec27e1e18d97c9db1500988dc5f",
+      "changed": true,
+      "media_count": 29,
+      "sample_media": [
+        "Library/Springy/Tesseract/19.png",
+        "Library/Springy/Tesseract/2.png",
+        "Library/Springy/Tesseract/1.png",
+        "Library/Springy/Tesseract/9.png",
+        "Library/Springy/Tesseract/22.png"
+      ]
+    },
+    {
+      "index": 42,
+      "name": "Three Waves",
+      "package": "io.github.virenmohindra.three-waves",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.three-waves_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 4415714,
+      "catalog_sha256": "57e88f9cf9357c4b192b57690fb0c8448e4ca6e4e1f81ea8c55332283f9a7526",
+      "actual_bytes": 4415594,
+      "actual_sha256": "99a543a7dea68433227b9951fe18b0c3a1dcd1d94b3a0cf1cd3c0a50cf70d353",
+      "changed": true,
+      "media_count": 60,
+      "sample_media": [
+        "Library/Springy/Three Waves/19.png",
+        "Library/Springy/Three Waves/2.png",
+        "Library/Springy/Three Waves/1.png",
+        "Library/Springy/Three Waves/58.png",
+        "Library/Springy/Three Waves/9.png"
+      ]
+    },
+    {
+      "index": 43,
+      "name": "Time And Money",
+      "package": "io.github.virenmohindra.time-and-money",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.time-and-money_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 1404558,
+      "catalog_sha256": "d4945e239377a86aa75c34eb8483052a7d469138a27abee1d69fe59b30d0cab5",
+      "actual_bytes": 1404530,
+      "actual_sha256": "39ab5d089b2fedc230bec5cc7d751a55d8af9c8e40b0fe9cd60bde51be6cc1bd",
+      "changed": true,
+      "media_count": 45,
+      "sample_media": [
+        "Library/Springy/Time And Money/19.png",
+        "Library/Springy/Time And Money/2.png",
+        "Library/Springy/Time And Money/1.png",
+        "Library/Springy/Time And Money/9.png",
+        "Library/Springy/Time And Money/22.png"
+      ]
+    },
+    {
+      "index": 44,
+      "name": "Twisting Cubes",
+      "package": "io.github.virenmohindra.twisting-cubes",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.twisting-cubes_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 24403780,
+      "catalog_sha256": "5a521054710cde2e621aa271c522cfe8aa5fbfeaa19e79662b7134771c4e328d",
+      "actual_bytes": 24403672,
+      "actual_sha256": "22cdeca0eaaa801ee7ce1d0b4ea97ebdc781e41bcc0a09d7a31f6cab5afea30b",
+      "changed": true,
+      "media_count": 96,
+      "sample_media": [
+        "Library/Springy/Twisting Cubes/19.png",
+        "Library/Springy/Twisting Cubes/2.png",
+        "Library/Springy/Twisting Cubes/1.png",
+        "Library/Springy/Twisting Cubes/58.png",
+        "Library/Springy/Twisting Cubes/9.png"
+      ]
+    },
+    {
+      "index": 45,
+      "name": "Upload",
+      "package": "io.github.virenmohindra.upload",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.upload_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 979518,
+      "catalog_sha256": "d5ab701ea35402affc0482c6421c8fd2a22da378b845df66fad47c83bdc8ccc4",
+      "actual_bytes": 979352,
+      "actual_sha256": "d6c5468a25cc77e37a4bb6cc0348ef5ea222a19ce3ad82730c286c7db00228bd",
+      "changed": true,
+      "media_count": 107,
+      "sample_media": [
+        "Library/Springy/Upload/19.png",
+        "Library/Springy/Upload/2.png",
+        "Library/Springy/Upload/1.png",
+        "Library/Springy/Upload/101.png",
+        "Library/Springy/Upload/58.png"
+      ]
+    },
+    {
+      "index": 46,
+      "name": "Waiting",
+      "package": "io.github.virenmohindra.waiting",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.waiting_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 5712876,
+      "catalog_sha256": "b65f5e3251d155a0e15bdc7abcb1bb8450d3efad7c088cd10f21bf7a819e2ad4",
+      "actual_bytes": 5712858,
+      "actual_sha256": "7a436d45ddd7c61477b48caf9b693a5118c3668251b74a6a5a789cef4af3edfa",
+      "changed": true,
+      "media_count": 13,
+      "sample_media": [
+        "Library/Springy/Waiting/2.png",
+        "Library/Springy/Waiting/1.png",
+        "Library/Springy/Waiting/9.png",
+        "Library/Springy/Waiting/7.png",
+        "Library/Springy/Waiting/3.png"
+      ]
+    },
+    {
+      "index": 47,
+      "name": "World Swap",
+      "package": "io.github.virenmohindra.world-swap",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.world-swap_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 2503382,
+      "catalog_sha256": "8ae2c0718edae87be4db3070abebc0b2c76352455906dd21c605aefe08fa1923",
+      "actual_bytes": 2503252,
+      "actual_sha256": "10abea214c1b31d328bb95a2b7040efc1e315d55af1972c86a0a999af09f5596",
+      "changed": true,
+      "media_count": 99,
+      "sample_media": [
+        "Library/Springy/World Swap/19.png",
+        "Library/Springy/World Swap/2.png",
+        "Library/Springy/World Swap/1.png",
+        "Library/Springy/World Swap/58.png",
+        "Library/Springy/World Swap/98.png"
+      ]
+    },
+    {
+      "index": 48,
+      "name": "Yin And Yang",
+      "package": "io.github.virenmohindra.yin-and-yang",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.yin-and-yang_2.0_iphoneos-arm.deb",
+      "catalog_bytes": 1372814,
+      "catalog_sha256": "c43b7634d624aad4375043bf631d870f8384d506c325e78bb3bb77b9ee06d6ad",
+      "actual_bytes": 1372756,
+      "actual_sha256": "9fe3b7f5d06a9db704d41dbe73056422b619e34f757b07017a3a9f1ad5a3550f",
+      "changed": true,
+      "media_count": 72,
+      "sample_media": [
+        "Library/Springy/Yin And Yang/19.png",
+        "Library/Springy/Yin And Yang/2.png",
+        "Library/Springy/Yin And Yang/1.png",
+        "Library/Springy/Yin And Yang/58.png",
+        "Library/Springy/Yin And Yang/9.png"
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "index": 40,
+      "name": "Swish",
+      "package": "io.github.virenmohindra.swish",
+      "url": "https://virenmohindra.github.io/debs/io.github.virenmohindra.swish_2.0_iphoneos-arm.deb",
+      "error": "exit=22 command=curl -fL --retry 4 --retry-delay 2 --connect-timeout 20 --max-time 240 https://virenmohindra.github.io/debs/io.github.virenmohindra.swish_2.0_iphoneos-arm.deb -o open-theme-diagnostic-work/40/theme.deb stderr=  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n100   162  100   162    0     0   3118      0 --:--:-- --:--:-- --:--:--  3176\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\ncurl: (22) The requested URL returned error: 404\n"
+    }
+  ]
+}

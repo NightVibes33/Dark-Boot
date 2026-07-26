@@ -1,0 +1,68 @@
+Gif2Ani Open Theme Live Diagnostic
+diagnosed_at_utc=2026-07-26T01:24:44Z
+expected_count=48
+success_count=47
+failure_count=1
+changed_payload_count=47
+
+--- failures ---
+40. Swish | io.github.virenmohindra.swish | exit=22 command=curl -fL --retry 4 --retry-delay 2 --connect-timeout 20 --max-time 240 https://virenmohindra.github.io/debs/io.github.virenmohindra.swish_2.0_iphoneos-arm.deb -o open-theme-diagnostic-work/40/theme.deb stderr=  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100   162  100   162    0     0   3118      0 --:--:-- --:--:-- --:--:--  3176
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+curl: (22) The requested URL returned error: 404
+
+
+--- successes ---
+01. A Wave | io.github.virenmohindra.a-wave | actual_bytes=2971658 | actual_sha256=853d01e5a41092561d47dc6ccfc87b9e547dd926b7ba1daa9980fe148e276279 | media=96 | changed=true
+02. Alone | io.github.virenmohindra.alone | actual_bytes=2426184 | actual_sha256=a699643d4d100853e44f33ee7d8ba530b29e18ea76326b3cd0c5ec8085df2ec7 | media=66 | changed=true
+03. Bipolar Balls | io.github.virenmohindra.bipolar-balls | actual_bytes=12971150 | actual_sha256=2917d32d3a532a3e5bfc0d66e6c15f9043ea1504f9896ed79f46825b9d9170e0 | media=44 | changed=true
+04. Black Hole | io.github.virenmohindra.black-hole | actual_bytes=22080514 | actual_sha256=ca472de7470b077b05fb894d5d1fcf72bf26342cbcc22b391a71fc0ca9c94a67 | media=30 | changed=true
+05. Boo | io.github.virenmohindra.boo | actual_bytes=4678464 | actual_sha256=7831abc6aa2018336139fda246d02d8a4dd3e39b46d77f9f36eed42baa32bb36 | media=60 | changed=true
+06. Bubbles | io.github.virenmohindra.bubbles | actual_bytes=4775930 | actual_sha256=ba3ccba41ebee25ff9860c204e94ffe9684223d90da1760950ff5812f5993e73 | media=96 | changed=true
+07. Colorful Stars In Space | io.github.virenmohindra.colorful-stars-in-space | actual_bytes=2098890 | actual_sha256=f0cda6842ff3ca6b99ed2c1ecc443b6ffc1d763f7df879dc557d5ecee7d2afc7 | media=60 | changed=true
+08. Columns | io.github.virenmohindra.columns | actual_bytes=3588408 | actual_sha256=a632e756397d99d299341af1fb2ff8086d7f147d8c7fbbcae93d166db3c90607 | media=54 | changed=true
+09. Complicated | io.github.virenmohindra.complicated | actual_bytes=6293790 | actual_sha256=e2e84a6d93a22403211cddedb43fe2a3fd65f2c37a43868dcab076c58550a713 | media=60 | changed=true
+10. Echo | io.github.virenmohindra.echo | actual_bytes=5357838 | actual_sha256=05c16fd7e7789ec4d45ae56d2f5d08a58a618cb7d34adc2ad7a44b1707e55d0c | media=168 | changed=true
+11. Fall Leaves | io.github.virenmohindra.fall-leaves | actual_bytes=2903760 | actual_sha256=78185380b8d8529fa825f3d6349adc3b94f099e688f97a216e1883f5a192714f | media=11 | changed=true
+12. Flower | io.github.virenmohindra.flower | actual_bytes=3313368 | actual_sha256=90c420f4505784300dafa8e18b7163d933958952659781ad6614e8651e0ab9b6 | media=72 | changed=true
+13. Fluid | io.github.virenmohindra.fluid | actual_bytes=882230 | actual_sha256=4a0a93d5be171a63c899d6bca93cbac97b2778b096e96294c362f347158fde67 | media=38 | changed=true
+14. Fragments | io.github.virenmohindra.fragments | actual_bytes=8657894 | actual_sha256=730c3fbbf9d9442514479b8aaf2997ae11f605b68ff8671338322ac052fe528b | media=92 | changed=true
+15. Funny Computer | io.github.virenmohindra.funny-computer | actual_bytes=7708706 | actual_sha256=156331dd36f99e418dd70588cbab71fa3ee233ef308db5934932ed7b95db6d2c | media=64 | changed=true
+16. Gameboy Advance | io.github.virenmohindra.gameboy-advance | actual_bytes=3312970 | actual_sha256=c5585f54418544f5583a2a6c856c0e2817c3b155f30860c40809bbfd716a6ad5 | media=63 | changed=true
+17. Gamecube Logo | io.github.virenmohindra.gamecube-logo | actual_bytes=1418126 | actual_sha256=7906c0da2ab96708ff950488e5bc779c3e68847bc316faedcce240d464c5bdc6 | media=41 | changed=true
+18. Hello Again | io.github.virenmohindra.hello-again | actual_bytes=14486844 | actual_sha256=cfa898b4f97a21711001e5cacc8a7cc976638e1699f7193877fd3499c5be838b | media=144 | changed=true
+19. Hypnotoad | io.github.virenmohindra.hypnotoad | actual_bytes=25035954 | actual_sha256=3c384d5b8808e8a2b85d135714b7e75e83d8025c00523f46a26bbe2f861f5020 | media=72 | changed=true
+20. Lines | io.github.virenmohindra.lines | actual_bytes=3902510 | actual_sha256=d8d5dfeaae0efae6c593dbea65ea09856d4cb356acdfc2a41627e5170fa91960 | media=60 | changed=true
+21. Mograph | io.github.virenmohindra.mograph | actual_bytes=4300018 | actual_sha256=06afe71b55dc81a16c91076753a3d9a3d7616b0e36f179bf696ce92634a7d4a3 | media=62 | changed=true
+22. Only Human | io.github.virenmohindra.only-human | actual_bytes=6521044 | actual_sha256=df84408a01c5c576d6ab2a01b9bd95a039d4cf347df4d8032e6b60321c897c60 | media=69 | changed=true
+23. Pepe Matrix | io.github.virenmohindra.pepe-matrix | actual_bytes=2938812 | actual_sha256=0f887081a73ae82ae5bfab9306da4cac358d5832754182be29ac214641badcb8 | media=20 | changed=true
+24. Pizza | io.github.virenmohindra.pizza | actual_bytes=1343924 | actual_sha256=8adea730e0957be1ac6b131b0b2a87bcbefe3cd50415592a789803b2b66d57ed | media=23 | changed=true
+25. Pizza Hi | io.github.virenmohindra.pizza-hi | actual_bytes=2713814 | actual_sha256=376a6dc7972a0dc71de5fc1d4f9e17896c9a88f98f5346168ce9744f2162c0d1 | media=23 | changed=true
+26. Pokemon | io.github.virenmohindra.pokemon | actual_bytes=4229866 | actual_sha256=c0223f1839626db484fbc6be443e3fadab6da479bb15cd59eb5c6712ef208ee1 | media=30 | changed=true
+27. Pulse | io.github.virenmohindra.pulse | actual_bytes=1168094 | actual_sha256=9173108b1cd0eabad2efc16831f80a73bd18a13e037659754a179019f2568896 | media=60 | changed=true
+28. Rainbow 8 | io.github.virenmohindra.rainbow-8 | actual_bytes=313520 | actual_sha256=a5c057c0c328b1ddb1f65e84e90f8bb8cd916ca8e2f253e2fc24039c45fadec6 | media=19 | changed=true
+29. Rainy | io.github.virenmohindra.rainy | actual_bytes=5127604 | actual_sha256=c3d0acdee177b5f040bd5d63bda0b227cbfdf00550cf3ce4d6aedf8cafb2f4e8 | media=9 | changed=true
+30. Rolling Circles | io.github.virenmohindra.rolling-circles | actual_bytes=4297622 | actual_sha256=ab8bf6f880ba5c57b1384d3e41e5ccf2be939003f187b71b626712107c5b5054 | media=73 | changed=true
+31. Routine | io.github.virenmohindra.routine | actual_bytes=5599266 | actual_sha256=4a33a5e29caba8ca5bd694d23b9eff28d67c7d182daa998979de9ac51e033f13 | media=40 | changed=true
+32. Sonic Running | io.github.virenmohindra.sonic-running | actual_bytes=264842 | actual_sha256=1dddf53611aa1694b776922721513a546ac88ee68ce63cb1d0d9c5ea25db62a7 | media=4 | changed=true
+33. Soup | io.github.virenmohindra.soup | actual_bytes=2531718 | actual_sha256=4ad2cf7822bca26b59637d4a7c7a8658ae24e5bf0481de9731552c30258ea19a | media=31 | changed=true
+34. Spikey | io.github.virenmohindra.spikey | actual_bytes=6630576 | actual_sha256=d4674f387119e8a512651f0f05899ca92fe5e86dd781eaea4d974ab3e8bd4205 | media=10 | changed=true
+35. Sploosh | io.github.virenmohindra.sploosh | actual_bytes=2311316 | actual_sha256=cd0741f54cb99311c86198ba3b67b46bef853d79377922026e19e6212294a005 | media=30 | changed=true
+36. Stay In Lane | io.github.virenmohindra.stay-in-lane | actual_bytes=4858370 | actual_sha256=0c1205b1ed326f254e7274e3033e3b4013b9cf1ea7e70eda74ab6cead326e723 | media=50 | changed=true
+37. Stranger Things | io.github.virenmohindra.stranger-things | actual_bytes=3568396 | actual_sha256=34a8a99b7d9f497c3a0697cdeb65a1cced7b37c90480fab2067b756446622f9f | media=70 | changed=true
+38. Super Mario | io.github.virenmohindra.super-mario | actual_bytes=3506774 | actual_sha256=0ffa6044272c4607412b5be788d545d8178901538219040e86493cf5666e85b9 | media=35 | changed=true
+39. Swimmer | io.github.virenmohindra.swimmer | actual_bytes=1573426 | actual_sha256=f804829e6c80172e8cc5fbeebcdfd0f3b9e197e3829d820d6dea34065adf0263 | media=70 | changed=true
+41. Tesseract | io.github.virenmohindra.tesseract | actual_bytes=3521998 | actual_sha256=b1b4e2dbc013319a085cb716dda9d05ac78a5ec27e1e18d97c9db1500988dc5f | media=29 | changed=true
+42. Three Waves | io.github.virenmohindra.three-waves | actual_bytes=4415594 | actual_sha256=99a543a7dea68433227b9951fe18b0c3a1dcd1d94b3a0cf1cd3c0a50cf70d353 | media=60 | changed=true
+43. Time And Money | io.github.virenmohindra.time-and-money | actual_bytes=1404530 | actual_sha256=39ab5d089b2fedc230bec5cc7d751a55d8af9c8e40b0fe9cd60bde51be6cc1bd | media=45 | changed=true
+44. Twisting Cubes | io.github.virenmohindra.twisting-cubes | actual_bytes=24403672 | actual_sha256=22cdeca0eaaa801ee7ce1d0b4ea97ebdc781e41bcc0a09d7a31f6cab5afea30b | media=96 | changed=true
+45. Upload | io.github.virenmohindra.upload | actual_bytes=979352 | actual_sha256=d6c5468a25cc77e37a4bb6cc0348ef5ea222a19ce3ad82730c286c7db00228bd | media=107 | changed=true
+46. Waiting | io.github.virenmohindra.waiting | actual_bytes=5712858 | actual_sha256=7a436d45ddd7c61477b48caf9b693a5118c3668251b74a6a5a789cef4af3edfa | media=13 | changed=true
+47. World Swap | io.github.virenmohindra.world-swap | actual_bytes=2503252 | actual_sha256=10abea214c1b31d328bb95a2b7040efc1e315d55af1972c86a0a999af09f5596 | media=99 | changed=true
+48. Yin And Yang | io.github.virenmohindra.yin-and-yang | actual_bytes=1372756 | actual_sha256=9fe3b7f5d06a9db704d41dbe73056422b619e34f757b07017a3a9f1ad5a3550f | media=72 | changed=true
