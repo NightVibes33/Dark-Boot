@@ -1,0 +1,130 @@
+name: Build Gif2Ani 3.5.2 Download and Preview Fix
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-gif2ani-352-download-previews.yml
+      - triggers/build-gif2ani-352-download-previews.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-352-download-previews
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply 3.5.2 source fix
+        run: |
+          set -euo pipefail
+          python3 scripts/apply_352_download_preview_fix.py | tee patch.log
+          grep -Fq 'Version: 3.5.2' control
+          grep -Fq 'curl-backed-gallery-download-v352' gif2aniprefs/G2RemoteThemePreviewOverride.inc
+          grep -Fq 'G2CurlDownloadData' gif2aniprefs/G2OpenThemeLibrary.inc
+          grep -Fq 'G2BundledThemePreview' gif2aniprefs/G2ModernGallery.inc
+
+      - name: Install build dependencies
+        env:
+          THEOS: /opt/theos
+          CI: '1'
+          SHELL: /bin/bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends bash curl sudo build-essential fakeroot rsync perl git libxml2 dpkg-dev unzip xz-utils ca-certificates python3 python3-pil file binutils
+          sudo rm -rf /opt/theos
+          sudo mkdir -p /opt
+          sudo chown "$USER:$USER" /opt
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          test -x /opt/theos/toolchain/linux/iphone/bin/clang
+
+      - name: Generate 102 verified real thumbnails
+        run: |
+          set -euo pipefail
+          python3 scripts/build_theme_previews.py | tee previews.log
+          test "$(find gif2aniprefs/Resources/ThemePreviews -type f -name '*.png' | wc -l)" = 102
+          test -s gif2aniprefs/Resources/ThemePreviews/cyan-pulse-rings.png
+          test -s gif2aniprefs/Resources/ThemePreviews/io.github.virenmohindra.a-wave.png
+
+      - name: Build and validate rootless 3.5.2 package
+        env:
+          THEOS: /opt/theos
+        run: |
+          set -euo pipefail
+          make clean package FINALPACKAGE=1 2>&1 | tee build.log
+          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.5.2_iphoneos-arm64.deb' -print -quit)"
+          test -s "$DEB"
+          test "$(dpkg-deb -f "$DEB" Package)" = 'com.nightvibes33.gif2ani'
+          test "$(dpkg-deb -f "$DEB" Version)" = '3.5.2'
+          test "$(dpkg-deb -f "$DEB" Architecture)" = 'iphoneos-arm64'
+          rm -rf verify-root
+          dpkg-deb -x "$DEB" verify-root
+          PREFS='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs'
+          TWEAK='verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib'
+          PREVIEWS='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/ThemePreviews'
+          test -s "$PREFS" && test -s "$TWEAK"
+          file "$PREFS" | grep -Fq 'Mach-O 64-bit arm64'
+          strings -a "$PREFS" | grep -Fq 'curl-backed-gallery-download-v352'
+          strings -a "$PREFS" | grep -Fq 'bundled-real-theme-previews-v352'
+          test "$(find "$PREVIEWS" -type f -name '*.png' | wc -l)" = 102
+          test -s "$PREVIEWS/cyan-pulse-rings.png"
+          test -s "$PREVIEWS/io.github.virenmohindra.a-wave.png"
+          mkdir -p release-packages
+          cp "$DEB" release-packages/Gif2Ani-3.5.2-download-previews-fix.deb
+          sha256sum release-packages/Gif2Ani-3.5.2-download-previews-fix.deb | tee release-packages/Gif2Ani-3.5.2-download-previews-fix.sha256
+
+      - name: Upload DEB
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gif2Ani-3.5.2-download-previews-fix
+          path: release-packages/Gif2Ani-3.5.2-download-previews-fix.deb
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish source, DEB, and status
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          mkdir -p status release-packages
+          {
+            echo 'Gif2Ani 3.5.2 Download and Real Preview Fix'
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "source_commit=${GITHUB_SHA}"
+            echo "status=${JOB_STATUS}"
+            echo "completed_at_utc=$(date -u +%FT%TZ)"
+            cat release-packages/Gif2Ani-3.5.2-download-previews-fix.sha256 2>/dev/null || true
+            echo 'download_path=verified jailbreak curl with pinned final URL, size, SHA-256, GIF/DEB validation'
+            echo 'previews=102 bundled real thumbnails: 54 CC0 GIFs + 48 original Springy packs'
+            echo '--- patch ---'
+            cat patch.log 2>/dev/null || true
+            echo '--- previews tail ---'
+            tail -n 120 previews.log 2>/dev/null || true
+            echo '--- build tail ---'
+            tail -n 160 build.log 2>/dev/null || true
+          } > status/gif2ani-352-download-previews.txt
+          if [ "$JOB_STATUS" = success ]; then
+            git add control gif2aniprefs/G2RemoteThemePreviewOverride.inc gif2aniprefs/G2OpenThemeLibrary.inc gif2aniprefs/G2ModernGallery.inc scripts/build_theme_previews.py
+            git rm scripts/apply_352_download_preview_fix.py
+            git add -f release-packages/Gif2Ani-3.5.2-download-previews-fix.deb
+            git add release-packages/Gif2Ani-3.5.2-download-previews-fix.sha256
+          else
+            git restore control gif2aniprefs/G2RemoteThemePreviewOverride.inc gif2aniprefs/G2OpenThemeLibrary.inc gif2aniprefs/G2ModernGallery.inc 2>/dev/null || true
+          fi
+          git add status/gif2ani-352-download-previews.txt
+          git commit -m "Publish Gif2Ani 3.5.2 download preview fix (${JOB_STATUS}) [skip ci]" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
