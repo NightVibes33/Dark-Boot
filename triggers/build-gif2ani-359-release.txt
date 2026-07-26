@@ -1,0 +1,2 @@
+requested_at_utc=2026-07-26T18:55:00Z
+purpose=build 3.5.9 with 262 animated previews and explicit pipe-safe package verification gates
