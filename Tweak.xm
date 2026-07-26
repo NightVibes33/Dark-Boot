@@ -21,6 +21,7 @@ static const NSUInteger G2MaximumDecodedFrames = 24;
 static const NSUInteger G2MaximumPixelDimension = 640;
 static const unsigned long long G2MaximumInputBytes = 25ULL * 1024ULL * 1024ULL;
 static const unsigned long long G2MaximumEstimatedDecodedBytes = 48ULL * 1024ULL * 1024ULL;
+static const NSTimeInterval G2MaximumTotalAnimationDuration = 30.0;
 
 static NSArray<UIImage *> *g2Frames;
 static NSArray<NSNumber *> *g2KeyTimes;
@@ -32,6 +33,11 @@ static CALayer *g2DedicatedAnimationLayer;
 static __weak CALayer *g2AppleLoaderLayer;
 static float g2AppleLoaderOriginalOpacity = 1.0f;
 static CGRect g2PresentationBounds;
+static BOOL g2DecodeInProgress;
+static unsigned long long g2PeakDecodedBytes;
+static NSTimeInterval g2LastDecodeMilliseconds;
+static dispatch_source_t g2MemoryPressureSource;
+static id g2AnimationLifetimeObserver;
 
 static void G2EnsureMediaDirectory(void) {
     [[NSFileManager defaultManager] createDirectoryAtPath:G2MediaDirectory
@@ -40,27 +46,68 @@ static void G2EnsureMediaDirectory(void) {
                                                      error:nil];
 }
 
+static dispatch_queue_t G2StatusQueue(void) {
+    static dispatch_queue_t queue;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        queue = dispatch_queue_create("com.nightvibes33.gif2ani.status", DISPATCH_QUEUE_SERIAL);
+    });
+    return queue;
+}
+
+static dispatch_queue_t G2DecodeQueue(void) {
+    static dispatch_queue_t queue;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        queue = dispatch_queue_create("com.nightvibes33.gif2ani.decode", DISPATCH_QUEUE_SERIAL);
+    });
+    return queue;
+}
+
+static BOOL G2StatusEventIsUrgent(NSString *event) {
+    NSString *lower = event.lowercaseString;
+    return [lower containsString:@"disabled"] || [lower containsString:@"failed"] ||
+           [lower containsString:@"exception"] || [lower containsString:@"stable"] ||
+           [lower containsString:@"memory-pressure"];
+}
+
 static void G2WriteStatus(NSString *event, NSDictionary *extra) {
-    G2EnsureMediaDirectory();
-    NSMutableDictionary *status = [@{
-        @"event": event ?: @"unknown",
-        @"timestamp": @([[NSDate date] timeIntervalSince1970]),
-        @"process": NSProcessInfo.processInfo.processName ?: @"unknown",
-        @"BKDisplayRenderOverlaySpinny": @(objc_getClass("BKDisplayRenderOverlaySpinny") != Nil),
-        @"gifExists": @([[NSFileManager defaultManager] fileExistsAtPath:G2ActiveGIFPath]),
-        @"frameCount": @(g2Frames.count),
-        @"animationPending": @(g2AnimationPending),
-        @"safetyLimits": @{
-            @"maximumSourceFrames": @(G2MaximumSourceFrames),
-            @"maximumDecodedFrames": @(G2MaximumDecodedFrames),
-            @"maximumPixelDimension": @(G2MaximumPixelDimension),
-            @"maximumInputBytes": @(G2MaximumInputBytes),
-            @"maximumEstimatedDecodedBytes": @(G2MaximumEstimatedDecodedBytes),
-        },
-    } mutableCopy];
-    if (g2MediaMetadata) status[@"media"] = g2MediaMetadata;
-    if (extra) [status addEntriesFromDictionary:extra];
-    [status writeToFile:G2StatusPath atomically:YES];
+    NSString *eventSnapshot = [event copy] ?: @"unknown";
+    NSDictionary *extraSnapshot = [extra copy];
+    NSDictionary *mediaSnapshot = [g2MediaMetadata copy];
+    NSUInteger frameCount = g2Frames.count;
+    BOOL animationPending = g2AnimationPending;
+    NSTimeInterval decodeMilliseconds = g2LastDecodeMilliseconds;
+    unsigned long long peakBytes = g2PeakDecodedBytes;
+    dispatch_async(G2StatusQueue(), ^{
+        static CFAbsoluteTime lastWrite = 0;
+        CFAbsoluteTime now = CFAbsoluteTimeGetCurrent();
+        if (!G2StatusEventIsUrgent(eventSnapshot) && now - lastWrite < 0.75) return;
+        lastWrite = now;
+        G2EnsureMediaDirectory();
+        NSMutableDictionary *status = [@{
+            @"event": eventSnapshot,
+            @"timestamp": @([[NSDate date] timeIntervalSince1970]),
+            @"process": NSProcessInfo.processInfo.processName ?: @"unknown",
+            @"BKDisplayRenderOverlaySpinny": @(objc_getClass("BKDisplayRenderOverlaySpinny") != Nil),
+            @"gifExists": @([[NSFileManager defaultManager] fileExistsAtPath:G2ActiveGIFPath]),
+            @"frameCount": @(frameCount),
+            @"animationPending": @(animationPending),
+            @"decodeMilliseconds": @(decodeMilliseconds),
+            @"peakDecodedBytes": @(peakBytes),
+            @"safetyLimits": @{
+                @"maximumSourceFrames": @(G2MaximumSourceFrames),
+                @"maximumDecodedFrames": @(G2MaximumDecodedFrames),
+                @"maximumPixelDimension": @(G2MaximumPixelDimension),
+                @"maximumInputBytes": @(G2MaximumInputBytes),
+                @"maximumEstimatedDecodedBytes": @(G2MaximumEstimatedDecodedBytes),
+                @"maximumTotalAnimationDuration": @(G2MaximumTotalAnimationDuration),
+            },
+        } mutableCopy];
+        if (mediaSnapshot) status[@"media"] = mediaSnapshot;
+        if (extraSnapshot) [status addEntriesFromDictionary:extraSnapshot];
+        [status writeToFile:G2StatusPath atomically:YES];
+    });
 }
 
 static void G2SetEnabledOnDisk(BOOL enabled) {
@@ -100,10 +147,12 @@ static void G2RejectActiveGIF(NSString *reason) {
     g2MediaMetadata = nil;
     g2AnimationPending = NO;
     g2PreparedContentLayer = nil;
-    G2RestoreAppleLoader();
-    [g2DedicatedAnimationLayer removeFromSuperlayer];
-    g2DedicatedAnimationLayer = nil;
-    g2PresentationBounds = CGRectZero;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        G2RestoreAppleLoader();
+        [g2DedicatedAnimationLayer removeFromSuperlayer];
+        g2DedicatedAnimationLayer = nil;
+        g2PresentationBounds = CGRectZero;
+    });
     G2WriteStatus(@"gif-auto-disabled", @{ @"reason": reason ?: @"unknown" });
 }
 
@@ -285,12 +334,15 @@ static BOOL G2LoadGIF(void) {
     unsigned long long decodedBytes = 0;
     NSString *failureReason = nil;
     BOOL decoded = NO;
+    CFAbsoluteTime decodeStarted = CFAbsoluteTimeGetCurrent();
     @try {
         decoded = G2DecodeActiveGIF(metadata, &frames, &keyTimes, &duration, &decodedBytes, &failureReason);
     } @catch (NSException *exception) {
         failureReason = [NSString stringWithFormat:@"bounded decoder exception: %@", exception.name ?: @"unknown"];
         G2WriteStatus(@"decode-exception", @{ @"name": exception.name ?: @"unknown" });
     }
+    g2LastDecodeMilliseconds = (CFAbsoluteTimeGetCurrent() - decodeStarted) * 1000.0;
+    g2PeakDecodedBytes = MAX(g2PeakDecodedBytes, decodedBytes);
 
     if (!decoded || !frames.count || keyTimes.count != frames.count) {
         G2RejectActiveGIF(failureReason ?: @"bounded ImageIO decoder failed");
@@ -303,8 +355,10 @@ static BOOL G2LoadGIF(void) {
     G2WriteStatus(@"gif-decoded-awaiting-animation", @{
         @"duration": @(g2NaturalDuration),
         @"decodedBytes": @(decodedBytes),
+        @"decodeMilliseconds": @(g2LastDecodeMilliseconds),
+        @"peakDecodedBytes": @(g2PeakDecodedBytes),
         @"timingMode": @"sampled-source-frame-key-times",
-        @"decoder": @"ImageIO-bounded-thumbnail",
+        @"decoder": @"ImageIO-bounded-thumbnail-serial-queue",
     });
     return YES;
 }
@@ -349,6 +403,33 @@ static CGRect G2OverlayBounds(CALayer *container) {
     bounds.origin = CGPointZero;
     return bounds;
 }
+
+@interface G2AnimationLifetimeObserver : NSObject <CAAnimationDelegate>
+@end
+
+@implementation G2AnimationLifetimeObserver
+- (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)finished {
+    (void)animation;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        g2Frames = nil;
+        g2KeyTimes = nil;
+        g2NaturalDuration = 0;
+        g2MediaMetadata = nil;
+        g2AnimationPending = NO;
+        g2PreparedContentLayer = nil;
+        if (finished) {
+            [g2DedicatedAnimationLayer removeFromSuperlayer];
+            g2DedicatedAnimationLayer = nil;
+            G2RestoreAppleLoader();
+        }
+        G2WriteStatus(@"custom-animation-finished-frames-released", @{
+            @"finished": @(finished),
+            @"peakDecodedBytes": @(g2PeakDecodedBytes),
+            @"decodeMilliseconds": @(g2LastDecodeMilliseconds),
+        });
+    });
+}
+@end
 
 static BOOL G2InstallAnimationOnLayer(CALayer *appleLayer) {
     if (!appleLayer || !g2Frames.count) return NO;
@@ -405,12 +486,18 @@ static BOOL G2InstallAnimationOnLayer(CALayer *appleLayer) {
     animation.values = values;
     animation.keyTimes = g2KeyTimes;
     animation.calculationMode = kCAAnimationDiscrete;
-    CGFloat loops = preferences.customLoop;
-    animation.repeatCount = loops < 0 ? HUGE_VALF : MAX(0.0, loops);
-    CGFloat duration = preferences.customDuration;
-    animation.duration = duration < 0 ? g2NaturalDuration : MAX(0.05, duration);
-    animation.removedOnCompletion = NO;
+    CGFloat requestedLoops = preferences.customLoop;
+    NSTimeInterval requestedDuration = preferences.customDuration;
+    NSTimeInterval cycleDuration = requestedDuration < 0 ? g2NaturalDuration : MAX(0.05, requestedDuration);
+    cycleDuration = MIN(G2MaximumTotalAnimationDuration, MAX(0.05, cycleDuration));
+    CGFloat repeatCount = requestedLoops < 0 ? HUGE_VALF : MAX(0.0, requestedLoops);
+    NSUInteger maximumPlays = MAX((NSUInteger)1, (NSUInteger)floor(G2MaximumTotalAnimationDuration / cycleDuration));
+    if (!isfinite(repeatCount) || repeatCount + 1.0 > maximumPlays) repeatCount = MAX(0.0, (CGFloat)maximumPlays - 1.0);
+    animation.repeatCount = repeatCount;
+    animation.duration = cycleDuration;
+    animation.removedOnCompletion = YES;
     animation.fillMode = kCAFillModeBoth;
+    animation.delegate = g2AnimationLifetimeObserver;
 
     @try {
         [g2DedicatedAnimationLayer addAnimation:animation forKey:G2AnimationKey];
@@ -424,22 +511,24 @@ static BOOL G2InstallAnimationOnLayer(CALayer *appleLayer) {
         @"duration": @(animation.duration),
         @"repeatCount": @(animation.repeatCount),
         @"timingMode": @"sampled-source-frame-key-times",
-        @"decoder": @"ImageIO-bounded-thumbnail",
+        @"decoder": @"ImageIO-bounded-thumbnail-serial-queue",
+        @"maximumTotalDuration": @(G2MaximumTotalAnimationDuration),
+        @"decodeMilliseconds": @(g2LastDecodeMilliseconds),
+        @"peakDecodedBytes": @(g2PeakDecodedBytes),
         @"attachmentPoint": @"dedicated-overlay-layer",
         @"overlayWidth": @(CGRectGetWidth(overlayBounds)),
         @"overlayHeight": @(CGRectGetHeight(overlayBounds)),
         @"appleLoaderHidden": @(appleLoaderHidden),
     });
 
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(500 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
         G2ClearLoadSentinel();
         G2WriteStatus(@"custom-animation-stable", @{
             @"attachmentPoint": @"dedicated-overlay-layer",
-            @"overlayWidth": @(CGRectGetWidth(g2DedicatedAnimationLayer.bounds)),
-            @"overlayHeight": @(CGRectGetHeight(g2DedicatedAnimationLayer.bounds)),
             @"appleLoaderHidden": @(appleLoaderHidden),
             @"duration": @(animation.duration),
             @"repeatCount": @(animation.repeatCount),
+            @"maximumTotalDuration": @(G2MaximumTotalAnimationDuration),
             @"contentsGravity": g2DedicatedAnimationLayer.contentsGravity ?: @"unknown",
         });
         g2PreparedContentLayer = nil;
@@ -482,27 +571,42 @@ static void G2Reload(__unused CFNotificationCenterRef center,
 
 - (void)_startAnimating {
     G2PreferencesManager *preferences = [G2PreferencesManager sharedInstance];
-    if (!preferences.isEnabled || (!g2Frames.count && !G2LoadGIF())) {
-        %orig;
-        return;
-    }
-
-    g2AnimationPending = YES;
     %orig;
+    if (!preferences.isEnabled) return;
 
     if ([self.display respondsToSelector:@selector(safeBounds)]) {
         g2PresentationBounds = [self.display safeBounds];
     }
-    CALayer *layer = self.contentLayer ?: g2PreparedContentLayer;
-    if (layer && G2InstallAnimationOnLayer(layer)) return;
+    CALayer *initialLayer = self.contentLayer ?: g2PreparedContentLayer;
+    if (g2Frames.count) {
+        g2AnimationPending = YES;
+        if (initialLayer && G2InstallAnimationOnLayer(initialLayer)) return;
+    }
+    if (g2DecodeInProgress) return;
 
-    G2WriteStatus(@"custom-animation-awaiting-content-layer", nil);
+    g2DecodeInProgress = YES;
+    g2AnimationPending = YES;
     __weak typeof(self) weakSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if (!g2AnimationPending) return;
-        CALayer *delayedLayer = weakSelf.contentLayer ?: g2PreparedContentLayer;
-        if (delayedLayer && G2InstallAnimationOnLayer(delayedLayer)) return;
-        G2RejectActiveGIF(@"BackBoard content layer never became available after Apple animation setup");
+    __weak CALayer *weakInitialLayer = initialLayer;
+    dispatch_async(G2DecodeQueue(), ^{
+        BOOL loaded = G2LoadGIF();
+        dispatch_async(dispatch_get_main_queue(), ^{
+            g2DecodeInProgress = NO;
+            if (!loaded) {
+                g2AnimationPending = NO;
+                return;
+            }
+            CALayer *resolvedLayer = weakSelf.contentLayer ?: g2PreparedContentLayer ?: weakInitialLayer;
+            if (resolvedLayer && G2InstallAnimationOnLayer(resolvedLayer)) return;
+
+            G2WriteStatus(@"custom-animation-awaiting-content-layer", @{ @"decodeCompleted": @YES });
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if (!g2AnimationPending) return;
+                CALayer *delayedLayer = weakSelf.contentLayer ?: g2PreparedContentLayer ?: weakInitialLayer;
+                if (delayedLayer && G2InstallAnimationOnLayer(delayedLayer)) return;
+                G2RejectActiveGIF(@"BackBoard content layer never became available after serial decode completed");
+            });
+        });
     });
 }
 
@@ -527,6 +631,28 @@ static void G2Reload(__unused CFNotificationCenterRef center,
     @autoreleasepool {
         if (![NSProcessInfo.processInfo.processName isEqualToString:@"backboardd"]) return;
         G2EnsureMediaDirectory();
+        g2AnimationLifetimeObserver = [G2AnimationLifetimeObserver new];
+        g2MemoryPressureSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_MEMORYPRESSURE, 0,
+            DISPATCH_MEMORYPRESSURE_WARN | DISPATCH_MEMORYPRESSURE_CRITICAL, G2DecodeQueue());
+        if (g2MemoryPressureSource) {
+            dispatch_source_set_event_handler(g2MemoryPressureSource, ^{
+                unsigned long pressure = dispatch_source_get_data(g2MemoryPressureSource);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [g2DedicatedAnimationLayer removeAnimationForKey:G2AnimationKey];
+                    [g2DedicatedAnimationLayer removeFromSuperlayer];
+                    g2DedicatedAnimationLayer = nil;
+                    G2RestoreAppleLoader();
+                    g2Frames = nil;
+                    g2KeyTimes = nil;
+                    g2NaturalDuration = 0;
+                    g2MediaMetadata = nil;
+                    g2AnimationPending = NO;
+                    g2PreparedContentLayer = nil;
+                    G2WriteStatus(@"memory-pressure-frames-released", @{ @"pressure": @(pressure) });
+                });
+            });
+            dispatch_resume(g2MemoryPressureSource);
+        }
 
         if ([[NSFileManager defaultManager] fileExistsAtPath:G2LoadSentinelPath]) {
             G2RejectActiveGIF(@"recovered automatically after backboardd restart");

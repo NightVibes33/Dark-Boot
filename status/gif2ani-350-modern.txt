@@ -1,8 +1,9 @@
 Gif2Ani 3.5.0 Modern Gallery and BackBoard Reliability
-run_id=30185855981
-source_commit=5037fff9a7297eabc3efce3cd0ec9c6859fca5f9
-status=failure
-completed_at_utc=2026-07-26T03:15:32Z
+run_id=30185953816
+source_commit=bbe1976b5941c1c6471281223677b35cd7188c6d
+status=success
+completed_at_utc=2026-07-26T03:19:15Z
+75168e3ce66aaf041c41ba16eded7994e2d4670c44e0b7c94623666fc3b718b0  release-packages/Gif2Ani-3.5.0-modern-gallery.deb
 gallery=search categories filters cards favorites recent delete download-all clear-cache storage update-indicator
 preview=actual-background scaling play-pause restart speed fullscreen device-frames apple-comparison
 apply=single-review apply-without-respring apply-and-respring five-rollbacks emergency-disable
@@ -56,12 +57,44 @@ dm.pl: building package `com.nightvibes33.gif2ani:iphoneos-arm64' in `./packages
 + grep -Fq 'Mach-O 64-bit arm64'
 + file verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib
 + grep -Fq 'Mach-O 64-bit arm64'
-+ for marker in 'Search themes' 'Download All CC0' 'Clear Download Cache' 'Favorites' 'Recently Used' 'Apply Without Respring' 'Apply and Respring' 'Emergency Disable' 'Compare with Apple'
++ for marker in 'Search themes' 'Download All 54 CC0 Themes' 'Clear Downloaded Theme Cache' 'Favorites' 'Recently Used' 'Apply Without Respring' 'Apply and Respring' 'Emergency Disable (No Respring)' 'Apple original'
 + strings -a verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
 + grep -Fq 'Search themes'
-+ for marker in 'Search themes' 'Download All CC0' 'Clear Download Cache' 'Favorites' 'Recently Used' 'Apply Without Respring' 'Apply and Respring' 'Emergency Disable' 'Compare with Apple'
-+ grep -Fq 'Download All CC0'
++ for marker in 'Search themes' 'Download All 54 CC0 Themes' 'Clear Downloaded Theme Cache' 'Favorites' 'Recently Used' 'Apply Without Respring' 'Apply and Respring' 'Emergency Disable (No Respring)' 'Apple original'
 + strings -a verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
-+ echo 'missing preference marker: Download All CC0'
-missing preference marker: Download All CC0
-+ exit 41
++ grep -Fq 'Download All 54 CC0 Themes'
++ for marker in 'Search themes' 'Download All 54 CC0 Themes' 'Clear Downloaded Theme Cache' 'Favorites' 'Recently Used' 'Apply Without Respring' 'Apply and Respring' 'Emergency Disable (No Respring)' 'Apple original'
++ strings -a verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
++ grep -Fq 'Clear Downloaded Theme Cache'
++ for marker in 'Search themes' 'Download All 54 CC0 Themes' 'Clear Downloaded Theme Cache' 'Favorites' 'Recently Used' 'Apply Without Respring' 'Apply and Respring' 'Emergency Disable (No Respring)' 'Apple original'
++ strings -a verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
++ grep -Fq Favorites
++ for marker in 'Search themes' 'Download All 54 CC0 Themes' 'Clear Downloaded Theme Cache' 'Favorites' 'Recently Used' 'Apply Without Respring' 'Apply and Respring' 'Emergency Disable (No Respring)' 'Apple original'
++ strings -a verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
++ grep -Fq 'Recently Used'
++ for marker in 'Search themes' 'Download All 54 CC0 Themes' 'Clear Downloaded Theme Cache' 'Favorites' 'Recently Used' 'Apply Without Respring' 'Apply and Respring' 'Emergency Disable (No Respring)' 'Apple original'
++ strings -a verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
++ grep -Fq 'Apply Without Respring'
++ for marker in 'Search themes' 'Download All 54 CC0 Themes' 'Clear Downloaded Theme Cache' 'Favorites' 'Recently Used' 'Apply Without Respring' 'Apply and Respring' 'Emergency Disable (No Respring)' 'Apple original'
++ strings -a verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
++ grep -Fq 'Apply and Respring'
++ for marker in 'Search themes' 'Download All 54 CC0 Themes' 'Clear Downloaded Theme Cache' 'Favorites' 'Recently Used' 'Apply Without Respring' 'Apply and Respring' 'Emergency Disable (No Respring)' 'Apple original'
++ strings -a verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
++ grep -Fq 'Emergency Disable (No Respring)'
++ for marker in 'Search themes' 'Download All 54 CC0 Themes' 'Clear Downloaded Theme Cache' 'Favorites' 'Recently Used' 'Apply Without Respring' 'Apply and Respring' 'Emergency Disable (No Respring)' 'Apple original'
++ strings -a verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs
++ grep -Fq 'Apple original'
++ for marker in 'memory-pressure-frames-released' 'custom-animation-finished-frames-released' 'ImageIO-bounded-thumbnail-serial-queue'
++ strings -a verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib
++ grep -Fq memory-pressure-frames-released
++ for marker in 'memory-pressure-frames-released' 'custom-animation-finished-frames-released' 'ImageIO-bounded-thumbnail-serial-queue'
++ strings -a verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib
++ grep -Fq custom-animation-finished-frames-released
++ for marker in 'memory-pressure-frames-released' 'custom-animation-finished-frames-released' 'ImageIO-bounded-thumbnail-serial-queue'
++ strings -a verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib
++ grep -Fq ImageIO-bounded-thumbnail-serial-queue
++ mkdir -p release-packages
++ cp packages/com.nightvibes33.gif2ani_3.5.0_iphoneos-arm64.deb release-packages/Gif2Ani-3.5.0-modern-gallery.deb
++ sha256sum release-packages/Gif2Ani-3.5.0-modern-gallery.deb
++ tee release-packages/Gif2Ani-3.5.0-modern-gallery.sha256
+75168e3ce66aaf041c41ba16eded7994e2d4670c44e0b7c94623666fc3b718b0  release-packages/Gif2Ani-3.5.0-modern-gallery.deb
