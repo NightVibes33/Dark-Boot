@@ -1,0 +1,236 @@
+name: Apply Verified Open Theme Live Snapshot
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/apply-open-theme-live-snapshot.yml
+      - triggers/apply-open-theme-live-snapshot.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-apply-open-theme-live-snapshot
+  cancel-in-progress: true
+
+jobs:
+  apply:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install package inspection tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends curl dpkg-dev python3 ca-certificates
+
+      - name: Apply 47 live payloads plus immutable Swish fallback
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import datetime as dt
+          import hashlib
+          import json
+          import pathlib
+          import shutil
+          import subprocess
+          import tempfile
+
+          repo_commit='c507a391f193c2bb362ff77fc1c1673c0da2dcae'
+          swish_package='io.github.virenmohindra.swish'
+          swish_url=f'https://raw.githubusercontent.com/VirenMohindra/CydiaRepo/{repo_commit}/debs/io.github.virenmohindra.swish_2.0_iphoneos-arm.deb'
+          pages_prefix='https://virenmohindra.github.io/debs/'
+
+          catalog_path=pathlib.Path('gif2aniprefs/Resources/OpenThemeCatalog.json')
+          diagnostic_path=pathlib.Path('status/open-theme-live-diagnostic.json')
+          catalog=json.loads(catalog_path.read_text())
+          diagnostic=json.loads(diagnostic_path.read_text())
+          assert catalog['count']==len(catalog['themes'])==48
+          assert diagnostic['expectedCount']==48
+          assert diagnostic['successCount']==47
+          assert diagnostic['failureCount']==1
+          assert diagnostic['failures'][0]['package']==swish_package
+          successes={item['package']:item for item in diagnostic['successes']}
+          assert len(successes)==47
+
+          def checked(args):
+              result=subprocess.run(args,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+              if result.returncode:
+                  raise RuntimeError(f"exit={result.returncode} command={' '.join(args)} stderr={result.stderr[-1500:]}")
+              return result.stdout
+
+          with tempfile.TemporaryDirectory() as temporary:
+              root=pathlib.Path(temporary)
+              deb=root/'swish.deb'
+              checked(['curl','-fL','--retry','5','--retry-delay','2','--connect-timeout','20','--max-time','240',swish_url,'-o',str(deb)])
+              swish_bytes=deb.stat().st_size
+              swish_sha=hashlib.sha256(deb.read_bytes()).hexdigest()
+              actual_package=checked(['dpkg-deb','-f',str(deb),'Package']).strip()
+              assert actual_package==swish_package
+              listing=checked(['dpkg-deb','-c',str(deb)])
+              for line in listing.splitlines():
+                  parts=line.split(maxsplit=5)
+                  if len(parts)<6:
+                      continue
+                  mode=parts[0]
+                  archive_path=parts[5].split(' -> ',1)[0]
+                  assert not mode.startswith(('l','h','c','b','p','s')), (mode,archive_path)
+                  assert archive_path.startswith('./') and '/../' not in archive_path and not archive_path.startswith('./../')
+              extracted=root/'root'
+              extracted.mkdir()
+              checked(['dpkg-deb','-x',str(deb),str(extracted)])
+              media=[]
+              for path in extracted.rglob('*'):
+                  assert not path.is_symlink(), path
+                  if path.is_file() and path.suffix.lower() in {'.gif','.png','.jpg','.jpeg','.webp'}:
+                      media.append(path)
+              assert media
+              swish_media=len(media)
+
+          verified_at=dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+          results=[]
+          for item in catalog['themes']:
+              package=item['package']
+              old_bytes=int(item['bytes'])
+              old_sha=item['sha256']
+              old_url=item['downloadURL']
+              if package==swish_package:
+                  actual_bytes=swish_bytes
+                  actual_sha=swish_sha
+                  media_count=swish_media
+                  item['downloadURL']=swish_url
+                  item['payloadSource']='Immutable raw source-repository fallback because the GitHub Pages DEB is missing.'
+                  item['payloadSourceCommit']=repo_commit
+              else:
+                  result=successes[package]
+                  actual_bytes=int(result['actual_bytes'])
+                  actual_sha=result['actual_sha256']
+                  media_count=int(result['media_count'])
+                  assert item['downloadURL'].startswith(pages_prefix)
+                  item['payloadSource']='Live Viren GitHub Pages DEB, independently downloaded and inspected.'
+              item['previousIndexBytes']=old_bytes
+              item['previousIndexSHA256']=old_sha
+              item['bytes']=actual_bytes
+              item['sha256']=actual_sha
+              item['verifiedMediaFiles']=media_count
+              item['liveVerifiedAtUTC']=verified_at
+              results.append({
+                  'name':item['name'],'package':package,'url':item['downloadURL'],
+                  'bytes':actual_bytes,'sha256':actual_sha,'media':media_count,
+                  'previousBytes':old_bytes,'previousSHA256':old_sha,'previousURL':old_url,
+              })
+
+          assert len(results)==48
+          assert len({item['package'] for item in catalog['themes']})==48
+          catalog['liveSnapshotVerifiedAtUTC']=verified_at
+          catalog['liveSnapshotCount']=48
+          catalog['repositoryIndexMismatchCount']=47
+          catalog['missingPagesPayloadFallbackCount']=1
+          catalog['verificationPolicy']='Each DEB was downloaded over HTTPS and verified for package identity, byte count, SHA-256, safe archive paths/types, no extracted symlinks, and previewable media. Bundled records remain authoritative over stale live index metadata.'
+          catalog_path.write_text(json.dumps(catalog,indent=2)+'\n')
+
+          openlib_path=pathlib.Path('gif2aniprefs/G2OpenThemeLibrary.inc')
+          openlib=openlib_path.read_text()
+          old='''static BOOL G2OpenThemeURLIsAllowed(NSURL *url, BOOL indexURL) {
+    if (![url.scheme.lowercaseString isEqualToString:@"https"]) return NO;
+    if (![url.host.lowercaseString isEqualToString:@"virenmohindra.github.io"]) return NO;
+    NSString *path = url.path.stringByStandardizingPath;
+    if (indexURL) return [path isEqualToString:@"/Packages"];
+    return [path hasPrefix:@"/debs/"] && [path.pathExtension.lowercaseString isEqualToString:@"deb"];
+}
+'''
+          new=f'''static NSString * const G2OpenThemePinnedRawHost = @"raw.githubusercontent.com";
+static NSString * const G2OpenThemePinnedRawPrefix = @"/VirenMohindra/CydiaRepo/{repo_commit}/debs/";
+
+static BOOL G2OpenThemeURLIsAllowed(NSURL *url, BOOL indexURL) {{
+    if (![url.scheme.lowercaseString isEqualToString:@"https"]) return NO;
+    NSString *host = url.host.lowercaseString;
+    NSString *path = url.path.stringByStandardizingPath;
+    if (indexURL) {{
+        return [host isEqualToString:@"virenmohindra.github.io"] && [path isEqualToString:@"/Packages"];
+    }}
+    if ([host isEqualToString:@"virenmohindra.github.io"]) {{
+        return [path hasPrefix:@"/debs/"] && [path.pathExtension.lowercaseString isEqualToString:@"deb"];
+    }}
+    if ([host isEqualToString:G2OpenThemePinnedRawHost]) {{
+        return [path hasPrefix:G2OpenThemePinnedRawPrefix] && [path.pathExtension.lowercaseString isEqualToString:@"deb"];
+    }}
+    return NO;
+}}
+'''
+          if old not in openlib:
+              raise SystemExit('open theme URL validator block not found')
+          openlib_path.write_text(openlib.replace(old,new,1))
+
+          for workflow_path in [
+              pathlib.Path('.github/workflows/build-gif2ani-340.yml'),
+              pathlib.Path('.github/workflows/audit-refresh-open-theme-catalog.yml'),
+          ]:
+              text=workflow_path.read_text()
+              old_assert="assert item['downloadURL'].startswith('https://virenmohindra.github.io/debs/')"
+              new_assert=f"assert item['downloadURL'].startswith('https://virenmohindra.github.io/debs/') or (item['package'] == '{swish_package}' and item['downloadURL'] == '{swish_url}')"
+              if old_assert in text:
+                  text=text.replace(old_assert,new_assert)
+              workflow_path.write_text(text)
+
+          lines=[
+              'Gif2Ani Verified 48-Pack Live Snapshot',
+              f'verified_at_utc={verified_at}',
+              'verified_pack_count=48',
+              'live_pages_pack_count=47',
+              'immutable_source_fallback_count=1',
+              f'swish_fallback_url={swish_url}',
+              f'swish_bytes={swish_bytes}',
+              f'swish_sha256={swish_sha}',
+              f'swish_media_files={swish_media}',
+              'all_package_identities_verified=true',
+              'all_archives_preflighted=true',
+              'all_packs_have_previewable_media=true',
+              '',
+          ]
+          for index,result in enumerate(results,1):
+              lines.append(f"{index:02d}. {result['name']} | {result['package']} | bytes={result['bytes']} | sha256={result['sha256']} | media={result['media']} | url={result['url']}")
+          pathlib.Path('status/open-theme-live-audit.txt').write_text('\n'.join(lines)+'\n')
+          PY
+
+      - name: Validate final source contract
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          data=json.loads(Path('gif2aniprefs/Resources/OpenThemeCatalog.json').read_text())
+          assert data['count']==len(data['themes'])==48
+          assert data['liveSnapshotCount']==48
+          assert data['repositoryIndexMismatchCount']==47
+          assert data['missingPagesPayloadFallbackCount']==1
+          for item in data['themes']:
+              assert re.fullmatch(r'[0-9a-f]{64}',item['sha256'])
+              assert 0<int(item['bytes'])<=100*1024*1024
+              assert int(item['verifiedMediaFiles'])>=1
+          swish=[item for item in data['themes'] if item['package']=='io.github.virenmohindra.swish']
+          assert len(swish)==1 and swish[0]['downloadURL'].startswith('https://raw.githubusercontent.com/VirenMohindra/CydiaRepo/c507a391f193c2bb362ff77fc1c1673c0da2dcae/debs/')
+          source=Path('gif2aniprefs/G2OpenThemeLibrary.inc').read_text()
+          assert 'G2OpenThemePinnedRawPrefix' in source
+          assert 'raw.githubusercontent.com' in source
+          print('verified_open_theme_snapshot=48')
+          PY
+
+      - name: Commit complete verified catalog
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add gif2aniprefs/Resources/OpenThemeCatalog.json \
+                  gif2aniprefs/G2OpenThemeLibrary.inc \
+                  .github/workflows/build-gif2ani-340.yml \
+                  .github/workflows/audit-refresh-open-theme-catalog.yml \
+                  status/open-theme-live-audit.txt
+          git commit -m 'Pin all 48 verified Springy theme payloads [skip ci]' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
