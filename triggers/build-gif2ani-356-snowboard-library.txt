@@ -1,0 +1,2 @@
+triggered_at_utc=2026-07-26T16:05:00Z
+purpose=discover every free publicly downloadable SnowBoard/WinterBoard respring DEB reachable from the enumerated source indexes, verify package integrity and .theme artwork, split multi-theme packages into individual downloadable gallery cards, remove historical import prompts, and preserve mobile-owned download caches
