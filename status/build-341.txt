@@ -1,8 +1,8 @@
 Gif2Ani 3.4.1 Deterministic Build
-run_id=30181419695
-source_commit=49203afa1e01526052128d03e8fd7efe9e27c48f
+run_id=30181443352
+source_commit=cf44593dbb55d1e6da4e24ef739a641554b3bb18
 status=failure
-completed_at_utc=2026-07-26T00:36:10Z
+completed_at_utc=2026-07-26T00:37:02Z
 
 --- packaged binaries ---
 
