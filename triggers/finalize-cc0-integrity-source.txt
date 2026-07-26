@@ -1,0 +1,2 @@
+run=2026-07-25T20:06:00-05:00
+reason=Enforce exact bytes and SHA-256 in the actual downloadable CC0 theme source before rebuilding 3.4.1.
