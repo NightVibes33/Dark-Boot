@@ -1,0 +1,14 @@
+Gif2Ani 3.5.9 Archive and Animated Preview Fix
+run_id=30214261144
+source_commit=6f7705af0617b7a772e928ce1603adc1a5af5c0a
+status=cancelled
+completed_at_utc=2026-07-26T18:14:00Z
+archive_fix=rootless PATH HOME TMPDIR and LC_ALL applied before every spawned jailbreak tool
+animated_downloadable_previews=262
+cc0_previews=54
+springy_previews=48
+snowboard_previews=160
+gallery_total=274
+--- source fix ---
+--- preview tail ---
+--- build tail ---
