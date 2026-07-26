@@ -5,7 +5,7 @@
   "sourceBranch": "master",
   "sourceCommit": "c507a391f193c2bb362ff77fc1c1673c0da2dcae",
   "sourceLicense": "MIT",
-  "downloadPolicy": "Immutable raw Git commit URL; SHA-256, byte count, package identity, and extracted artwork verified",
+  "downloadPolicy": "Immutable raw Git commit URL; SHA-256, byte count, package identity, exact package name, and extracted artwork verified",
   "themes": [
     {
       "identifier": "io.github.virenmohindra.a-wave",
@@ -31,7 +31,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 2971658,
       "legacyPagesSHA256": "853d01e5a41092561d47dc6ccfc87b9e547dd926b7ba1daa9980fe148e276279",
-      "immutableVerifiedMediaFiles": 96
+      "immutableVerifiedMediaFiles": 96,
+      "sourcePackageName": "A Wave - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.alone",
@@ -57,7 +58,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 2426184,
       "legacyPagesSHA256": "a699643d4d100853e44f33ee7d8ba530b29e18ea76326b3cd0c5ec8085df2ec7",
-      "immutableVerifiedMediaFiles": 66
+      "immutableVerifiedMediaFiles": 66,
+      "sourcePackageName": "Alone - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.bipolar-balls",
@@ -83,7 +85,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 12971150,
       "legacyPagesSHA256": "2917d32d3a532a3e5bfc0d66e6c15f9043ea1504f9896ed79f46825b9d9170e0",
-      "immutableVerifiedMediaFiles": 44
+      "immutableVerifiedMediaFiles": 44,
+      "sourcePackageName": "Bipolar Balls - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.black-hole",
@@ -109,7 +112,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 22080514,
       "legacyPagesSHA256": "ca472de7470b077b05fb894d5d1fcf72bf26342cbcc22b391a71fc0ca9c94a67",
-      "immutableVerifiedMediaFiles": 30
+      "immutableVerifiedMediaFiles": 30,
+      "sourcePackageName": "Black Hole - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.boo",
@@ -135,7 +139,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 4678464,
       "legacyPagesSHA256": "7831abc6aa2018336139fda246d02d8a4dd3e39b46d77f9f36eed42baa32bb36",
-      "immutableVerifiedMediaFiles": 60
+      "immutableVerifiedMediaFiles": 60,
+      "sourcePackageName": "Boo - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.bubbles",
@@ -161,7 +166,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 4775930,
       "legacyPagesSHA256": "ba3ccba41ebee25ff9860c204e94ffe9684223d90da1760950ff5812f5993e73",
-      "immutableVerifiedMediaFiles": 96
+      "immutableVerifiedMediaFiles": 96,
+      "sourcePackageName": "Bubbles - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.colorful-stars-in-space",
@@ -187,7 +193,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 2098890,
       "legacyPagesSHA256": "f0cda6842ff3ca6b99ed2c1ecc443b6ffc1d763f7df879dc557d5ecee7d2afc7",
-      "immutableVerifiedMediaFiles": 60
+      "immutableVerifiedMediaFiles": 60,
+      "sourcePackageName": "Colorful Stars In Space - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.columns",
@@ -213,7 +220,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 3588408,
       "legacyPagesSHA256": "a632e756397d99d299341af1fb2ff8086d7f147d8c7fbbcae93d166db3c90607",
-      "immutableVerifiedMediaFiles": 54
+      "immutableVerifiedMediaFiles": 54,
+      "sourcePackageName": "Columns - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.complicated",
@@ -239,7 +247,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 6293790,
       "legacyPagesSHA256": "e2e84a6d93a22403211cddedb43fe2a3fd65f2c37a43868dcab076c58550a713",
-      "immutableVerifiedMediaFiles": 60
+      "immutableVerifiedMediaFiles": 60,
+      "sourcePackageName": "Complicated - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.echo",
@@ -265,7 +274,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 5357838,
       "legacyPagesSHA256": "05c16fd7e7789ec4d45ae56d2f5d08a58a618cb7d34adc2ad7a44b1707e55d0c",
-      "immutableVerifiedMediaFiles": 168
+      "immutableVerifiedMediaFiles": 168,
+      "sourcePackageName": "Echo - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.fall-leaves",
@@ -291,7 +301,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 2903760,
       "legacyPagesSHA256": "78185380b8d8529fa825f3d6349adc3b94f099e688f97a216e1883f5a192714f",
-      "immutableVerifiedMediaFiles": 11
+      "immutableVerifiedMediaFiles": 11,
+      "sourcePackageName": "Fall Leaves - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.flower",
@@ -317,7 +328,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 3313368,
       "legacyPagesSHA256": "90c420f4505784300dafa8e18b7163d933958952659781ad6614e8651e0ab9b6",
-      "immutableVerifiedMediaFiles": 72
+      "immutableVerifiedMediaFiles": 72,
+      "sourcePackageName": "Flower - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.fluid",
@@ -343,7 +355,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 882230,
       "legacyPagesSHA256": "4a0a93d5be171a63c899d6bca93cbac97b2778b096e96294c362f347158fde67",
-      "immutableVerifiedMediaFiles": 38
+      "immutableVerifiedMediaFiles": 38,
+      "sourcePackageName": "Fluid - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.fragments",
@@ -369,7 +382,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 8657894,
       "legacyPagesSHA256": "730c3fbbf9d9442514479b8aaf2997ae11f605b68ff8671338322ac052fe528b",
-      "immutableVerifiedMediaFiles": 92
+      "immutableVerifiedMediaFiles": 92,
+      "sourcePackageName": "Fragments - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.funny-computer",
@@ -395,7 +409,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 7708706,
       "legacyPagesSHA256": "156331dd36f99e418dd70588cbab71fa3ee233ef308db5934932ed7b95db6d2c",
-      "immutableVerifiedMediaFiles": 64
+      "immutableVerifiedMediaFiles": 64,
+      "sourcePackageName": "Funny Computer - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.gameboy-advance",
@@ -421,7 +436,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 3312970,
       "legacyPagesSHA256": "c5585f54418544f5583a2a6c856c0e2817c3b155f30860c40809bbfd716a6ad5",
-      "immutableVerifiedMediaFiles": 63
+      "immutableVerifiedMediaFiles": 63,
+      "sourcePackageName": "Gameboy Advance - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.gamecube-logo",
@@ -447,7 +463,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 1418126,
       "legacyPagesSHA256": "7906c0da2ab96708ff950488e5bc779c3e68847bc316faedcce240d464c5bdc6",
-      "immutableVerifiedMediaFiles": 41
+      "immutableVerifiedMediaFiles": 41,
+      "sourcePackageName": "Gamecube Logo - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.hello-again",
@@ -473,7 +490,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 14486844,
       "legacyPagesSHA256": "cfa898b4f97a21711001e5cacc8a7cc976638e1699f7193877fd3499c5be838b",
-      "immutableVerifiedMediaFiles": 144
+      "immutableVerifiedMediaFiles": 144,
+      "sourcePackageName": "Hello Again - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.hypnotoad",
@@ -499,7 +517,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 25035954,
       "legacyPagesSHA256": "3c384d5b8808e8a2b85d135714b7e75e83d8025c00523f46a26bbe2f861f5020",
-      "immutableVerifiedMediaFiles": 72
+      "immutableVerifiedMediaFiles": 72,
+      "sourcePackageName": "Hypnotoad - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.lines",
@@ -525,7 +544,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 3902510,
       "legacyPagesSHA256": "d8d5dfeaae0efae6c593dbea65ea09856d4cb356acdfc2a41627e5170fa91960",
-      "immutableVerifiedMediaFiles": 60
+      "immutableVerifiedMediaFiles": 60,
+      "sourcePackageName": "Lines - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.mograph",
@@ -551,7 +571,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 4300018,
       "legacyPagesSHA256": "06afe71b55dc81a16c91076753a3d9a3d7616b0e36f179bf696ce92634a7d4a3",
-      "immutableVerifiedMediaFiles": 62
+      "immutableVerifiedMediaFiles": 62,
+      "sourcePackageName": "Mograph - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.only-human",
@@ -577,7 +598,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 6521044,
       "legacyPagesSHA256": "df84408a01c5c576d6ab2a01b9bd95a039d4cf347df4d8032e6b60321c897c60",
-      "immutableVerifiedMediaFiles": 69
+      "immutableVerifiedMediaFiles": 69,
+      "sourcePackageName": "Only Human - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.pepe-matrix",
@@ -603,7 +625,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 2938812,
       "legacyPagesSHA256": "0f887081a73ae82ae5bfab9306da4cac358d5832754182be29ac214641badcb8",
-      "immutableVerifiedMediaFiles": 20
+      "immutableVerifiedMediaFiles": 20,
+      "sourcePackageName": "Pepe Matrix - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.pizza",
@@ -629,7 +652,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 1343924,
       "legacyPagesSHA256": "8adea730e0957be1ac6b131b0b2a87bcbefe3cd50415592a789803b2b66d57ed",
-      "immutableVerifiedMediaFiles": 23
+      "immutableVerifiedMediaFiles": 23,
+      "sourcePackageName": "Pizza - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.pizza-hi",
@@ -655,7 +679,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 2713814,
       "legacyPagesSHA256": "376a6dc7972a0dc71de5fc1d4f9e17896c9a88f98f5346168ce9744f2162c0d1",
-      "immutableVerifiedMediaFiles": 23
+      "immutableVerifiedMediaFiles": 23,
+      "sourcePackageName": "Pizza Hi - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.pokemon",
@@ -681,7 +706,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 4229866,
       "legacyPagesSHA256": "c0223f1839626db484fbc6be443e3fadab6da479bb15cd59eb5c6712ef208ee1",
-      "immutableVerifiedMediaFiles": 30
+      "immutableVerifiedMediaFiles": 30,
+      "sourcePackageName": "Pokemon - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.pulse",
@@ -707,7 +733,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 1168094,
       "legacyPagesSHA256": "9173108b1cd0eabad2efc16831f80a73bd18a13e037659754a179019f2568896",
-      "immutableVerifiedMediaFiles": 60
+      "immutableVerifiedMediaFiles": 60,
+      "sourcePackageName": "Pulse - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.rainbow-8",
@@ -733,7 +760,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 313520,
       "legacyPagesSHA256": "a5c057c0c328b1ddb1f65e84e90f8bb8cd916ca8e2f253e2fc24039c45fadec6",
-      "immutableVerifiedMediaFiles": 19
+      "immutableVerifiedMediaFiles": 19,
+      "sourcePackageName": "Rainbow 8 - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.rainy",
@@ -759,7 +787,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 5127604,
       "legacyPagesSHA256": "c3d0acdee177b5f040bd5d63bda0b227cbfdf00550cf3ce4d6aedf8cafb2f4e8",
-      "immutableVerifiedMediaFiles": 9
+      "immutableVerifiedMediaFiles": 9,
+      "sourcePackageName": "Rainy - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.rolling-circles",
@@ -785,7 +814,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 4297622,
       "legacyPagesSHA256": "ab8bf6f880ba5c57b1384d3e41e5ccf2be939003f187b71b626712107c5b5054",
-      "immutableVerifiedMediaFiles": 73
+      "immutableVerifiedMediaFiles": 73,
+      "sourcePackageName": "Rolling Circles - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.routine",
@@ -811,7 +841,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 5599266,
       "legacyPagesSHA256": "4a33a5e29caba8ca5bd694d23b9eff28d67c7d182daa998979de9ac51e033f13",
-      "immutableVerifiedMediaFiles": 40
+      "immutableVerifiedMediaFiles": 40,
+      "sourcePackageName": "Routine - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.sonic-running",
@@ -837,7 +868,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 264842,
       "legacyPagesSHA256": "1dddf53611aa1694b776922721513a546ac88ee68ce63cb1d0d9c5ea25db62a7",
-      "immutableVerifiedMediaFiles": 4
+      "immutableVerifiedMediaFiles": 4,
+      "sourcePackageName": "Sonic Running - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.soup",
@@ -863,7 +895,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 2531718,
       "legacyPagesSHA256": "4ad2cf7822bca26b59637d4a7c7a8658ae24e5bf0481de9731552c30258ea19a",
-      "immutableVerifiedMediaFiles": 31
+      "immutableVerifiedMediaFiles": 31,
+      "sourcePackageName": "Soup - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.spikey",
@@ -889,7 +922,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 6630576,
       "legacyPagesSHA256": "d4674f387119e8a512651f0f05899ca92fe5e86dd781eaea4d974ab3e8bd4205",
-      "immutableVerifiedMediaFiles": 10
+      "immutableVerifiedMediaFiles": 10,
+      "sourcePackageName": "Spikey - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.sploosh",
@@ -915,7 +949,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 2311316,
       "legacyPagesSHA256": "cd0741f54cb99311c86198ba3b67b46bef853d79377922026e19e6212294a005",
-      "immutableVerifiedMediaFiles": 30
+      "immutableVerifiedMediaFiles": 30,
+      "sourcePackageName": "Sploosh - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.stay-in-lane",
@@ -941,12 +976,13 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 4858370,
       "legacyPagesSHA256": "0c1205b1ed326f254e7274e3033e3b4013b9cf1ea7e70eda74ab6cead326e723",
-      "immutableVerifiedMediaFiles": 50
+      "immutableVerifiedMediaFiles": 50,
+      "sourcePackageName": "Stay In Lane - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.stranger-things",
       "package": "io.github.virenmohindra.stranger-things",
-      "name": "Stranger Things",
+      "name": "Stranger Things (DankerThings)",
       "version": "2.0",
       "filename": "./debs/io.github.virenmohindra.stranger-things_2.0_iphoneos-arm.deb",
       "downloadURL": "https://raw.githubusercontent.com/VirenMohindra/CydiaRepo/c507a391f193c2bb362ff77fc1c1673c0da2dcae/debs/io.github.virenmohindra.stranger-things_2.0_iphoneos-arm.deb",
@@ -967,7 +1003,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 3568396,
       "legacyPagesSHA256": "34a8a99b7d9f497c3a0697cdeb65a1cced7b37c90480fab2067b756446622f9f",
-      "immutableVerifiedMediaFiles": 70
+      "immutableVerifiedMediaFiles": 70,
+      "sourcePackageName": "Stranger Things - Springy BootLogo (DankerThings)"
     },
     {
       "identifier": "io.github.virenmohindra.super-mario",
@@ -993,7 +1030,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 3506774,
       "legacyPagesSHA256": "0ffa6044272c4607412b5be788d545d8178901538219040e86493cf5666e85b9",
-      "immutableVerifiedMediaFiles": 35
+      "immutableVerifiedMediaFiles": 35,
+      "sourcePackageName": "Super Mario - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.swimmer",
@@ -1019,7 +1057,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 1573426,
       "legacyPagesSHA256": "f804829e6c80172e8cc5fbeebcdfd0f3b9e197e3829d820d6dea34065adf0263",
-      "immutableVerifiedMediaFiles": 70
+      "immutableVerifiedMediaFiles": 70,
+      "sourcePackageName": "Swimmer - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.swish",
@@ -1044,7 +1083,8 @@
       "previousIndexSHA256": "9222d95626886b0b1c81e06077f3d25a0a2e57e46302d19d088a45206439b8b5",
       "verifiedMediaFiles": 64,
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
-      "immutableVerifiedMediaFiles": 64
+      "immutableVerifiedMediaFiles": 64,
+      "sourcePackageName": "Swish - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.tesseract",
@@ -1070,7 +1110,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 3521998,
       "legacyPagesSHA256": "b1b4e2dbc013319a085cb716dda9d05ac78a5ec27e1e18d97c9db1500988dc5f",
-      "immutableVerifiedMediaFiles": 29
+      "immutableVerifiedMediaFiles": 29,
+      "sourcePackageName": "Tesseract - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.three-waves",
@@ -1096,7 +1137,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 4415594,
       "legacyPagesSHA256": "99a543a7dea68433227b9951fe18b0c3a1dcd1d94b3a0cf1cd3c0a50cf70d353",
-      "immutableVerifiedMediaFiles": 60
+      "immutableVerifiedMediaFiles": 60,
+      "sourcePackageName": "Three Waves - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.time-and-money",
@@ -1122,7 +1164,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 1404530,
       "legacyPagesSHA256": "39ab5d089b2fedc230bec5cc7d751a55d8af9c8e40b0fe9cd60bde51be6cc1bd",
-      "immutableVerifiedMediaFiles": 45
+      "immutableVerifiedMediaFiles": 45,
+      "sourcePackageName": "Time And Money - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.twisting-cubes",
@@ -1148,7 +1191,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 24403672,
       "legacyPagesSHA256": "22cdeca0eaaa801ee7ce1d0b4ea97ebdc781e41bcc0a09d7a31f6cab5afea30b",
-      "immutableVerifiedMediaFiles": 96
+      "immutableVerifiedMediaFiles": 96,
+      "sourcePackageName": "Twisting Cubes - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.upload",
@@ -1174,7 +1218,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 979352,
       "legacyPagesSHA256": "d6c5468a25cc77e37a4bb6cc0348ef5ea222a19ce3ad82730c286c7db00228bd",
-      "immutableVerifiedMediaFiles": 107
+      "immutableVerifiedMediaFiles": 107,
+      "sourcePackageName": "Upload - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.waiting",
@@ -1200,7 +1245,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 5712858,
       "legacyPagesSHA256": "7a436d45ddd7c61477b48caf9b693a5118c3668251b74a6a5a789cef4af3edfa",
-      "immutableVerifiedMediaFiles": 13
+      "immutableVerifiedMediaFiles": 13,
+      "sourcePackageName": "Waiting - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.world-swap",
@@ -1226,7 +1272,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 2503252,
       "legacyPagesSHA256": "10abea214c1b31d328bb95a2b7040efc1e315d55af1972c86a0a999af09f5596",
-      "immutableVerifiedMediaFiles": 99
+      "immutableVerifiedMediaFiles": 99,
+      "sourcePackageName": "World Swap - Springy BootLogo"
     },
     {
       "identifier": "io.github.virenmohindra.yin-and-yang",
@@ -1252,7 +1299,8 @@
       "liveVerifiedAtUTC": "2026-07-26T01:56:53Z",
       "legacyPagesBytes": 1372756,
       "legacyPagesSHA256": "9fe3b7f5d06a9db704d41dbe73056422b619e34f757b07017a3a9f1ad5a3550f",
-      "immutableVerifiedMediaFiles": 72
+      "immutableVerifiedMediaFiles": 72,
+      "sourcePackageName": "Yin And Yang - Springy BootLogo"
     }
   ],
   "liveSnapshotVerifiedAtUTC": "2026-07-26T01:56:53Z",
@@ -1260,5 +1308,6 @@
   "repositoryIndexMismatchCount": 47,
   "missingPagesPayloadFallbackCount": 1,
   "verificationPolicy": "Each DEB was downloaded over HTTPS and verified for package identity, byte count, SHA-256, safe archive paths/types, no extracted symlinks, and previewable media. Bundled records remain authoritative over stale live index metadata.",
-  "immutableCatalogVerifiedAtUTC": "2026-07-26T15:31:08Z"
+  "immutableCatalogVerifiedAtUTC": "2026-07-26T15:42:10Z",
+  "namesDerivedFromDEBMetadata": true
 }
