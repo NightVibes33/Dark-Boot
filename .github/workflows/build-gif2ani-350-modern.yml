@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: gif2ani-350-modern-final
+  group: gif2ani-350-modern-final-v2
   cancel-in-progress: false
 
 jobs:
@@ -96,7 +96,6 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git pull --rebase origin main
           mkdir -p status release-packages
           {
             echo 'Gif2Ani 3.5.0 Modern Gallery and BackBoard Reliability'
@@ -119,7 +118,12 @@ jobs:
             git add control Tweak.xm gif2aniprefs/G2ThemeGalleryController.m gif2aniprefs/G2ModernGallery.inc
             git add -f release-packages/Gif2Ani-3.5.0-modern-gallery.deb
             git add release-packages/Gif2Ani-3.5.0-modern-gallery.sha256
+          else
+            git restore control Tweak.xm gif2aniprefs/G2ThemeGalleryController.m 2>/dev/null || true
+            rm -f gif2aniprefs/G2ModernGallery.inc release-packages/Gif2Ani-3.5.0-modern-gallery.deb release-packages/Gif2Ani-3.5.0-modern-gallery.sha256
           fi
+          rm -f scripts/G2ModernGallery.inc.gz.b64 scripts/apply_modernization.py scripts/apply_modernization.py.b64
           git add status/gif2ani-350-modern.txt
           git commit -m "Publish Gif2Ani 3.5.0 modernization (${JOB_STATUS}) [skip ci]" || exit 0
+          git pull --rebase origin main
           git push origin HEAD:main
