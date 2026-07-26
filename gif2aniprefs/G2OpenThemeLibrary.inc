@@ -357,30 +357,17 @@ static BOOL G2NormalizeOpenThemeCandidate(NSDictionary *candidate, NSDictionary 
     self.stageButton.enabled = NO;
     self.stageButton.alpha = 0.45;
     [self.stageButton setTitle:@"" forState:UIControlStateNormal];
-    self.statusLabel.text = @"Downloading the original pack and verifying its SHA-256…";
+    self.statusLabel.text = @"Downloading the original pack through the verified jailbreak network path…";
     [self.activity startAnimating];
 
-    NSURLSessionConfiguration *configuration = NSURLSessionConfiguration.ephemeralSessionConfiguration;
-    configuration.timeoutIntervalForRequest = 45.0;
-    configuration.timeoutIntervalForResource = 90.0;
-    configuration.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *task = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *networkError) {
-        NSError *error = networkError;
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        NSError *error = nil;
         BOOL success = NO;
-        NSInteger statusCode = [response isKindOfClass:NSHTTPURLResponse.class] ? [(NSHTTPURLResponse *)response statusCode] : 0;
-        if (!error && (!G2OpenThemeURLIsAllowed(response.URL, NO) || statusCode != 200)) {
-            error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:73 userInfo:@{NSLocalizedDescriptionKey:@"The original repository returned an unexpected response or redirect."}];
-        }
         unsigned long long expectedMaximum = MIN(G2MaximumArchiveBytes, [pack[@"downloadBytes"] unsignedLongLongValue] + 65536ULL);
-        if (!error && (!data.length || data.length > expectedMaximum)) {
-            error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:74 userInfo:@{NSLocalizedDescriptionKey:@"The downloaded package size does not match the verified catalog."}];
-        }
-        NSString *actualSHA = !error ? G2SHA256ForData(data) : nil;
-        if (!error && ![actualSHA isEqualToString:pack[@"sha256"]]) {
-            error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:75 userInfo:@{NSLocalizedDescriptionKey:@"SHA-256 verification failed. The package was not opened or cached."}];
-        }
+        NSData *data = G2CurlDownloadData(url, YES, expectedMaximum, &error);
+        NSString *actualSHA = data && !error ? G2SHA256ForData(data) : nil;
+        if (!error && ![actualSHA isEqualToString:pack[@"sha256"]]) error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:75 userInfo:@{NSLocalizedDescriptionKey:@"SHA-256 verification failed. The package was not opened or cached."}];
 
         NSFileManager *manager = NSFileManager.defaultManager;
         NSString *work = [G2OpenThemeLibraryRoot stringByAppendingPathComponent:[NSString stringWithFormat:@".download-%@", NSUUID.UUID.UUIDString]];
@@ -391,22 +378,15 @@ static BOOL G2NormalizeOpenThemeCandidate(NSDictionary *candidate, NSDictionary 
         if (!error) {
             int code = -1;
             NSString *packageID = [G2RunToolCapture(@[@"/var/jb/usr/bin/dpkg-deb", @"/usr/bin/dpkg-deb"], @[@"-f", debPath, @"Package"], &code) stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-            if (code != 0 || ![packageID isEqualToString:pack[@"package"]]) {
-                error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:76 userInfo:@{NSLocalizedDescriptionKey:@"The downloaded DEB package identifier does not match the selected theme."}];
-            }
+            if (code != 0 || ![packageID isEqualToString:pack[@"package"]]) error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:76 userInfo:@{NSLocalizedDescriptionKey:@"The downloaded DEB package identifier does not match the selected theme."}];
         }
         if (!error && !G2PreflightArchive(debPath, @"deb", &error)) success = NO;
-        if (!error && G2RunTool(@[@"/var/jb/usr/bin/dpkg-deb", @"/usr/bin/dpkg-deb"], @[@"-x", debPath, extractRoot]) != 0) {
-            error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:77 userInfo:@{NSLocalizedDescriptionKey:@"The verified theme package could not be extracted."}];
-        }
+        if (!error && G2RunTool(@[@"/var/jb/usr/bin/dpkg-deb", @"/usr/bin/dpkg-deb"], @[@"-x", debPath, extractRoot]) != 0) error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:77 userInfo:@{NSLocalizedDescriptionKey:@"The verified theme package could not be extracted."}];
         if (!error && !G2ValidateExtractedTree(extractRoot, &error)) success = NO;
         NSDictionary *candidate = !error ? G2BestAnimationCandidateInTree(extractRoot) : nil;
-        if (!error && !candidate) {
-            error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:78 userInfo:@{NSLocalizedDescriptionKey:@"The package did not contain a compatible animated GIF or frame sequence."}];
-        }
+        if (!error && !candidate) error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:78 userInfo:@{NSLocalizedDescriptionKey:@"The package did not contain a compatible animated GIF or frame sequence."}];
         if (!error) success = G2NormalizeOpenThemeCandidate(candidate, pack, &error);
         [manager removeItemAtPath:work error:nil];
-        [session finishTasksAndInvalidate];
 
         dispatch_async(dispatch_get_main_queue(), ^{
             typeof(self) strongSelf = weakSelf;
@@ -424,8 +404,7 @@ static BOOL G2NormalizeOpenThemeCandidate(NSDictionary *candidate, NSDictionary 
                 [strongSelf presentViewController:alert animated:YES completion:nil];
             }
         });
-    }];
-    [task resume];
+    });
 }
 
 @end

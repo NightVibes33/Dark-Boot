@@ -1,6 +1,6 @@
 Package: com.nightvibes33.gif2ani
 Name: Gif2Ani Rootless
-Version: 3.5.1
+Version: 3.5.2
 Architecture: iphoneos-arm64
 Depends: firmware (>= 15.0), mobilesubstrate
 Conflicts: com.nightvibes33.darkboot, com.wizage.gif2ani2, com.wizages.gif2ani

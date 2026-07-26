@@ -1,6 +1,53 @@
 #import <objc/runtime.h>
 #import <CommonCrypto/CommonDigest.h>
 
+
+__attribute__((used)) static const char G2DownloadPreviewFixMarkers[] =
+    "curl-backed-gallery-download-v352\0"
+    "bundled-real-theme-previews-v352\0";
+
+static UIImage *G2BundledThemePreview(NSDictionary *pack) {
+    NSString *identifier = [pack[@"identifier"] isKindOfClass:NSString.class] ? pack[@"identifier"] : pack[@"package"];
+    if (!identifier.length) return nil;
+    NSURL *url = [G2ThemeGalleryBundle() URLForResource:identifier withExtension:@"png" subdirectory:@"ThemePreviews"];
+    return url.path.length ? [UIImage imageWithContentsOfFile:url.path] : nil;
+}
+
+static NSData *G2CurlDownloadData(NSURL *url, BOOL openTheme, unsigned long long maximumBytes, NSError **error) {
+    if (!url || !url.absoluteString.length) {
+        if (error) *error = [NSError errorWithDomain:@"Gif2AniDownload" code:90 userInfo:@{NSLocalizedDescriptionKey:@"The theme URL is missing."}];
+        return nil;
+    }
+    NSFileManager *manager = NSFileManager.defaultManager;
+    [manager createDirectoryAtPath:G2MediaDirectory withIntermediateDirectories:YES attributes:@{NSFilePosixPermissions:@0755} error:nil];
+    NSString *output = [G2MediaDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@".curl-%@.download", NSUUID.UUID.UUIDString]];
+    int code = -1;
+    NSString *effective = G2RunToolCapture(@[@"/var/jb/usr/bin/curl", @"/usr/bin/curl"], @[
+        @"--fail", @"--location", @"--silent", @"--show-error", @"--retry", @"3",
+        @"--connect-timeout", @"20", @"--max-time", @"180",
+        @"--output", output, @"--write-out", @"%{url_effective}", url.absoluteString
+    ], &code);
+    NSString *trimmed = [effective stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+    NSURL *finalURL = [NSURL URLWithString:trimmed];
+    BOOL allowed = openTheme ? G2OpenThemeURLIsAllowed(finalURL, NO) : G2RemoteThemeURLIsAllowed(finalURL);
+    if (code != 0 || !allowed) {
+        [manager removeItemAtPath:output error:nil];
+        NSString *detail = trimmed.length && code != 0 ? trimmed : @"The verified download command failed or was redirected outside its pinned source.";
+        if (error) *error = [NSError errorWithDomain:@"Gif2AniDownload" code:91 userInfo:@{NSLocalizedDescriptionKey:detail}];
+        return nil;
+    }
+    NSDictionary *attributes = [manager attributesOfItemAtPath:output error:nil];
+    unsigned long long size = [attributes[NSFileSize] unsignedLongLongValue];
+    if (!size || size > maximumBytes) {
+        [manager removeItemAtPath:output error:nil];
+        if (error) *error = [NSError errorWithDomain:@"Gif2AniDownload" code:92 userInfo:@{NSLocalizedDescriptionKey:@"The downloaded file is empty or exceeds the safe size limit."}];
+        return nil;
+    }
+    NSData *data = [NSData dataWithContentsOfFile:output options:NSDataReadingMappedIfSafe error:error];
+    [manager removeItemAtPath:output error:nil];
+    return data;
+}
+
 static NSString *G2SHA256StringForData(NSData *data) {
     if (!data.length || data.length > UINT32_MAX) return nil;
     unsigned char digest[CC_SHA256_DIGEST_LENGTH];
@@ -86,9 +133,10 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
         if (!G2RemoteCachedThemeIsValid(pack)) {
             [self.activity stopAnimating];
             self.frames = @[];
-            self.imageView.contentMode = UIViewContentModeCenter;
+            UIImage *bundledPreview = G2BundledThemePreview(pack);
+            self.imageView.contentMode = bundledPreview ? UIViewContentModeScaleAspectFit : UIViewContentModeCenter;
             self.imageView.tintColor = self.view.tintColor;
-            self.imageView.image = [UIImage systemImageNamed:@"icloud.and.arrow.down.fill"];
+            self.imageView.image = bundledPreview ?: [UIImage systemImageNamed:@"icloud.and.arrow.down.fill"];
             self.statusLabel.text = @"Built-in catalog theme • not downloaded yet\nTap Download & Preview. The GIF byte count, SHA-256, and animation structure are verified before it is cached.";
             [self.stageButton setTitle:@"Download & Preview" forState:UIControlStateNormal];
             self.stageButton.enabled = YES;
@@ -101,9 +149,10 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
         if (!openInfo) {
             [self.activity stopAnimating];
             self.frames = @[];
-            self.imageView.contentMode = UIViewContentModeCenter;
+            UIImage *bundledPreview = G2BundledThemePreview(pack);
+            self.imageView.contentMode = bundledPreview ? UIViewContentModeScaleAspectFit : UIViewContentModeCenter;
             self.imageView.tintColor = self.view.tintColor;
-            self.imageView.image = [UIImage systemImageNamed:@"shippingbox.and.arrow.backward.fill"];
+            self.imageView.image = bundledPreview ?: [UIImage systemImageNamed:@"shippingbox.and.arrow.backward.fill"];
             self.statusLabel.text = [NSString stringWithFormat:@"Original source pack • not downloaded yet\n%@\nTap Download & Preview. Gif2Ani verifies SHA-256 and package identity before extracting only the animation files.", pack[@"license"] ?: @"Original credits are preserved."];
             [self.stageButton setTitle:@"Download & Preview" forState:UIControlStateNormal];
             self.stageButton.enabled = YES;
@@ -183,71 +232,42 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
 }
 
 - (void)g2_downloadRemoteTheme {
-    NSString *urlString = self.pack[@"downloadURL"];
-    NSURL *url = [NSURL URLWithString:urlString];
+    NSDictionary *pack = self.pack;
+    NSURL *url = [NSURL URLWithString:pack[@"downloadURL"]];
     if (!G2RemoteThemeURLIsAllowed(url)) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Download blocked"
-            message:@"This theme does not point to the pinned Gif2Ani catalog host."
-            preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Download blocked" message:@"This theme does not point to the pinned Gif2Ani catalog host." preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
         [self presentViewController:alert animated:YES completion:nil];
         return;
     }
-
     self.stageButton.enabled = NO;
     self.stageButton.alpha = 0.45;
     [self.stageButton setTitle:@"" forState:UIControlStateNormal];
-    self.statusLabel.text = @"Downloading and verifying the pinned Gif2Ani catalog theme…";
+    self.statusLabel.text = @"Downloading through the verified jailbreak network path…";
     [self.activity startAnimating];
 
-    NSURLSessionConfiguration *configuration = NSURLSessionConfiguration.ephemeralSessionConfiguration;
-    configuration.timeoutIntervalForRequest = 30.0;
-    configuration.timeoutIntervalForResource = 45.0;
-    configuration.requestCachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
-    NSDictionary *pack = self.pack;
     __weak typeof(self) weakSelf = self;
-    NSURLSessionDataTask *task = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *networkError) {
-        NSError *error = networkError;
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        NSError *error = nil;
         BOOL success = NO;
-        NSURL *finalURL = response.URL;
-        NSInteger statusCode = [response isKindOfClass:NSHTTPURLResponse.class] ? [(NSHTTPURLResponse *)response statusCode] : 0;
-        if (!error && (!G2RemoteThemeURLIsAllowed(finalURL) || statusCode != 200)) {
-            error = [NSError errorWithDomain:@"Gif2AniGallery" code:40 userInfo:@{
-                NSLocalizedDescriptionKey:@"The catalog server returned an unexpected response or redirect."
-            }];
-        }
-        NSDictionary *metadata = nil;
-        if (!error && !G2RemoteDataMatchesManifest(data, pack, &error)) metadata = nil;
-        if (!error) metadata = G2ValidateGIFData(data, &error);
-        if (!error && metadata) {
-            NSFileManager *manager = [NSFileManager defaultManager];
+        NSData *data = G2CurlDownloadData(url, NO, G2MaximumInputBytes, &error);
+        NSDictionary *metadata = data ? (G2RemoteDataMatchesManifest(data, pack, &error) ? G2ValidateGIFData(data, &error) : nil) : nil;
+        if (metadata && !error) {
+            NSFileManager *manager = NSFileManager.defaultManager;
             NSString *cachePath = G2RemoteThemeCachePath(pack);
             NSString *temporary = [cachePath stringByAppendingString:@".download"];
-            if (![manager createDirectoryAtPath:G2RemoteThemeCacheDirectory
-                      withIntermediateDirectories:YES
-                                       attributes:@{NSFilePosixPermissions:@0755}
-                                            error:&error]) {
-                success = NO;
-            } else {
+            if ([manager createDirectoryAtPath:G2RemoteThemeCacheDirectory withIntermediateDirectories:YES attributes:@{NSFilePosixPermissions:@0755} error:&error]) {
                 [manager removeItemAtPath:temporary error:nil];
-                [manager removeItemAtPath:cachePath error:nil];
-                if ([data writeToFile:temporary options:NSDataWritingAtomic error:&error] &&
-                    [manager moveItemAtPath:temporary toPath:cachePath error:&error]) {
-                    chown(cachePath.fileSystemRepresentation, 501, 501);
-                    chmod(cachePath.fileSystemRepresentation, 0644);
-                    success = G2RemoteCachedThemeIsValid(pack);
-                    if (!success && !error) {
-                        error = [NSError errorWithDomain:@"Gif2AniGallery" code:41 userInfo:@{
-                            NSLocalizedDescriptionKey:@"The downloaded GIF failed its final cache verification."
-                        }];
-                    }
+                if ([data writeToFile:temporary options:NSDataWritingAtomic error:&error]) {
+                    chmod(temporary.fileSystemRepresentation, 0644);
+                    chown(temporary.fileSystemRepresentation, 501, 501);
+                    [manager removeItemAtPath:cachePath error:nil];
+                    if ([manager moveItemAtPath:temporary toPath:cachePath error:&error]) success = G2RemoteCachedThemeIsValid(pack);
                 }
                 [manager removeItemAtPath:temporary error:nil];
             }
         }
-        [session finishTasksAndInvalidate];
-
+        if (!success && !error) error = [NSError errorWithDomain:@"Gif2AniGallery" code:93 userInfo:@{NSLocalizedDescriptionKey:@"The verified GIF could not be saved to the theme cache."}];
         dispatch_async(dispatch_get_main_queue(), ^{
             typeof(self) strongSelf = weakSelf;
             if (!strongSelf) return;
@@ -259,15 +279,12 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
                 [strongSelf.stageButton setTitle:@"Retry Download" forState:UIControlStateNormal];
                 strongSelf.stageButton.enabled = YES;
                 strongSelf.stageButton.alpha = 1.0;
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Download failed"
-                    message:error.localizedDescription ?: @"The theme could not be downloaded safely."
-                    preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Download failed" message:error.localizedDescription ?: @"The theme could not be downloaded safely." preferredStyle:UIAlertControllerStyleAlert];
                 [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
                 [strongSelf presentViewController:alert animated:YES completion:nil];
             }
         });
-    }];
-    [task resume];
+    });
 }
 
 - (void)g2_remoteStageAnimation {

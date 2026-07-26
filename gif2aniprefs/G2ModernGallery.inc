@@ -1303,7 +1303,11 @@ static BOOL G2MRestartProcess(NSString *processName) {
     } else {
         NSString *kind = pack[@"kind"];
         if ([kind isEqualToString:@"legacy"]) cell.themeImageView.image = [UIImage systemImageNamed:@"archivebox"];
-        else if (([kind isEqualToString:@"remote"] || [kind isEqualToString:@"sourceDeb"]) && state != 1) cell.themeImageView.image = [UIImage systemImageNamed:state == 2 ? @"arrow.triangle.2.circlepath.icloud" : @"icloud.and.arrow.down"];
+        else if (([kind isEqualToString:@"remote"] || [kind isEqualToString:@"sourceDeb"]) && state != 1) {
+            UIImage *bundledPreview = G2BundledThemePreview(pack);
+            cell.themeImageView.contentMode = bundledPreview ? UIViewContentModeScaleAspectFill : UIViewContentModeCenter;
+            cell.themeImageView.image = bundledPreview ?: [UIImage systemImageNamed:state == 2 ? @"arrow.triangle.2.circlepath.icloud" : @"icloud.and.arrow.down"];
+        }
         else {
             cell.themeImageView.image = [UIImage systemImageNamed:@"photo.on.rectangle"];
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
