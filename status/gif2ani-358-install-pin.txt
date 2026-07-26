@@ -1,0 +1,8 @@
+Gif2Ani 3.5.8 immutable install pin
+package=release-packages/Gif2Ani-3.5.8-sha-bound-identity.deb
+sha256=0d2953840e63191e221ac0bf9bd682c001ac77c064a40cf41c7808504b3a2d44
+identity_policy=exact URL plus byte count plus SHA-256 authoritative; clean real package-ID mismatch remains fatal; metadata-tool failure uses cryptographic fallback
+diagnostic=LastPackageVerification.plist
+springy_themes=48
+snowboard_themes=160
+gallery_total=274
