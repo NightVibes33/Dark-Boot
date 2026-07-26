@@ -1,0 +1,109 @@
+name: Publish Exact Gif2Ani 3.6.0 Animated Cards
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-gif2ani-360-exact.yml
+      - triggers/publish-gif2ani-360-exact.txt
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: publish-gif2ani-360-exact
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download exact verified artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: '8635932300'
+          EXPECTED_SHA: '228df90cc9d308de706c4df55fadbb16d537d39ff0da12008b7eb33c6ebb0f33'
+        run: |
+          set -euo pipefail
+          curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip" -o artifact.zip
+          rm -rf artifact
+          mkdir artifact
+          unzip -q artifact.zip -d artifact
+          DEB='artifact/release-packages/Gif2Ani-3.6.0-animated-gallery-cards.deb'
+          test -s "$DEB"
+          test "$(sha256sum "$DEB" | awk '{print $1}')" = "$EXPECTED_SHA"
+          test "$(dpkg-deb -f "$DEB" Package | tr -d '\r\n')" = 'com.nightvibes33.gif2ani'
+          test "$(dpkg-deb -f "$DEB" Version | tr -d '\r\n')" = '3.6.0'
+          test "$(dpkg-deb -f "$DEB" Architecture | tr -d '\r\n')" = 'iphoneos-arm64'
+          echo 'exact_360_artifact_gate=passed'
+
+      - name: Apply matching source and verify binary
+        env:
+          EXPECTED_SHA: '228df90cc9d308de706c4df55fadbb16d537d39ff0da12008b7eb33c6ebb0f33'
+        run: |
+          set -euo pipefail
+          git pull --rebase origin main
+          python3 scripts/run_gif2ani_360_animated_gallery_cards_v2.py | tee source-fix.log
+          DEB='artifact/release-packages/Gif2Ani-3.6.0-animated-gallery-cards.deb'
+          rm -rf verify-root
+          dpkg-deb -x "$DEB" verify-root
+          BUNDLE='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle'
+          PREFS="$BUNDLE/Gif2AniPrefs"
+          test -s "$PREFS"
+          grep -Fq 'GIF2ANI 3.6.0' "$BUNDLE/Root.plist"
+          grep -Fq '274-THEME ANIMATION GALLERY' "$BUNDLE/Root.plist"
+          test "$(find "$BUNDLE/ThemePreviewAnimations" -maxdepth 1 -type f -name '*.gif' | wc -l | tr -d ' ')" = '262'
+          strings -a "$PREFS" > prefs-strings.txt
+          grep -Fq 'visible-card-bundled-animation-v360' prefs-strings.txt
+          grep -Fq '/var/jb/usr/bin:/var/jb/usr/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin' prefs-strings.txt
+          grep -Fq 'g2m_configureBundledAnimatedCardForCell' gif2aniprefs/G2ModernGallery.inc
+          grep -Fq 'didEndDisplayingCell' gif2aniprefs/G2ModernGallery.inc
+          grep -Fq 'totalCostLimit = 12 * 1024 * 1024' gif2aniprefs/G2ModernGallery.inc
+
+          mkdir -p release-packages status
+          cp "$DEB" release-packages/Gif2Ani-3.6.0-animated-gallery-cards.deb
+          printf '%s  %s\n' "$EXPECTED_SHA" 'release-packages/Gif2Ani-3.6.0-animated-gallery-cards.deb' \
+            > release-packages/Gif2Ani-3.6.0-animated-gallery-cards.sha256
+          {
+            echo 'Gif2Ani 3.6.0 Animated Gallery Cards'
+            echo 'status=success'
+            echo 'compiled_run_id=30216388601'
+            echo 'compiled_artifact_id=8635932300'
+            echo "published_at_utc=$(date -u +%FT%TZ)"
+            echo "$EXPECTED_SHA  release-packages/Gif2Ani-3.6.0-animated-gallery-cards.deb"
+            echo 'gallery_total=274'
+            echo 'animated_downloadable_card_previews=262'
+            echo 'visible_only_decoding=true'
+            echo 'offscreen_frame_release=true'
+            echo 'decoded_cache_limit_bytes=12582912'
+            echo 'artifact_identity_gate=passed'
+            echo 'binary_runtime_marker_gate=passed'
+          } > status/gif2ani-360-animated-gallery-cards-published.txt
+
+      - name: Commit and push conflict-safely
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add control gif2aniprefs/G2ModernGallery.inc gif2aniprefs/Resources/Root.plist
+          git add -f release-packages/Gif2Ani-3.6.0-animated-gallery-cards.deb
+          git add release-packages/Gif2Ani-3.6.0-animated-gallery-cards.sha256
+          git add status/gif2ani-360-animated-gallery-cards-published.txt
+          git commit -m 'Publish exact Gif2Ani 3.6.0 animated gallery cards [skip ci]'
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              echo 'gif2ani_360_exact_publish=success'
+              exit 0
+            fi
+            git rebase --abort >/dev/null 2>&1 || true
+            sleep $((attempt * 3))
+          done
+          echo 'gif2ani_360_exact_publish=failure'
+          exit 1
