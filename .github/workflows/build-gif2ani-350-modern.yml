@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: gif2ani-350-modern-final-v3
+  group: gif2ani-350-modern-final-v4
   cancel-in-progress: false
 
 jobs:
@@ -72,7 +72,7 @@ jobs:
             test -s "$PREFS" && test -s "$TWEAK"
             file "$PREFS" | grep -Fq 'Mach-O 64-bit arm64'
             file "$TWEAK" | grep -Fq 'Mach-O 64-bit arm64'
-            for marker in 'Search themes' 'Download All CC0' 'Clear Download Cache' 'Favorites' 'Recently Used' 'Apply Without Respring' 'Apply and Respring' 'Emergency Disable' 'Compare with Apple'; do
+            for marker in 'Search themes' 'Download All 54 CC0 Themes' 'Clear Downloaded Theme Cache' 'Favorites' 'Recently Used' 'Apply Without Respring' 'Apply and Respring' 'Emergency Disable (No Respring)' 'Apple original'; do
               if ! strings -a "$PREFS" | grep -Fq "$marker"; then
                 echo "missing preference marker: $marker" >&2
                 exit 41
