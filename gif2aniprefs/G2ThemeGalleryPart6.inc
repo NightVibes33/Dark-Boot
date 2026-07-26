@@ -1,22 +1,41 @@
     NSDictionary *pack = [self packAtIndexPath:indexPath];
     cell.textLabel.text = pack[@"name"];
-    cell.detailTextLabel.text = pack[@"subtitle"];
+    NSDictionary *openInfo = [pack[@"kind"] isEqualToString:@"sourceDeb"] ? G2OpenThemeCachedInfo(pack) : nil;
+    if (openInfo) {
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ • Downloaded", pack[@"subtitle"] ?: @"Original source pack"];
+    } else if ([pack[@"kind"] isEqualToString:@"sourceDeb"]) {
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ • Tap to download", pack[@"subtitle"] ?: @"Original source pack"];
+    } else {
+        cell.detailTextLabel.text = pack[@"subtitle"];
+    }
     cell.detailTextLabel.numberOfLines = 2;
     NSString *cacheKey = pack[@"identifier"] ?: [NSString stringWithFormat:@"legacy-%@", pack[@"package"] ?: pack[@"name"]];
+    if ([pack[@"kind"] isEqualToString:@"sourceDeb"]) cacheKey = [cacheKey stringByAppendingFormat:@"-%@", pack[@"sha256"] ?: @""];
     UIImage *cached = [self.thumbnailCache objectForKey:cacheKey];
     if (cached) {
         cell.imageView.image = cached;
     } else if ([pack[@"kind"] isEqualToString:@"legacy"]) {
         cell.imageView.image = [UIImage systemImageNamed:@"archivebox"];
+    } else if ([pack[@"kind"] isEqualToString:@"sourceDeb"] && !openInfo) {
+        cell.imageView.image = [UIImage systemImageNamed:@"icloud.and.arrow.down"];
+    } else if ([pack[@"kind"] isEqualToString:@"remote"] && !G2RemoteCachedThemeIsValid(pack)) {
+        cell.imageView.image = [UIImage systemImageNamed:@"icloud.and.arrow.down"];
     } else {
         cell.imageView.image = [UIImage systemImageNamed:@"photo.on.rectangle"];
         __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
             @autoreleasepool {
                 UIImage *thumb = nil;
-                if ([pack[@"kind"] isEqualToString:@"builtin"]) thumb = G2RenderBuiltInFrame(pack[@"style"], 0, 24, CGSizeMake(64,64));
-                else if ([pack[@"kind"] isEqualToString:@"gif"]) thumb = G2ThumbnailFromGIF(pack[@"path"], 96);
-                else if ([pack[@"kind"] isEqualToString:@"frames"]) thumb = G2ThumbnailFromDirectory(pack[@"path"], 96);
+                NSString *kind = pack[@"kind"];
+                if ([kind isEqualToString:@"builtin"]) thumb = G2RenderBuiltInFrame(pack[@"style"], 0, 24, CGSizeMake(64,64));
+                else if ([kind isEqualToString:@"remote"]) thumb = G2ThumbnailFromGIF(G2RemoteThemeCachePath(pack), 96);
+                else if ([kind isEqualToString:@"gif"]) thumb = G2ThumbnailFromGIF(pack[@"path"], 96);
+                else if ([kind isEqualToString:@"frames"]) thumb = G2ThumbnailFromDirectory(pack[@"path"], 96);
+                else if ([kind isEqualToString:@"sourceDeb"]) {
+                    NSDictionary *info = G2OpenThemeCachedInfo(pack);
+                    if ([info[@"kind"] isEqualToString:@"gif"]) thumb = G2ThumbnailFromGIF(info[@"path"], 96);
+                    else if ([info[@"kind"] isEqualToString:@"frames"]) thumb = G2ThumbnailFromDirectory(info[@"path"], 96);
+                }
                 if (!thumb) return;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     typeof(self) strongSelf = weakSelf;
@@ -25,6 +44,7 @@
                     UITableViewCell *visible = [strongSelf.tableView cellForRowAtIndexPath:indexPath];
                     NSDictionary *currentPack = [strongSelf packAtIndexPath:indexPath];
                     NSString *currentKey = currentPack[@"identifier"] ?: [NSString stringWithFormat:@"legacy-%@", currentPack[@"package"] ?: currentPack[@"name"]];
+                    if ([currentPack[@"kind"] isEqualToString:@"sourceDeb"]) currentKey = [currentKey stringByAppendingFormat:@"-%@", currentPack[@"sha256"] ?: @""];
                     if ([currentKey isEqualToString:cacheKey]) visible.imageView.image = thumb;
                 });
             }
@@ -37,14 +57,18 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 1 && self.discovered.count == 0) {
+    if (indexPath.section == 1 && self.openThemes.count == 0) {
+        if (!self.openLibraryLoading) [self refreshOpenThemeLibrary];
+        return;
+    }
+    if (indexPath.section == 2 && self.discovered.count == 0) {
         [self importPack];
         return;
     }
     NSDictionary *pack = [self packAtIndexPath:indexPath];
     if ([pack[@"kind"] isEqualToString:@"legacy"]) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:pack[@"name"]
-                                                                       message:[NSString stringWithFormat:@"%@ is a known free Springy pack, but no open redistribution license was published. Import its original DEB, ZIP, GIF, or frame folder to make it previewable without rehosting someone else’s artwork.", pack[@"package"]]
+                                                                       message:[NSString stringWithFormat:@"%@ is a historical respring package whose current original file or redistribution terms could not be verified. The verified open-source library above is one-tap downloadable; this separate row remains an import/reference fallback.", pack[@"package"]]
                                                                 preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:@"Import Pack File" style:UIAlertActionStyleDefault handler:^(__unused UIAlertAction *action) { [self importPack]; }]];
         [alert addAction:[UIAlertAction actionWithTitle:@"Close" style:UIAlertActionStyleCancel handler:nil]];
