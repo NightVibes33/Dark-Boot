@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import math
 import re
 import shutil
 import subprocess
@@ -115,6 +114,8 @@ def pulse_frames(path: Path) -> tuple[list[Image.Image], list[int]]:
 
 
 def image_files(root: Path) -> list[Path]:
+    if root.is_file():
+        return [root] if root.suffix.lower() in IMAGE_EXTENSIONS else []
     return sorted(
         [path for path in root.rglob("*") if path.is_file() and path.suffix.lower() in IMAGE_EXTENSIONS],
         key=natural_key,
@@ -203,10 +204,10 @@ def verify_deb(deb: Path, package: str) -> None:
 
 def cc0_job(theme: dict, work: Path) -> tuple[str, dict]:
     identifier = theme["id"]
-    source = work / "cc0" / theme["file"]
+    source = work / "cc0" / identifier / Path(theme["file"]).name
     url = f"https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/{CC0_COMMIT}/gif2ani-themes/v1/{theme['file']}"
     fetch(url, source, theme["sha256"], int(theme["bytes"]))
-    metadata = build_animation(source.parent if source.suffix.lower() != ".gif" else source.parent, OUTPUT / f"{identifier}.gif")
+    metadata = build_animation(source, OUTPUT / f"{identifier}.gif")
     metadata.update({"identifier": identifier, "catalog": "cc0", "source": url})
     return identifier, metadata
 
