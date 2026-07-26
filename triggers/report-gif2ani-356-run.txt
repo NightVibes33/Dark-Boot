@@ -1,2 +1,2 @@
-requested_at_utc=2026-07-26T16:46:00Z
-purpose=report the latest Gif2Ani 3.5.6 SnowBoard build after safe Objective-C escape generator update
+requested_at_utc=2026-07-26T16:47:00Z
+purpose=report the latest forced Gif2Ani 3.5.6 SnowBoard build for commit f8c55284 after Objective-C escape fix
