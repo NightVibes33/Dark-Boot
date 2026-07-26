@@ -1,0 +1,19 @@
+Gif2Ani 3.5.9 Final 3 Reporter
+target_sha=116e93d577b0f649e59124ac8a83abab5adcc9dd
+id=30214703192
+head_sha=116e93d577b0f649e59124ac8a83abab5adcc9dd
+status=in_progress
+conclusion=None
+created_at=2026-07-26T18:26:03Z
+updated_at=2026-07-26T18:26:25Z
+html_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30214703192
+job=89826752432|build|in_progress|None
+step=1|Set up job|completed|success
+step=2|Run actions/checkout@v4|completed|success
+step=3|Install dependencies|in_progress|None
+step=4|Apply 3.5.9 source fixes|pending|None
+step=5|Generate and validate 262 animated previews|pending|None
+step=6|Compile and verify package|pending|None
+step=7|Upload evidence|pending|None
+step=8|Publish package and status|pending|None
+step=16|Post Run actions/checkout@v4|pending|None
