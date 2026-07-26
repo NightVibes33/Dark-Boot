@@ -1,0 +1,204 @@
+name: Audit and Refresh Open Theme Catalog
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/audit-refresh-open-theme-catalog.yml
+      - triggers/audit-refresh-open-theme-catalog.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-open-theme-live-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install package inspection tools
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends curl dpkg-dev python3 ca-certificates file
+
+      - name: Download, identify, and safely inspect all 48 live DEBs
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import concurrent.futures
+          import datetime as dt
+          import hashlib
+          import json
+          import os
+          import pathlib
+          import shutil
+          import subprocess
+          import tempfile
+
+          catalog_path = pathlib.Path('gif2aniprefs/Resources/OpenThemeCatalog.json')
+          catalog = json.loads(catalog_path.read_text())
+          themes = catalog['themes']
+          assert catalog['count'] == len(themes) == 48
+          assert len({item['package'] for item in themes}) == 48
+
+          work = pathlib.Path('open-theme-live-audit-work')
+          shutil.rmtree(work, ignore_errors=True)
+          work.mkdir(parents=True)
+
+          def run_checked(args, **kwargs):
+              result = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, **kwargs)
+              if result.returncode != 0:
+                  raise RuntimeError(f"command failed ({result.returncode}): {' '.join(args)}\n{result.stderr[-2000:]}")
+              return result.stdout
+
+          def inspect(index_item):
+              index, item = index_item
+              package = item['package']
+              url = item['downloadURL']
+              package_dir = work / f'{index:02d}-{package}'
+              package_dir.mkdir()
+              deb = package_dir / 'theme.deb'
+              subprocess.run([
+                  'curl', '-fL', '--retry', '5', '--retry-delay', '2',
+                  '--connect-timeout', '20', '--max-time', '240',
+                  url, '-o', str(deb)
+              ], check=True)
+
+              size = deb.stat().st_size
+              if size <= 0 or size > 100 * 1024 * 1024:
+                  raise RuntimeError(f'{package}: unsafe downloaded size {size}')
+              digest = hashlib.sha256(deb.read_bytes()).hexdigest()
+              actual_package = run_checked(['dpkg-deb', '-f', str(deb), 'Package']).strip()
+              if actual_package != package:
+                  raise RuntimeError(f'{package}: package identity mismatch: {actual_package}')
+
+              listing = run_checked(['dpkg-deb', '-c', str(deb)])
+              for line in listing.splitlines():
+                  parts = line.split(maxsplit=5)
+                  if len(parts) < 6:
+                      continue
+                  mode, archive_path = parts[0], parts[5]
+                  archive_path = archive_path.split(' -> ', 1)[0]
+                  if mode.startswith(('l', 'h', 'c', 'b', 'p', 's')):
+                      raise RuntimeError(f'{package}: unsafe special file {archive_path}')
+                  if not archive_path.startswith('./') or '/../' in archive_path or archive_path.startswith('./../'):
+                      raise RuntimeError(f'{package}: unsafe archive path {archive_path}')
+
+              extracted = package_dir / 'root'
+              extracted.mkdir()
+              run_checked(['dpkg-deb', '-x', str(deb), str(extracted)])
+              media = []
+              for path in extracted.rglob('*'):
+                  if path.is_symlink():
+                      raise RuntimeError(f'{package}: extracted symlink {path}')
+                  if path.is_file() and path.suffix.lower() in {'.gif', '.png', '.jpg', '.jpeg', '.webp'}:
+                      media.append(path)
+              if not media:
+                  raise RuntimeError(f'{package}: no previewable media files')
+              if len(media) > 1000:
+                  raise RuntimeError(f'{package}: unreasonable media count {len(media)}')
+
+              return {
+                  'index': index,
+                  'package': package,
+                  'name': item['name'],
+                  'url': url,
+                  'old_bytes': int(item['bytes']),
+                  'old_sha256': item['sha256'],
+                  'actual_bytes': size,
+                  'actual_sha256': digest,
+                  'media_files': len(media),
+                  'changed': size != int(item['bytes']) or digest != item['sha256'],
+              }
+
+          results = []
+          with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
+              futures = {pool.submit(inspect, pair): pair[1]['package'] for pair in enumerate(themes, 1)}
+              for future in concurrent.futures.as_completed(futures):
+                  package = futures[future]
+                  result = future.result()
+                  print(f"verified {package}: {result['actual_bytes']} bytes {result['actual_sha256']} media={result['media_files']} changed={result['changed']}")
+                  results.append(result)
+
+          results.sort(key=lambda x: x['index'])
+          result_by_package = {item['package']: item for item in results}
+          verified_at = dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+
+          for item in themes:
+              result = result_by_package[item['package']]
+              previous_bytes = int(item['bytes'])
+              previous_sha = item['sha256']
+              item['bytes'] = result['actual_bytes']
+              item['sha256'] = result['actual_sha256']
+              item['liveVerifiedAtUTC'] = verified_at
+              item['verifiedMediaFiles'] = result['media_files']
+              if result['changed']:
+                  item['previousIndexBytes'] = previous_bytes
+                  item['previousIndexSHA256'] = previous_sha
+
+          catalog['count'] = len(themes)
+          catalog['liveSnapshotVerifiedAtUTC'] = verified_at
+          catalog['verificationPolicy'] = 'Live DEB downloaded over HTTPS; package identity, byte count, SHA-256, archive paths, special files, symlinks, and previewable media verified.'
+          catalog_path.write_text(json.dumps(catalog, indent=2, sort_keys=False) + '\n')
+
+          changed = [item for item in results if item['changed']]
+          lines = [
+              'Gif2Ani Open Theme Live Audit',
+              f'verified_at_utc={verified_at}',
+              f'verified_theme_count={len(results)}',
+              f'changed_from_repository_index_count={len(changed)}',
+              'all_package_identities_verified=true',
+              'all_archives_preflighted=true',
+              'all_packs_have_previewable_media=true',
+              '',
+          ]
+          for result in results:
+              lines.append(
+                  f"{result['index']:02d}. {result['name']} | {result['package']} | "
+                  f"actual_bytes={result['actual_bytes']} | actual_sha256={result['actual_sha256']} | "
+                  f"media_files={result['media_files']} | index_changed={str(result['changed']).lower()}"
+              )
+              if result['changed']:
+                  lines.append(
+                      f"    previous_index_bytes={result['old_bytes']} | previous_index_sha256={result['old_sha256']}"
+                  )
+          pathlib.Path('status/open-theme-live-audit.txt').write_text('\n'.join(lines) + '\n')
+          PY
+
+      - name: Validate refreshed catalog
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          data=json.loads(Path('gif2aniprefs/Resources/OpenThemeCatalog.json').read_text())
+          assert data['count'] == len(data['themes']) == 48
+          assert data['liveSnapshotVerifiedAtUTC']
+          assert len({item['package'] for item in data['themes']}) == 48
+          for item in data['themes']:
+              assert item['downloadURL'].startswith('https://virenmohindra.github.io/debs/')
+              assert re.fullmatch(r'[0-9a-f]{64}', item['sha256'])
+              assert 0 < int(item['bytes']) <= 100 * 1024 * 1024
+              assert int(item['verifiedMediaFiles']) >= 1
+              assert item['liveVerifiedAtUTC'] == data['liveSnapshotVerifiedAtUTC']
+          print('refreshed_open_theme_catalog=48')
+          PY
+
+      - name: Commit verified live snapshot
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add gif2aniprefs/Resources/OpenThemeCatalog.json status/open-theme-live-audit.txt
+          git commit -m 'Refresh all 48 verified Springy theme payload hashes [skip ci]' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
