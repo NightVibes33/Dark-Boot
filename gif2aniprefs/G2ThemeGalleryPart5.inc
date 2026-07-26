@@ -51,8 +51,11 @@
 
 @interface G2ThemeGalleryController ()
 @property (nonatomic, strong) NSArray<NSDictionary *> *builtIn;
+@property (nonatomic, strong) NSArray<NSDictionary *> *openThemes;
 @property (nonatomic, strong) NSArray<NSDictionary *> *discovered;
 @property (nonatomic, strong) NSArray<NSDictionary *> *legacy;
+@property (nonatomic, assign) BOOL openLibraryLoading;
+@property (nonatomic, strong) NSString *openLibraryError;
 @property (nonatomic, assign) BOOL importing;
 @property (nonatomic, assign) BOOL scanning;
 @property (nonatomic, strong) NSCache<NSString *, UIImage *> *thumbnailCache;
@@ -66,16 +69,23 @@
     self.title = @"Animation Gallery";
     self.tableView.rowHeight = 70.0;
     self.tableView.estimatedRowHeight = 70.0;
-    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshGallery)];
-    refreshButton.accessibilityLabel = @"Refresh Animation Gallery";
+    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshAllSources)];
+    refreshButton.accessibilityLabel = @"Refresh Animation Gallery and Open Theme Library";
     UIBarButtonItem *importButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(importPack)];
     importButton.accessibilityLabel = @"Import GIF, ZIP, DEB, or Frame Folder";
     self.navigationItem.rightBarButtonItems = @[refreshButton, importButton];
     self.thumbnailCache = [NSCache new];
-    self.thumbnailCache.countLimit = 80;
+    self.thumbnailCache.countLimit = 120;
     self.builtIn = G2BuiltInPacks();
+    self.openThemes = G2LoadCachedOpenThemeCatalog();
     self.legacy = G2LegacyCatalog();
     [self refreshGallery];
+    [self refreshOpenThemeLibrary];
+}
+
+- (void)refreshAllSources {
+    [self refreshGallery];
+    [self refreshOpenThemeLibrary];
 }
 
 - (void)refreshGallery {
@@ -166,34 +176,38 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     (void)tableView;
-    return 3;
+    return 4;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     (void)tableView;
-    if (section == 0) return @"Built-In • Original and Redistributable";
-    if (section == 1) return @"Installed or Imported Packs";
-    return @"Legacy Free-Pack Catalog";
+    if (section == 0) return @"Built-In • Offline and Downloadable";
+    if (section == 1) return @"Open Source Pack Library";
+    if (section == 2) return @"Installed or Imported Packs";
+    return @"Additional Legacy References";
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     (void)tableView;
-    if (section == 0) return @"These procedural animations ship with Gif2Ani and are immediately previewable.";
-    if (section == 1) return self.discovered.count ? @"Springy, SnowBoard Respring, GIF, frame-folder, ZIP, and DEB packs are detected here." : @"Tap + to import a GIF, ZIP, DEB, or theme folder. Installed Springy and SnowBoard packs are detected automatically.";
-    return @"Free does not grant redistribution rights. These names are indexed for compatibility; import a legally obtained pack to preview and use its actual animation.";
+    if (section == 0) return @"Twelve offline animations and 54 pinned CC0 downloads are first-class Gif2Ani themes.";
+    if (section == 1) return @"Every row downloads its original Springy DEB, verifies SHA-256 and package identity, extracts only safe image content, previews it, and stages it without installing the old package.";
+    if (section == 2) return self.discovered.count ? @"Springy, SnowBoard Respring, GIF, frame-folder, ZIP, and DEB packs are detected here." : @"Tap + to import a GIF, ZIP, DEB, or theme folder. Installed Springy and SnowBoard packs are detected automatically.";
+    return @"References from other historical repositories remain listed when their original files or redistribution terms cannot be verified.";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     (void)tableView;
     if (section == 0) return self.builtIn.count;
-    if (section == 1) return MAX((NSUInteger)1, self.discovered.count);
+    if (section == 1) return MAX((NSUInteger)1, self.openThemes.count);
+    if (section == 2) return MAX((NSUInteger)1, self.discovered.count);
     return self.legacy.count;
 }
 
 - (NSDictionary *)packAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) return self.builtIn[indexPath.row];
-    if (indexPath.section == 1 && self.discovered.count) return self.discovered[indexPath.row];
-    if (indexPath.section == 2) {
+    if (indexPath.section == 1 && self.openThemes.count) return self.openThemes[indexPath.row];
+    if (indexPath.section == 2 && self.discovered.count) return self.discovered[indexPath.row];
+    if (indexPath.section == 3) {
         NSMutableDictionary *legacy = [self.legacy[indexPath.row] mutableCopy];
         legacy[@"kind"] = @"legacy";
         legacy[@"subtitle"] = [NSString stringWithFormat:@"Legacy package: %@", legacy[@"package"]];
@@ -207,7 +221,15 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    if (indexPath.section == 1 && self.discovered.count == 0) {
+    if (indexPath.section == 1 && self.openThemes.count == 0) {
+        cell.textLabel.text = self.openLibraryLoading ? @"Loading original Springy packs…" : @"Open theme library unavailable";
+        cell.detailTextLabel.text = self.openLibraryLoading ? @"Reading and validating the original repository index" : (self.openLibraryError ?: @"Tap to retry the original source");
+        cell.detailTextLabel.numberOfLines = 2;
+        cell.imageView.image = [UIImage systemImageNamed:self.openLibraryLoading ? @"arrow.triangle.2.circlepath" : @"exclamationmark.icloud"];
+        cell.accessoryType = self.openLibraryLoading ? UITableViewCellAccessoryNone : UITableViewCellAccessoryDisclosureIndicator;
+        return cell;
+    }
+    if (indexPath.section == 2 && self.discovered.count == 0) {
         cell.textLabel.text = self.scanning ? @"Scanning installed packs…" : @"No imported packs yet";
         cell.detailTextLabel.text = self.scanning ? @"This runs outside the Settings UI thread" : @"Tap + to import or install a compatible theme";
         cell.imageView.image = [UIImage systemImageNamed:self.scanning ? @"hourglass" : @"square.and.arrow.down"];
