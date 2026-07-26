@@ -1,0 +1,190 @@
+name: Finalize Open Respring Theme Library
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/finalize-open-theme-library.yml
+      - triggers/finalize-open-theme-library.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-open-theme-library
+  cancel-in-progress: true
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve and download original catalog
+        run: |
+          set -euo pipefail
+          SOURCE_COMMIT="$(git ls-remote https://github.com/VirenMohindra/CydiaRepo.git refs/heads/master | awk '{print $1}')"
+          test "${#SOURCE_COMMIT}" = 40
+          echo "$SOURCE_COMMIT" > open-theme-source-commit.txt
+          curl -fsSL --retry 4 --retry-delay 2 \
+            "https://raw.githubusercontent.com/VirenMohindra/CydiaRepo/${SOURCE_COMMIT}/Packages" \
+            -o open-theme-Packages
+          curl -fsSL --retry 4 --retry-delay 2 \
+            "https://raw.githubusercontent.com/VirenMohindra/CydiaRepo/${SOURCE_COMMIT}/LICENSE" \
+            -o open-theme-LICENSE
+          grep -q 'The MIT License' open-theme-LICENSE
+
+      - name: Build verified downloadable theme manifest
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, pathlib, re, urllib.parse
+
+          root = pathlib.Path('.')
+          source_commit = root.joinpath('open-theme-source-commit.txt').read_text().strip()
+          text = root.joinpath('open-theme-Packages').read_text(errors='strict').replace('\r\n', '\n')
+
+          def parse_stanza(stanza):
+              result = {}
+              last = None
+              for raw in stanza.splitlines():
+                  if raw.startswith((' ', '\t')) and last:
+                      value = raw.strip()
+                      if value:
+                          result[last] = (result.get(last, '') + ' ' + value).strip()
+                      continue
+                  if ':' not in raw:
+                      continue
+                  key, value = raw.split(':', 1)
+                  key, value = key.strip(), value.strip()
+                  if key and value:
+                      result[key] = value
+                      last = key
+              return result
+
+          records = []
+          seen = set()
+          for stanza in re.split(r'\n{2,}', text):
+              fields = parse_stanza(stanza)
+              package = fields.get('Package', '')
+              depends = fields.get('Depends', '')
+              filename = fields.get('Filename', '')
+              sha256 = fields.get('SHA256', '').lower()
+              try:
+                  size = int(fields.get('Size', '0'))
+              except ValueError:
+                  continue
+              if 'com.aditkamath.springy' not in depends:
+                  continue
+              if not re.fullmatch(r'io\.github\.virenmohindra\.[A-Za-z0-9.-]+', package):
+                  continue
+              if not re.fullmatch(r'\./debs/[A-Za-z0-9._-]+\.deb', filename):
+                  continue
+              if not re.fullmatch(r'[0-9a-f]{64}', sha256):
+                  continue
+              if not 0 < size <= 100 * 1024 * 1024:
+                  continue
+              if package in seen:
+                  raise SystemExit(f'duplicate package: {package}')
+              seen.add(package)
+
+              name = fields.get('Name', package)
+              name = re.sub(r'\s+-\s+Springy BootLogo(?:\s*\([^)]*\))?\s*$', '', name).strip() or package
+              relative = filename[2:]
+              download_url = 'https://virenmohindra.github.io/' + urllib.parse.quote(relative, safe='/._-')
+              records.append({
+                  'identifier': package,
+                  'package': package,
+                  'name': name,
+                  'version': fields.get('Version', ''),
+                  'filename': filename,
+                  'downloadURL': download_url,
+                  'sha256': sha256,
+                  'bytes': size,
+                  'description': fields.get('Description', 'Animated respring theme for Springy'),
+                  'author': fields.get('Author', fields.get('Maintainer', 'Viren Mohindra')),
+                  'depiction': fields.get('Depiction', ''),
+                  'format': 'Springy',
+                  'source': "Viren's Repo",
+                  'sourceRepository': 'VirenMohindra/CydiaRepo',
+                  'sourceCommit': source_commit,
+                  'sourceLicense': 'MIT',
+              })
+
+          records.sort(key=lambda item: item['name'].casefold())
+          if len(records) < 50:
+              raise SystemExit(f'expected at least 50 Springy packs, found {len(records)}')
+
+          manifest = {
+              'version': 1,
+              'count': len(records),
+              'sourceRepository': 'VirenMohindra/CydiaRepo',
+              'sourceBranch': 'master',
+              'sourceCommit': source_commit,
+              'sourceLicense': 'MIT',
+              'downloadPolicy': 'Original upstream host; SHA-256 and package identity verified before extraction',
+              'themes': records,
+          }
+          resources = root / 'gif2aniprefs' / 'Resources'
+          resources.mkdir(parents=True, exist_ok=True)
+          resources.joinpath('OpenThemeCatalog.json').write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + '\n')
+
+          status = root / 'status'
+          status.mkdir(exist_ok=True)
+          status.joinpath('open-theme-library.txt').write_text(
+              '\n'.join([
+                  'Gif2Ani Open Respring Theme Library',
+                  f'source_commit={source_commit}',
+                  f'verified_springy_pack_count={len(records)}',
+                  'source_license=MIT',
+                  'download_policy=original host plus SHA-256 and package identity verification',
+                  '',
+                  *[f"{index + 1:02d}. {item['name']} | {item['package']} | {item['bytes']} bytes | {item['sha256']}" for index, item in enumerate(records)],
+                  '',
+              ])
+          )
+          print(f'verified_springy_pack_count={len(records)}')
+          print(f'first={records[0]["name"]}')
+          print(f'last={records[-1]["name"]}')
+          PY
+
+      - name: Validate manifest contract
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, pathlib, re
+          path = pathlib.Path('gif2aniprefs/Resources/OpenThemeCatalog.json')
+          data = json.loads(path.read_text())
+          assert data['version'] == 1
+          assert data['count'] == len(data['themes']) >= 50
+          assert re.fullmatch(r'[0-9a-f]{40}', data['sourceCommit'])
+          packages = set()
+          for item in data['themes']:
+              assert item['package'] == item['identifier']
+              assert item['package'].startswith('io.github.virenmohindra.')
+              assert item['package'] not in packages
+              packages.add(item['package'])
+              assert item['downloadURL'].startswith('https://virenmohindra.github.io/debs/')
+              assert re.fullmatch(r'[0-9a-f]{64}', item['sha256'])
+              assert 0 < int(item['bytes']) <= 100 * 1024 * 1024
+              assert item['sourceLicense'] == 'MIT'
+          print('open_theme_manifest_contract=success')
+          PY
+
+      - name: Commit catalog snapshot
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add gif2aniprefs/Resources/OpenThemeCatalog.json status/open-theme-library.txt
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          COUNT="$(awk -F= '/verified_springy_pack_count=/{print $2; exit}' status/open-theme-library.txt)"
+          git commit -m "Bundle ${COUNT} verified open respring themes [skip ci]"
+          git pull --rebase origin main
+          git push origin HEAD:main
