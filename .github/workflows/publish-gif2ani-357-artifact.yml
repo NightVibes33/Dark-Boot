@@ -1,0 +1,114 @@
+name: Publish Gif2Ani 3.5.7 Verified Artifact
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-gif2ani-357-artifact.yml
+      - triggers/publish-gif2ani-357-artifact.txt
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: publish-gif2ani-357-artifact
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download exact green artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: '8634769301'
+          EXPECTED_SHA: '7b02279eb5a6146cd5a3835b723cf6bb2d4434b5327f4bb51af17cf46fd4b04f'
+        run: |
+          set -euo pipefail
+          curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip" \
+            -o artifact.zip
+          rm -rf artifact
+          mkdir artifact
+          unzip -q artifact.zip -d artifact
+          DEB='artifact/release-packages/Gif2Ani-3.5.7-shared-verifier-fix.deb'
+          test -s "$DEB"
+          test "$(sha256sum "$DEB" | awk '{print $1}')" = "$EXPECTED_SHA"
+          test "$(dpkg-deb -f "$DEB" Package)" = 'com.nightvibes33.gif2ani'
+          test "$(dpkg-deb -f "$DEB" Version)" = '3.5.7'
+          test "$(dpkg-deb -f "$DEB" Architecture)" = 'iphoneos-arm64'
+          echo 'green_artifact_validation=success'
+
+      - name: Apply matching source fix and verify binary contents
+        env:
+          EXPECTED_SHA: '7b02279eb5a6146cd5a3835b723cf6bb2d4434b5327f4bb51af17cf46fd4b04f'
+        run: |
+          set -euo pipefail
+          git pull --rebase origin main
+          python3 scripts/apply_gif2ani_357_verifier_fix.py | tee source-fix.log
+          DEB='artifact/release-packages/Gif2Ani-3.5.7-shared-verifier-fix.deb'
+          rm -rf verify-root
+          dpkg-deb -x "$DEB" verify-root
+          BUNDLE='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle'
+          test -s "$BUNDLE/Gif2AniPrefs"
+          grep -Fq 'GIF2ANI 3.5.7' "$BUNDLE/Root.plist"
+          grep -Fq '274-THEME ANIMATION GALLERY' "$BUNDLE/Root.plist"
+          strings -a "$BUNDLE/Gif2AniPrefs" | grep -Fq 'Expected %@, received %@.'
+          python3 - "$BUNDLE/OpenThemeCatalog.json" "$BUNDLE/SnowBoardCatalog.json" <<'PY'
+          import json, pathlib, sys
+          springy=json.loads(pathlib.Path(sys.argv[1]).read_text())
+          snowboard=json.loads(pathlib.Path(sys.argv[2]).read_text())
+          assert springy['count'] == 48
+          assert snowboard['packageCount'] == 7
+          assert snowboard['count'] == 160
+          print('embedded_source_backed_themes=208')
+          PY
+          mkdir -p release-packages status
+          cp "$DEB" release-packages/Gif2Ani-3.5.7-shared-verifier-fix.deb
+          printf '%s  %s\n' "$EXPECTED_SHA" 'release-packages/Gif2Ani-3.5.7-shared-verifier-fix.deb' \
+            > release-packages/Gif2Ani-3.5.7-shared-verifier-fix.sha256
+          {
+            echo 'Gif2Ani 3.5.7 Shared Verifier Fix'
+            echo 'status=success'
+            echo 'compiled_run_id=30212137981'
+            echo 'compiled_artifact_id=8634769301'
+            echo "published_at_utc=$(date -u +%FT%TZ)"
+            echo "$EXPECTED_SHA  release-packages/Gif2Ani-3.5.7-shared-verifier-fix.deb"
+            echo 'root_cause=dpkg-deb warnings on stderr were merged into stdout, contaminating valid package identifiers'
+            echo 'fix=stdout and stderr are captured separately; comparisons use the catalog package field'
+            echo 'springy_themes=48'
+            echo 'snowboard_packages=7'
+            echo 'snowboard_themes=160'
+            echo 'gallery_total=274'
+            echo 'compile_and_package_validation=success'
+          } > status/gif2ani-357-published.txt
+
+      - name: Commit and push conflict-safely
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add control
+          git add gif2aniprefs/G2ThemeGalleryPart3.inc
+          git add gif2aniprefs/G2OpenThemeLibrary.inc
+          git add gif2aniprefs/Resources/Root.plist
+          git add -f release-packages/Gif2Ani-3.5.7-shared-verifier-fix.deb
+          git add release-packages/Gif2Ani-3.5.7-shared-verifier-fix.sha256
+          git add status/gif2ani-357-published.txt
+          git commit -m 'Publish Gif2Ani 3.5.7 shared verifier fix (success) [skip ci]'
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              echo 'gif2ani_357_publish=success'
+              exit 0
+            fi
+            sleep $((attempt * 2))
+          done
+          echo 'gif2ani_357_publish=failed'
+          exit 1
