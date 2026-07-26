@@ -8,6 +8,7 @@ on:
       - .github/workflows/build-gif2ani-356-snowboard-library.yml
       - scripts/build_snowboard_catalog.py
       - scripts/build_snowboard_catalog_seeded.py
+      - scripts/build_snowboard_catalog_live.py
       - scripts/requests.py
       - scripts/apply_snowboard_gallery.py
       - triggers/build-gif2ani-356-snowboard-library.txt
@@ -49,7 +50,7 @@ jobs:
       - name: Discover and physically verify public SnowBoard respring packages
         run: |
           set -euo pipefail
-          python3 scripts/build_snowboard_catalog_seeded.py 2>&1 | tee snowboard-catalog.log
+          python3 scripts/build_snowboard_catalog_live.py 2>&1 | tee snowboard-catalog.log
           grep -Fq 'snowboard_verified_package_count=' snowboard-catalog.log
           grep -Fq 'snowboard_verified_theme_count=' snowboard-catalog.log
           python3 - <<'PY'
@@ -59,8 +60,8 @@ jobs:
           themes = catalog['themes']
           assert catalog['version'] == 1
           assert catalog['catalogType'] == 'verified-snowboard-respring'
-          assert catalog['count'] == len(themes) >= 1
-          assert catalog['packageCount'] >= 1
+          assert catalog['count'] == len(themes) >= 10
+          assert catalog['packageCount'] >= 3
           assert len({x['identifier'] for x in themes}) == len(themes)
           for theme in themes:
               assert theme['identifier'].startswith('snowboard.')
@@ -114,8 +115,8 @@ jobs:
           python3 - "$SNOWBOARD" <<'PY'
           import json, pathlib, sys
           catalog = json.loads(pathlib.Path(sys.argv[1]).read_text())
-          assert catalog['count'] == len(catalog['themes']) >= 1
-          assert catalog['packageCount'] >= 1
+          assert catalog['count'] == len(catalog['themes']) >= 10
+          assert catalog['packageCount'] >= 3
           print(f"embedded_snowboard_themes={catalog['count']}")
           print(f"embedded_snowboard_packages={catalog['packageCount']}")
           PY
@@ -161,15 +162,16 @@ jobs:
             echo 'checks=HTTPS, published SHA-256, package ID, version, architecture, archive paths, .theme paths, media files'
             echo 'legacy_import_prompt=removed'
             echo 'download_cache_postinst_owner=mobile-recursive'
-            echo 'catalog_discovery=deterministic verified seeds; dead or gated hosts omitted'
+            echo 'catalog_discovery=deterministic metadata plus known live Packix source pages; dead or gated hosts omitted'
+            echo 'release_gate=at least 3 verified packages and 10 individual themes'
             echo '--- SnowBoard catalog summary ---'
-            grep -E 'candidate_page_count=|snowboard_verified_package_count=|snowboard_verified_theme_count=|snowboard_rejected_count=' snowboard-catalog.log 2>/dev/null || true
+            grep -E 'candidate_page_count=|live_page_warning=|snowboard_verified_package_count=|snowboard_verified_theme_count=|snowboard_rejected_count=' snowboard-catalog.log 2>/dev/null || true
             echo '--- catalog audit tail ---'
-            tail -n 180 status/snowboard-catalog-audit.txt 2>/dev/null || true
+            tail -n 220 status/snowboard-catalog-audit.txt 2>/dev/null || true
             echo '--- source patch ---'
             cat source-patch.log 2>/dev/null || true
             echo '--- build tail ---'
-            tail -n 220 build.log 2>/dev/null || true
+            tail -n 240 build.log 2>/dev/null || true
           } > status/gif2ani-356-snowboard-library.txt
 
           if [ "$JOB_STATUS" = success ]; then
