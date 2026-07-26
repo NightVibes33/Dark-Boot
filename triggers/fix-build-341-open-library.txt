@@ -1,0 +1,2 @@
+run=2026-07-25T19:36:00-05:00
+reason=Validate 54 CC0 themes plus 48 source-backed Springy themes without pipefail false failures.
