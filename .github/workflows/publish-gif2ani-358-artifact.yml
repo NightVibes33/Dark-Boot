@@ -1,0 +1,102 @@
+name: Publish Gif2Ani 3.5.8 Verified Artifact
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-gif2ani-358-artifact.yml
+      - triggers/publish-gif2ani-358-artifact.txt
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: publish-gif2ani-358-artifact
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download and verify exact green artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: '8634957206'
+          EXPECTED_SHA: '0d2953840e63191e221ac0bf9bd682c001ac77c064a40cf41c7808504b3a2d44'
+        run: |
+          set -euo pipefail
+          curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}/zip" -o artifact.zip
+          rm -rf artifact
+          mkdir artifact
+          unzip -q artifact.zip -d artifact
+          DEB='artifact/release-packages/Gif2Ani-3.5.8-sha-bound-identity.deb'
+          test -s "$DEB"
+          test "$(sha256sum "$DEB" | awk '{print $1}')" = "$EXPECTED_SHA"
+          test "$(dpkg-deb -f "$DEB" Package)" = 'com.nightvibes33.gif2ani'
+          test "$(dpkg-deb -f "$DEB" Version)" = '3.5.8'
+          test "$(dpkg-deb -f "$DEB" Architecture)" = 'iphoneos-arm64'
+          echo 'green_artifact_validation=success'
+
+      - name: Apply matching source and prepare release
+        env:
+          EXPECTED_SHA: '0d2953840e63191e221ac0bf9bd682c001ac77c064a40cf41c7808504b3a2d44'
+        run: |
+          set -euo pipefail
+          git pull --rebase origin main
+          python3 scripts/apply_gif2ani_358_sha_bound_identity.py | tee source-fix.log
+          DEB='artifact/release-packages/Gif2Ani-3.5.8-sha-bound-identity.deb'
+          rm -rf verify-root
+          dpkg-deb -x "$DEB" verify-root
+          BUNDLE='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle'
+          test -s "$BUNDLE/Gif2AniPrefs"
+          grep -Fq 'GIF2ANI 3.5.8' "$BUNDLE/Root.plist"
+          grep -Fq '274-THEME ANIMATION GALLERY' "$BUNDLE/Root.plist"
+          strings -a "$BUNDLE/Gif2AniPrefs" | grep -Fq 'sha256-bound-package-identity-fallback-v358'
+          strings -a "$BUNDLE/Gif2AniPrefs" | grep -Fq 'strict-package-id-mismatch'
+          strings -a "$BUNDLE/Gif2AniPrefs" | grep -Fq 'LastPackageVerification.plist'
+          mkdir -p release-packages status
+          cp "$DEB" release-packages/Gif2Ani-3.5.8-sha-bound-identity.deb
+          printf '%s  %s\n' "$EXPECTED_SHA" 'release-packages/Gif2Ani-3.5.8-sha-bound-identity.deb' > release-packages/Gif2Ani-3.5.8-sha-bound-identity.sha256
+          {
+            echo 'Gif2Ani 3.5.8 SHA-Bound Identity'
+            echo 'status=success'
+            echo 'compiled_run_id=30212812686'
+            echo 'compiled_artifact_id=8634957206'
+            echo "published_at_utc=$(date -u +%FT%TZ)"
+            echo "$EXPECTED_SHA  release-packages/Gif2Ani-3.5.8-sha-bound-identity.deb"
+            echo 'identity=exact URL, byte count, and SHA-256 authoritative; clean mismatch fatal; metadata-tool failure uses fallback'
+            echo 'diagnostic=LastPackageVerification.plist'
+            echo 'springy_themes=48'
+            echo 'snowboard_themes=160'
+            echo 'gallery_total=274'
+            echo 'compile_and_package_validation=success'
+          } > status/gif2ani-358-published.txt
+
+      - name: Commit and push conflict-safely
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add control
+          git add gif2aniprefs/G2OpenThemeLibrary.inc
+          git add gif2aniprefs/Resources/Root.plist
+          git add -f release-packages/Gif2Ani-3.5.8-sha-bound-identity.deb
+          git add release-packages/Gif2Ani-3.5.8-sha-bound-identity.sha256
+          git add status/gif2ani-358-published.txt
+          git commit -m 'Publish Gif2Ani 3.5.8 SHA-bound identity (success) [skip ci]'
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              echo 'gif2ani_358_publish=success'
+              exit 0
+            fi
+            sleep $((attempt * 2))
+          done
+          exit 1
