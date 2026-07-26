@@ -1,4 +1,4 @@
-requested_at_utc=2026-07-26T02:36:00Z
+requested_at_utc=2026-07-26T02:38:00Z
 version=3.4.1
-source_commit=57bfdbc3f5fd16bf0e441a4a30400e7e6ccd0141
-purpose=build-install-test-gallery-navigation-fix
+source_commit=7b72695a3f411aeea5bf2acc948733e9ec8fc362
+purpose=build-install-test-reconciled-gallery-navigation-fix
