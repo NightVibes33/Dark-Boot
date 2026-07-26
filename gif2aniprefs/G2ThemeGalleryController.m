@@ -10,6 +10,7 @@ static BOOL G2StageGIFAtPath(NSString *sourcePath, NSDictionary *recommended, NS
 static NSArray<NSDictionary *> *G2LoadCachedOpenThemeCatalog(void);
 static NSDictionary *G2OpenThemeCachedInfo(NSDictionary *pack);
 static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack);
+static BOOL G2OpenThemeURLIsAllowed(NSURL *url, BOOL indexURL);
 
 @interface G2ThemeGalleryController (G2OpenThemeLibraryRefresh)
 - (void)refreshOpenThemeLibrary;
@@ -26,6 +27,13 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack);
 #undef G2BuiltInPacks
 #include "G2ThemeGalleryPart1Tail.inc"
 #include "G2ThemeGalleryPart2.inc"
+#include "G2BundledOpenThemeCatalog.inc"
+
+static NSArray<NSDictionary *> *G2PreferredOpenThemeCatalog(void) {
+    NSArray<NSDictionary *> *cached = G2LoadCachedOpenThemeCatalog();
+    if (cached.count >= 48) return cached;
+    return G2BundledOpenThemeCatalog();
+}
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
@@ -35,7 +43,9 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack);
 #pragma clang diagnostic pop
 
 #include "G2ThemeGalleryPart4.inc"
+#define G2LoadCachedOpenThemeCatalog G2PreferredOpenThemeCatalog
 #include "G2ThemeGalleryPart5.inc"
+#undef G2LoadCachedOpenThemeCatalog
 #include "G2ThemeGalleryPart6.inc"
 
 #include "G2ThemeStageOverride.inc"
