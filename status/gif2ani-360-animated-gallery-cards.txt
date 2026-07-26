@@ -1,0 +1,12 @@
+Gif2Ani 3.6.0 Animated Gallery Cards
+run_id=30216222850
+source_commit=eb249f2cbf8965cb1761e97c818b818fe73bf028
+status=cancelled
+completed_at_utc=2026-07-26T19:08:56Z
+gallery_total=274
+animated_downloadable_card_previews=262
+visible_only_decoding=true
+offscreen_frame_release=true
+decoded_cache_limit_bytes=12582912
+--- source ---
+--- build tail ---
