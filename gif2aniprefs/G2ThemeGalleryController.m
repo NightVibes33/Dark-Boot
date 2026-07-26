@@ -45,9 +45,24 @@ static BOOL G2OpenThemeURLIsAllowed(NSURL *url, BOOL indexURL);
 #include "G2BundledOpenThemeCatalog.inc"
 
 static NSArray<NSDictionary *> *G2PreferredOpenThemeCatalog(void) {
+    NSArray<NSDictionary *> *bundled = G2BundledOpenThemeCatalog();
     NSArray<NSDictionary *> *cached = G2LoadCachedOpenThemeCatalog();
-    if (cached.count >= 48) return cached;
-    return G2BundledOpenThemeCatalog();
+    if (bundled.count < 48) return cached ?: @[];
+    if (!cached.count) return bundled;
+
+    NSMutableArray<NSDictionary *> *combined = [bundled mutableCopy];
+    NSMutableSet<NSString *> *knownPackages = [NSMutableSet setWithCapacity:bundled.count];
+    for (NSDictionary *pack in bundled) {
+        NSString *package = pack[@"package"];
+        if (package.length) [knownPackages addObject:package];
+    }
+    for (NSDictionary *pack in cached) {
+        NSString *package = pack[@"package"];
+        if (!package.length || [knownPackages containsObject:package]) continue;
+        [knownPackages addObject:package];
+        [combined addObject:pack];
+    }
+    return combined;
 }
 
 #include "G2ThemeStageOverride.inc"
