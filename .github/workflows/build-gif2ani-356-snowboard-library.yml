@@ -11,6 +11,7 @@ on:
       - scripts/build_snowboard_catalog_live.py
       - scripts/requests.py
       - scripts/apply_snowboard_gallery.py
+      - scripts/apply_snowboard_gallery_safe.py
       - triggers/build-gif2ani-356-snowboard-library.txt
 
 permissions:
@@ -77,13 +78,14 @@ jobs:
       - name: Integrate verified SnowBoard catalog and bump 3.5.6
         run: |
           set -euo pipefail
-          python3 scripts/apply_snowboard_gallery.py 2>&1 | tee source-patch.log
+          python3 scripts/apply_snowboard_gallery_safe.py 2>&1 | tee source-patch.log
           grep -Fq 'snowboard_gallery_source_patch=success' source-patch.log
           grep -Fq 'Version: 3.5.6' control
           grep -Fq 'GIF2ANI 3.5.6' gif2aniprefs/Resources/Root.plist
           grep -Fq 'G2BundledSnowBoardCatalog.inc' gif2aniprefs/G2ThemeGalleryController.m
           grep -Fq 'G2SnowBoardThemeURLIsAllowed(url)' gif2aniprefs/G2OpenThemeLibrary.inc
           grep -Fq 'static respring logo could not be normalized safely' gif2aniprefs/G2OpenThemeLibrary.inc
+          grep -Fq 'containsString:@"\\"' gif2aniprefs/G2OpenThemeLibrary.inc
           grep -Fq 'self.legacy = @[]' gif2aniprefs/G2ThemeGalleryPart5.inc
           ! grep -Fq 'Import Pack File' gif2aniprefs/G2ThemeGalleryPart6.inc
 
@@ -117,6 +119,7 @@ jobs:
           catalog = json.loads(pathlib.Path(sys.argv[1]).read_text())
           assert catalog['count'] == len(catalog['themes']) >= 10
           assert catalog['packageCount'] >= 3
+          assert len({theme['identifier'] for theme in catalog['themes']}) == catalog['count']
           print(f"embedded_snowboard_themes={catalog['count']}")
           print(f"embedded_snowboard_packages={catalog['packageCount']}")
           PY
@@ -176,6 +179,7 @@ jobs:
 
           if [ "$JOB_STATUS" = success ]; then
             git add control packaging/postinst
+            git add scripts/apply_snowboard_gallery.py
             git add gif2aniprefs/G2ThemeGalleryController.m
             git add gif2aniprefs/G2OpenThemeLibrary.inc
             git add gif2aniprefs/G2ThemeGalleryPart5.inc
