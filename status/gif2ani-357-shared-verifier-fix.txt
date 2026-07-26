@@ -1,0 +1,13 @@
+Gif2Ani 3.5.7 Shared Springy and SnowBoard Verifier Fix
+run_id=30212133740
+source_commit=1fb08aa76671e64886c7c0a50db4dee788b0328c
+status=cancelled
+completed_at_utc=2026-07-26T17:14:09Z
+root_cause=dpkg-deb stderr warnings were merged into stdout and compared as part of the package identifier
+fix=stdout and stderr captured separately; real catalog package field remains the comparison target
+springy_themes=48
+snowboard_packages=7
+snowboard_themes=160
+gallery_total=274
+--- source fix ---
+--- build tail ---
