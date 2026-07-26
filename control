@@ -1,11 +1,11 @@
 Package: com.nightvibes33.gif2ani
 Name: Gif2Ani Rootless
-Version: 3.5.3
+Version: 3.5.4
 Architecture: iphoneos-arm64
 Depends: firmware (>= 15.0), mobilesubstrate
 Conflicts: com.nightvibes33.darkboot, com.wizage.gif2ani2, com.wizages.gif2ani
 Replaces: com.nightvibes33.darkboot
-Description: Crash-safe custom respring animations for BackBoard on rootless iOS 15 and 16. Gif2Ani 3.5.3 fixes every bundled Springy download by deriving each DEB URL from its immutable recorded Git commit instead of a mutable GitHub Pages file, keeping the catalog byte count and SHA-256 permanently aligned. It provides 114 first-class themes: 12 offline procedural animations, 54 pinned CC0 GIF downloads, and 48 original Springy pack downloads from the verified MIT-licensed VirenMohindra/CydiaRepo catalog. Every download is previewed and staged before Apply; catalog files are checked by host, byte limit, SHA-256, package identity, archive paths, extracted size, frame count, dimensions, and decoded-memory limits. The tweak preserves user-selected scaling, background, repeat, and duration settings, discovers installed Springy and SnowBoard packs, supports safe GIF/ZIP/DEB/frame-folder import, and automatically quarantines unsafe BackBoard media.
+Description: Crash-safe custom respring animations for BackBoard on rootless iOS 15 and 16. Gif2Ani 3.5.4 regenerates all 48 bundled Springy package sizes and SHA-256 values directly from immutable raw Git blobs and derives every download URL from the verified source commit and safe DEB filename. It provides 114 first-class themes: 12 offline procedural animations, 54 pinned CC0 GIF downloads, and 48 original Springy pack downloads from the verified MIT-licensed VirenMohindra/CydiaRepo catalog. Every download is previewed and staged before Apply; catalog files are checked by host, byte limit, SHA-256, package identity, archive paths, extracted size, frame count, dimensions, and decoded-memory limits. The tweak preserves user-selected scaling, background, repeat, and duration settings, discovers installed Springy and SnowBoard packs, supports safe GIF/ZIP/DEB/frame-folder import, and automatically quarantines unsafe BackBoard media.
 Maintainer: NightVibes33
 Author: wizages, rootless port by NightVibes33
 Section: Tweaks
