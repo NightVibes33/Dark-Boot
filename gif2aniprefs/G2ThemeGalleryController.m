@@ -60,26 +60,10 @@ static NSArray<NSDictionary *> *G2PreferredOpenThemeCatalog(void) {
 #include "G2RemoteThemePreviewOverride.inc"
 #include "G2RemoteGalleryPolish.inc"
 
-@implementation G2ThemeGalleryController (G2PreferencesCompatibility)
-
-// PreferenceLoader normally expects PSViewController subclasses for a
-// PSLinkCell detail class. Keep these compatibility entry points so an older
-// cached Root.plist cannot crash while the new button-action plist is loading.
-- (instancetype)initForContentSize:(CGSize)contentSize {
-    (void)contentSize;
-    return [self initWithStyle:UITableViewStyleInsetGrouped];
-}
-
-- (void)setSpecifier:(id)specifier { (void)specifier; }
-- (void)setRootController:(id)controller { (void)controller; }
-- (void)setParentController:(id)controller { (void)controller; }
-
-@end
-
 @implementation Gif2AniRootListController (G2ThemeGalleryNavigation)
 
 - (void)openAnimationGallery {
-    G2ThemeGalleryController *gallery = [[G2ThemeGalleryController alloc] initWithStyle:UITableViewStyleInsetGrouped];
+    G2ThemeGalleryController *gallery = [[G2ThemeGalleryController alloc] initForContentSize:self.view.bounds.size];
     gallery.modalPresentationStyle = UIModalPresentationFullScreen;
     if (self.navigationController) {
         [self.navigationController pushViewController:gallery animated:YES];
