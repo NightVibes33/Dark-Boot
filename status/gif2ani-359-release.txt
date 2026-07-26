@@ -1,0 +1,14 @@
+Gif2Ani 3.5.9 Release
+run_id=30214867861
+source_commit=1ae86c36a169b3fe4b1d78437f22906aa5a6c2ba
+status=cancelled
+completed_at_utc=2026-07-26T18:31:05Z
+archive_fix=rootless PATH HOME TMPDIR LC_ALL
+animated_downloadable_previews=262
+cc0_previews=54
+springy_previews=48
+snowboard_previews=160
+gallery_total=274
+--- source ---
+--- previews tail ---
+--- build tail ---
