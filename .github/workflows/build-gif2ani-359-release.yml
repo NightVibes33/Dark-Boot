@@ -1,0 +1,225 @@
+name: Build Gif2Ani 3.5.9 Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-gif2ani-359-release.yml
+      - scripts/run_gif2ani_359_patch.py
+      - scripts/apply_gif2ani_359_archive_and_animated_previews_v2.py
+      - scripts/run_animated_theme_previews_v2.py
+      - scripts/build_animated_theme_previews.py
+      - triggers/build-gif2ani-359-release.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-359-release
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        env:
+          THEOS: /opt/theos
+          CI: '1'
+          SHELL: /bin/bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            bash curl sudo build-essential fakeroot rsync perl git libxml2 dpkg-dev \
+            unzip xz-utils ca-certificates python3 python3-pip file binutils
+          python3 -m pip install --break-system-packages --disable-pip-version-check 'Pillow>=10.0,<12'
+          sudo rm -rf /opt/theos
+          sudo mkdir -p /opt
+          sudo chown "$USER:$USER" /opt
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          test -x /opt/theos/toolchain/linux/iphone/bin/clang
+
+      - name: Apply source fixes
+        run: |
+          set -euo pipefail
+          python3 scripts/run_gif2ani_359_patch.py | tee source-fix.log
+          grep -Fq 'gif2ani_359_rootless_archive_environment=success' source-fix.log
+          grep -Fq 'gif2ani_359_animated_preview_runtime=success' source-fix.log
+          echo 'source_fix_gate=passed'
+
+      - name: Generate 262 animated previews
+        run: |
+          set -euo pipefail
+          python3 scripts/run_animated_theme_previews_v2.py 2>&1 | tee animated-previews.log
+          grep -Fq 'animated_preview_count=262' animated-previews.log
+          grep -Fq 'animated_preview_validation=success' animated-previews.log
+          python3 - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          from PIL import Image
+          root=Path('gif2aniprefs/Resources/ThemePreviewAnimations')
+          manifest=json.loads(Path('gif2aniprefs/Resources/ThemePreviewAnimations.json').read_text())
+          files=sorted(root.glob('*.gif'))
+          assert manifest['count']==262
+          assert len(manifest['previews'])==262
+          assert len(files)==262
+          assert manifest['totalBytes']==sum(path.stat().st_size for path in files)
+          assert manifest['totalBytes'] <= 55*1024*1024
+          records={record['identifier']:record for record in manifest['previews']}
+          assert len(records)==262
+          for identifier,record in records.items():
+              path=root/f'{identifier}.gif'
+              assert path.is_file()
+              assert path.stat().st_size==record['bytes']
+              assert path.stat().st_size<=280000
+              digest=hashlib.sha256(path.read_bytes()).hexdigest()
+              assert digest==record['sha256']
+              with Image.open(path) as image:
+                  assert image.n_frames>=2,(identifier,image.n_frames)
+                  assert image.width<=144 and image.height<=144
+          print(f"preview_gate=passed|count=262|bytes={manifest['totalBytes']}")
+          PY
+
+      - name: Compile package
+        env:
+          THEOS: /opt/theos
+        run: |
+          set -euo pipefail
+          make clean package FINALPACKAGE=1 2>&1 | tee build.log
+          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.5.9_iphoneos-arm64.deb' -print -quit)"
+          test -s "$DEB"
+          mkdir -p release-packages
+          cp "$DEB" release-packages/Gif2Ani-3.5.9-archive-animated-previews.deb
+          sha256sum release-packages/Gif2Ani-3.5.9-archive-animated-previews.deb \
+            | tee release-packages/Gif2Ani-3.5.9-archive-animated-previews.sha256
+          echo "compiled_deb=$DEB"
+          echo 'compile_gate=passed'
+
+      - name: Verify package explicitly
+        run: |
+          set -euo pipefail
+          DEB='release-packages/Gif2Ani-3.5.9-archive-animated-previews.deb'
+          check() {
+            label="$1"
+            shift
+            echo "checking_${label}=started"
+            "$@"
+            echo "checking_${label}=passed"
+          }
+          check package_id test "$(dpkg-deb -f "$DEB" Package | tr -d '\r\n')" = 'com.nightvibes33.gif2ani'
+          check version test "$(dpkg-deb -f "$DEB" Version | tr -d '\r\n')" = '3.5.9'
+          check architecture test "$(dpkg-deb -f "$DEB" Architecture | tr -d '\r\n')" = 'iphoneos-arm64'
+
+          rm -rf verify-root
+          check extraction dpkg-deb -x "$DEB" verify-root
+          BUNDLE='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle'
+          PREFS="$BUNDLE/Gif2AniPrefs"
+          TWEAK='verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib'
+          check prefs_binary test -s "$PREFS"
+          check tweak_binary test -s "$TWEAK"
+          file "$PREFS" | tee prefs-file.txt
+          file "$TWEAK" | tee tweak-file.txt
+          check prefs_arm64 grep -F 'Mach-O 64-bit arm64' prefs-file.txt
+          check tweak_arm64 grep -F 'Mach-O 64-bit arm64' tweak-file.txt
+          check visible_version grep -F 'GIF2ANI 3.5.9' "$BUNDLE/Root.plist"
+          check gallery_total grep -F '274-THEME ANIMATION GALLERY' "$BUNDLE/Root.plist"
+          check preview_manifest test -s "$BUNDLE/ThemePreviewAnimations.json"
+          PREVIEW_COUNT="$(find "$BUNDLE/ThemePreviewAnimations" -maxdepth 1 -type f -name '*.gif' | wc -l | tr -d ' ')"
+          echo "packaged_preview_count=$PREVIEW_COUNT"
+          check preview_count test "$PREVIEW_COUNT" = '262'
+
+          strings -a "$PREFS" > prefs-strings.txt
+          check rootless_path grep -F '/var/jb/usr/bin:/var/jb/usr/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin' prefs-strings.txt
+          check preview_marker grep -F 'bundled-262-animated-download-previews-v359' prefs-strings.txt
+          check preview_text grep -F 'Animated bounded preview' prefs-strings.txt
+          check archive_diagnostic grep -F 'The archive could not be inspected safely before extraction (dpkg-deb exit %d).' prefs-strings.txt
+
+          python3 - "$BUNDLE/ThemePreviewAnimations.json" "$BUNDLE/ThemePreviewAnimations" <<'PY'
+          import hashlib,json,pathlib,sys
+          manifest=json.loads(pathlib.Path(sys.argv[1]).read_text())
+          root=pathlib.Path(sys.argv[2])
+          files=list(root.glob('*.gif'))
+          assert manifest['count']==262 and len(files)==262
+          for record in manifest['previews']:
+              path=root/f"{record['identifier']}.gif"
+              assert path.is_file() and path.stat().st_size==record['bytes']
+              assert hashlib.sha256(path.read_bytes()).hexdigest()==record['sha256']
+          print(f"packaged_preview_manifest=passed|count={manifest['count']}|bytes={manifest['totalBytes']}")
+          PY
+          echo 'package_verification_gate=passed'
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gif2Ani-3.5.9-release
+          path: |
+            release-packages/Gif2Ani-3.5.9-archive-animated-previews.deb
+            release-packages/Gif2Ani-3.5.9-archive-animated-previews.sha256
+            source-fix.log
+            animated-previews.log
+            build.log
+            prefs-strings.txt
+            prefs-file.txt
+            tweak-file.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Publish release conflict-safely
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          mkdir -p status release-packages
+          {
+            echo 'Gif2Ani 3.5.9 Release'
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "source_commit=${GITHUB_SHA}"
+            echo "status=${JOB_STATUS}"
+            echo "completed_at_utc=$(date -u +%FT%TZ)"
+            cat release-packages/Gif2Ani-3.5.9-archive-animated-previews.sha256 2>/dev/null || true
+            echo 'archive_fix=rootless PATH HOME TMPDIR LC_ALL'
+            echo 'animated_downloadable_previews=262'
+            echo 'cc0_previews=54'
+            echo 'springy_previews=48'
+            echo 'snowboard_previews=160'
+            echo 'gallery_total=274'
+            echo '--- source ---'
+            cat source-fix.log 2>/dev/null || true
+            echo '--- previews tail ---'
+            tail -n 100 animated-previews.log 2>/dev/null || true
+            echo '--- build tail ---'
+            tail -n 180 build.log 2>/dev/null || true
+          } > status/gif2ani-359-release.txt
+
+          if [ "$JOB_STATUS" = success ]; then
+            git add control gif2aniprefs/G2ThemeGalleryPart3.inc gif2aniprefs/G2RemoteThemePreviewOverride.inc gif2aniprefs/Resources/Root.plist
+            git add gif2aniprefs/Resources/ThemePreviewAnimations.json
+            git add -f gif2aniprefs/Resources/ThemePreviewAnimations
+            git add -f release-packages/Gif2Ani-3.5.9-archive-animated-previews.deb
+            git add release-packages/Gif2Ani-3.5.9-archive-animated-previews.sha256
+          fi
+          git add status/gif2ani-359-release.txt
+          git add -f source-fix.log animated-previews.log build.log 2>/dev/null || true
+          git commit -m "Publish Gif2Ani 3.5.9 release (${JOB_STATUS}) [skip ci]" || true
+          git reset --hard HEAD
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              echo 'release_publish=success'
+              exit 0
+            fi
+            git rebase --abort >/dev/null 2>&1 || true
+            sleep $((attempt * 3))
+          done
+          echo 'release_publish=failure'
+          exit 1
