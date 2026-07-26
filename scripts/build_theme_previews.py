@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import tempfile
@@ -31,8 +31,9 @@ def fetch(url: str, destination: Path, expected_sha: str, expected_bytes: int) -
     destination.parent.mkdir(parents=True, exist_ok=True)
     subprocess.run([
         "curl", "--fail", "--location", "--silent", "--show-error", "--retry", "3",
-        "--connect-timeout", "20", "--max-time", "240", "--output", str(destination), url,
-    ], check=True)
+        "--connect-timeout", "20", "--max-time", "240", "--output", str(destination),
+        "--write-out", "%{url_effective}", url,
+    ], check=True, stdout=subprocess.PIPE, text=True)
     actual_bytes = destination.stat().st_size
     actual_sha = sha256(destination)
     if actual_bytes != expected_bytes:
@@ -63,6 +64,18 @@ def cc0_thumbnail(theme: dict, work: Path) -> str:
     fetch(url, source, theme["sha256"], int(theme["bytes"]))
     save_thumbnail(source, OUTPUT / f"{identifier}.png")
     return identifier
+
+
+def immutable_springy_url(theme: dict) -> str:
+    commit = str(theme["sourceCommit"]).lower()
+    filename = str(theme["filename"])
+    if not re.fullmatch(r"[0-9a-f]{40}", commit):
+        raise RuntimeError(f"invalid source commit for {theme.get('identifier')}")
+    if not filename.startswith("./debs/") or not filename.endswith(".deb"):
+        raise RuntimeError(f"invalid DEB filename for {theme.get('identifier')}")
+    if ".." in filename or "\\" in filename:
+        raise RuntimeError(f"unsafe DEB filename for {theme.get('identifier')}")
+    return f"https://raw.githubusercontent.com/VirenMohindra/CydiaRepo/{commit}/{filename[2:]}"
 
 
 def image_score(path: Path, sibling_count: int) -> int:
@@ -105,7 +118,7 @@ def springy_thumbnail(theme: dict, work: Path) -> str:
     deb = package_work / "theme.deb"
     extracted = package_work / "root"
     package_work.mkdir(parents=True, exist_ok=True)
-    fetch(theme["downloadURL"], deb, theme["sha256"], int(theme["bytes"]))
+    fetch(immutable_springy_url(theme), deb, theme["sha256"], int(theme["bytes"]))
     package_id = subprocess.check_output(["dpkg-deb", "-f", str(deb), "Package"], text=True).strip()
     if package_id != theme["package"]:
         raise RuntimeError(f"package mismatch: {package_id} != {theme['package']}")
