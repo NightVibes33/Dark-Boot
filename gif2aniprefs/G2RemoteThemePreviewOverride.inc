@@ -4,13 +4,26 @@
 
 __attribute__((used)) static const char G2DownloadPreviewFixMarkers[] =
     "curl-backed-gallery-download-v352\0"
-    "bundled-real-theme-previews-v352\0";
+    "bundled-real-theme-previews-v352\0"
+    "bundled-262-animated-download-previews-v359\0";
 
 static UIImage *G2BundledThemePreview(NSDictionary *pack) {
     NSString *identifier = [pack[@"identifier"] isKindOfClass:NSString.class] ? pack[@"identifier"] : pack[@"package"];
     if (!identifier.length) return nil;
     NSURL *url = [G2ThemeGalleryBundle() URLForResource:identifier withExtension:@"png" subdirectory:@"ThemePreviews"];
     return url.path.length ? [UIImage imageWithContentsOfFile:url.path] : nil;
+}
+
+static NSString *G2BundledThemePreviewAnimationPath(NSDictionary *pack) {
+    NSString *identifier = [pack[@"identifier"] isKindOfClass:NSString.class] ? pack[@"identifier"] : pack[@"package"];
+    if (!identifier.length) return nil;
+    NSURL *url = [G2ThemeGalleryBundle() URLForResource:identifier withExtension:@"gif" subdirectory:@"ThemePreviewAnimations"];
+    return url.path.length ? url.path : nil;
+}
+
+static NSArray<UIImage *> *G2BundledThemePreviewAnimationFrames(NSDictionary *pack) {
+    NSString *path = G2BundledThemePreviewAnimationPath(pack);
+    return path.length ? G2FramesFromGIF(path, 400) : @[];
 }
 
 static NSData *G2CurlDownloadData(NSURL *url, BOOL openTheme, unsigned long long maximumBytes, NSError **error) {
@@ -115,6 +128,20 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
     });
 }
 
+- (BOOL)g2_showBundledAnimatedDownloadPreview {
+    NSString *path = G2BundledThemePreviewAnimationPath(self.pack);
+    NSArray<UIImage *> *frames = G2BundledThemePreviewAnimationFrames(self.pack);
+    if (!path.length || frames.count < 2) return NO;
+    self.frames = frames;
+    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    self.imageView.animationImages = frames;
+    self.imageView.animationDuration = MAX(0.8, G2NaturalGIFDuration(path));
+    self.imageView.animationRepeatCount = 0;
+    self.imageView.image = frames.firstObject;
+    [self.imageView startAnimating];
+    return YES;
+}
+
 - (void)g2_remoteLoadPreview {
     NSUInteger generation = ++self.previewGeneration;
     self.stageButton.enabled = NO;
@@ -132,12 +159,17 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
     if ([kind isEqualToString:@"remote"]) {
         if (!G2RemoteCachedThemeIsValid(pack)) {
             [self.activity stopAnimating];
-            self.frames = @[];
-            UIImage *bundledPreview = G2BundledThemePreview(pack);
-            self.imageView.contentMode = bundledPreview ? UIViewContentModeScaleAspectFit : UIViewContentModeCenter;
-            self.imageView.tintColor = self.view.tintColor;
-            self.imageView.image = bundledPreview ?: [UIImage systemImageNamed:@"icloud.and.arrow.down.fill"];
-            self.statusLabel.text = @"Built-in catalog theme • not downloaded yet\nTap Download & Preview. The GIF byte count, SHA-256, and animation structure are verified before it is cached.";
+            BOOL animatedPreview = [self g2_showBundledAnimatedDownloadPreview];
+            if (!animatedPreview) {
+                self.frames = @[];
+                UIImage *bundledPreview = G2BundledThemePreview(pack);
+                self.imageView.contentMode = bundledPreview ? UIViewContentModeScaleAspectFit : UIViewContentModeCenter;
+                self.imageView.tintColor = self.view.tintColor;
+                self.imageView.image = bundledPreview ?: [UIImage systemImageNamed:@"icloud.and.arrow.down.fill"];
+            }
+            self.statusLabel.text = animatedPreview
+                ? @"Animated bounded preview • full CC0 theme not downloaded yet\nTap Download & Preview. The original GIF byte count, SHA-256, and animation structure are verified before it is cached."
+                : @"Built-in catalog theme • not downloaded yet\nTap Download & Preview. The GIF byte count, SHA-256, and animation structure are verified before it is cached.";
             [self.stageButton setTitle:@"Download & Preview" forState:UIControlStateNormal];
             self.stageButton.enabled = YES;
             self.stageButton.alpha = 1.0;
@@ -148,12 +180,17 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
         openInfo = G2OpenThemeCachedInfo(pack);
         if (!openInfo) {
             [self.activity stopAnimating];
-            self.frames = @[];
-            UIImage *bundledPreview = G2BundledThemePreview(pack);
-            self.imageView.contentMode = bundledPreview ? UIViewContentModeScaleAspectFit : UIViewContentModeCenter;
-            self.imageView.tintColor = self.view.tintColor;
-            self.imageView.image = bundledPreview ?: [UIImage systemImageNamed:@"shippingbox.and.arrow.backward.fill"];
-            self.statusLabel.text = [NSString stringWithFormat:@"Original source pack • not downloaded yet\n%@\nTap Download & Preview. Gif2Ani verifies SHA-256 and package identity before extracting only the animation files.", pack[@"license"] ?: @"Original credits are preserved."];
+            BOOL animatedPreview = [self g2_showBundledAnimatedDownloadPreview];
+            if (!animatedPreview) {
+                self.frames = @[];
+                UIImage *bundledPreview = G2BundledThemePreview(pack);
+                self.imageView.contentMode = bundledPreview ? UIViewContentModeScaleAspectFit : UIViewContentModeCenter;
+                self.imageView.tintColor = self.view.tintColor;
+                self.imageView.image = bundledPreview ?: [UIImage systemImageNamed:@"shippingbox.and.arrow.backward.fill"];
+            }
+            self.statusLabel.text = animatedPreview
+                ? [NSString stringWithFormat:@"Animated bounded preview • original pack not downloaded yet\n%@\nTap Download & Preview. Gif2Ani verifies bytes, SHA-256, package identity, archive paths, and artwork before caching only this animation.", pack[@"license"] ?: @"Original credits are preserved."]
+                : [NSString stringWithFormat:@"Original source pack • not downloaded yet\n%@\nTap Download & Preview. Gif2Ani verifies SHA-256 and package identity before extracting only the animation files.", pack[@"license"] ?: @"Original credits are preserved."];
             [self.stageButton setTitle:@"Download & Preview" forState:UIControlStateNormal];
             self.stageButton.enabled = YES;
             self.stageButton.alpha = 1.0;

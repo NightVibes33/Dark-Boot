@@ -125,7 +125,18 @@ rollback:
     return NO;
 }
 
+static void G2PrepareRootlessToolEnvironment(void) {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        setenv("PATH", "/var/jb/usr/bin:/var/jb/usr/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin", 1);
+        setenv("HOME", "/var/mobile", 1);
+        setenv("TMPDIR", "/tmp", 1);
+        setenv("LC_ALL", "C", 1);
+    });
+}
+
 static int G2RunTool(NSArray<NSString *> *candidates, NSArray<NSString *> *arguments) {
+    G2PrepareRootlessToolEnvironment();
     for (NSString *tool in candidates) {
         if (![[NSFileManager defaultManager] isExecutableFileAtPath:tool]) continue;
         NSUInteger argc = arguments.count + 2;
@@ -148,6 +159,7 @@ static int G2RunTool(NSArray<NSString *> *candidates, NSArray<NSString *> *argum
 static NSString *G2RunToolCapture(NSArray<NSString *> *candidates,
                                   NSArray<NSString *> *arguments,
                                   int *exitCode) {
+    G2PrepareRootlessToolEnvironment();
     NSString *token = [[NSUUID UUID] UUIDString];
     NSString *capturePath = [NSTemporaryDirectory() stringByAppendingPathComponent:
                              [NSString stringWithFormat:@"gif2ani-capture-%@.txt", token]];
