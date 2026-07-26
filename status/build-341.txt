@@ -1,8 +1,8 @@
 Gif2Ani 3.4.1 Gallery Build
-run_id=30207730287
-commit=21e0a0ecd60798df98236c08367578164a788c7b
-status=cancelled
-completed_at_utc=2026-07-26T15:13:40Z
+run_id=30208332553
+commit=2e0c7eb2098f4a56586cedd48f689afd4d95747b
+status=failure
+completed_at_utc=2026-07-26T15:30:54Z
 offline_themes=12
 cc0_downloadable_themes=54
 source_backed_springy_themes=48
