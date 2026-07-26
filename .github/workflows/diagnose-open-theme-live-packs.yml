@@ -1,0 +1,178 @@
+name: Diagnose Open Theme Live Packs
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/diagnose-open-theme-live-packs.yml
+      - triggers/diagnose-open-theme-live-packs.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-open-theme-live-diagnostic
+  cancel-in-progress: true
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install inspection tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends curl dpkg-dev python3 ca-certificates
+
+      - name: Inspect every current live pack without stopping early
+        id: inspect
+        continue-on-error: true
+        run: |
+          set -uo pipefail
+          python3 - <<'PY'
+          import concurrent.futures
+          import datetime as dt
+          import hashlib
+          import json
+          import pathlib
+          import shutil
+          import subprocess
+          import traceback
+
+          source=pathlib.Path('gif2aniprefs/Resources/OpenThemeCatalog.json')
+          catalog=json.loads(source.read_text())
+          themes=catalog['themes']
+          assert len(themes)==48
+          work=pathlib.Path('open-theme-diagnostic-work')
+          shutil.rmtree(work,ignore_errors=True)
+          work.mkdir()
+
+          def cmd(args):
+              result=subprocess.run(args,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+              if result.returncode:
+                  raise RuntimeError(f"exit={result.returncode} command={' '.join(args)} stderr={result.stderr[-1000:]}")
+              return result.stdout
+
+          def one(pair):
+              index,item=pair
+              package=item['package']
+              d=work/f'{index:02d}'
+              d.mkdir()
+              deb=d/'theme.deb'
+              cmd(['curl','-fL','--retry','4','--retry-delay','2','--connect-timeout','20','--max-time','240',item['downloadURL'],'-o',str(deb)])
+              actual_bytes=deb.stat().st_size
+              actual_sha=hashlib.sha256(deb.read_bytes()).hexdigest()
+              actual_package=cmd(['dpkg-deb','-f',str(deb),'Package']).strip()
+              if actual_package!=package:
+                  raise RuntimeError(f'package identity mismatch expected={package} actual={actual_package}')
+
+              listing=cmd(['dpkg-deb','-c',str(deb)])
+              unsafe=[]
+              for line in listing.splitlines():
+                  parts=line.split(maxsplit=5)
+                  if len(parts)<6:
+                      continue
+                  mode=parts[0]
+                  archive_path=parts[5].split(' -> ',1)[0]
+                  if mode.startswith(('l','h','c','b','p','s')):
+                      unsafe.append(f'special:{mode}:{archive_path}')
+                  if not archive_path.startswith('./') or '/../' in archive_path or archive_path.startswith('./../'):
+                      unsafe.append(f'path:{archive_path}')
+              if unsafe:
+                  raise RuntimeError('unsafe archive entries: '+' | '.join(unsafe[:10]))
+
+              root=d/'root'
+              root.mkdir()
+              cmd(['dpkg-deb','-x',str(deb),str(root)])
+              symlinks=[]
+              media=[]
+              for path in root.rglob('*'):
+                  if path.is_symlink(): symlinks.append(str(path.relative_to(root)))
+                  elif path.is_file() and path.suffix.lower() in {'.gif','.png','.jpg','.jpeg','.webp'}:
+                      media.append(str(path.relative_to(root)))
+              if symlinks:
+                  raise RuntimeError('extracted symlinks: '+' | '.join(symlinks[:10]))
+              if not media:
+                  raise RuntimeError('no previewable media files')
+
+              return {
+                  'index':index,'name':item['name'],'package':package,'url':item['downloadURL'],
+                  'catalog_bytes':int(item['bytes']),'catalog_sha256':item['sha256'],
+                  'actual_bytes':actual_bytes,'actual_sha256':actual_sha,
+                  'changed':actual_bytes!=int(item['bytes']) or actual_sha!=item['sha256'],
+                  'media_count':len(media),'sample_media':media[:5],
+              }
+
+          successes=[]
+          failures=[]
+          with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
+              futures={pool.submit(one,pair):pair for pair in enumerate(themes,1)}
+              for future,pair in list(futures.items()):
+                  index,item=pair
+                  try:
+                      result=future.result()
+                      successes.append(result)
+                      print('PASS',item['package'],result['actual_bytes'],result['actual_sha256'],flush=True)
+                  except Exception as exc:
+                      failure={'index':index,'name':item['name'],'package':item['package'],'url':item['downloadURL'],'error':str(exc)}
+                      failures.append(failure)
+                      print('FAIL',item['package'],repr(exc),flush=True)
+
+          successes.sort(key=lambda x:x['index'])
+          failures.sort(key=lambda x:x['index'])
+          now=dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+          report={
+              'diagnosedAtUTC':now,
+              'expectedCount':48,
+              'successCount':len(successes),
+              'failureCount':len(failures),
+              'changedPayloadCount':sum(1 for x in successes if x['changed']),
+              'successes':successes,
+              'failures':failures,
+          }
+          pathlib.Path('status/open-theme-live-diagnostic.json').write_text(json.dumps(report,indent=2)+'\n')
+          lines=[
+              'Gif2Ani Open Theme Live Diagnostic',
+              f'diagnosed_at_utc={now}',
+              f'expected_count=48',
+              f'success_count={len(successes)}',
+              f'failure_count={len(failures)}',
+              f'changed_payload_count={report["changedPayloadCount"]}',
+              '',
+              '--- failures ---',
+          ]
+          for x in failures:
+              lines.append(f"{x['index']:02d}. {x['name']} | {x['package']} | {x['error']}")
+          lines += ['', '--- successes ---']
+          for x in successes:
+              lines.append(f"{x['index']:02d}. {x['name']} | {x['package']} | actual_bytes={x['actual_bytes']} | actual_sha256={x['actual_sha256']} | media={x['media_count']} | changed={str(x['changed']).lower()}")
+          pathlib.Path('status/open-theme-live-diagnostic.txt').write_text('\n'.join(lines)+'\n')
+          raise SystemExit(0 if not failures else 2)
+          PY
+
+      - name: Publish full diagnostic
+        if: always()
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add status/open-theme-live-diagnostic.json status/open-theme-live-diagnostic.txt
+          git commit -m 'Record all 48 Springy live-pack diagnostics [skip ci]' || exit 0
+          git push origin HEAD:main
+
+      - name: Fail if any live pack failed validation
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json
+          data=json.load(open('status/open-theme-live-diagnostic.json'))
+          if data['failureCount']:
+              raise SystemExit(f"{data['failureCount']} live packs failed validation")
+          print('all_live_packs_valid=48')
+          PY
