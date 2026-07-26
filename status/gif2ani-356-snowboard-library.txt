@@ -1,8 +1,8 @@
 Gif2Ani 3.5.6 Verified SnowBoard Respring Library
-run_id=30210532324
-source_commit=78e67e7bc61211c88b0d05cd6d3ca42f400cedf2
+run_id=30210638861
+source_commit=72d9dfe868be9ac4dbfc515f648accc3ba5c51f8
 status=failure
-completed_at_utc=2026-07-26T16:30:14Z
+completed_at_utc=2026-07-26T16:32:50Z
 policy=free direct public original DEBs only; package files are never installed
 checks=HTTPS, published SHA-256, package ID, version, architecture, archive paths, .theme paths, media files
 legacy_import_prompt=removed
