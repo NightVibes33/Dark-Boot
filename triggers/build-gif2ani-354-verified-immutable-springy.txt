@@ -1,0 +1,2 @@
+rebuild=2026-07-26T15:30:00Z
+reason=Package the corrected GIF2ANI 3.5.4 Settings header with the fully regenerated immutable Springy catalog.
