@@ -6,6 +6,10 @@ on:
     branches: [main]
     paths:
       - .github/workflows/build-gif2ani-356-snowboard-library.yml
+      - scripts/build_snowboard_catalog.py
+      - scripts/build_snowboard_catalog_seeded.py
+      - scripts/requests.py
+      - scripts/apply_snowboard_gallery.py
       - triggers/build-gif2ani-356-snowboard-library.txt
 
 permissions:
@@ -13,7 +17,7 @@ permissions:
 
 concurrency:
   group: gif2ani-356-snowboard-library
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -45,7 +49,7 @@ jobs:
       - name: Discover and physically verify public SnowBoard respring packages
         run: |
           set -euo pipefail
-          python3 scripts/build_snowboard_catalog.py 2>&1 | tee snowboard-catalog.log
+          python3 scripts/build_snowboard_catalog_seeded.py 2>&1 | tee snowboard-catalog.log
           grep -Fq 'snowboard_verified_package_count=' snowboard-catalog.log
           grep -Fq 'snowboard_verified_theme_count=' snowboard-catalog.log
           python3 - <<'PY'
@@ -157,6 +161,7 @@ jobs:
             echo 'checks=HTTPS, published SHA-256, package ID, version, architecture, archive paths, .theme paths, media files'
             echo 'legacy_import_prompt=removed'
             echo 'download_cache_postinst_owner=mobile-recursive'
+            echo 'catalog_discovery=deterministic verified seeds plus explicit source pages'
             echo '--- SnowBoard catalog summary ---'
             grep -E 'candidate_page_count=|snowboard_verified_package_count=|snowboard_verified_theme_count=|snowboard_rejected_count=' snowboard-catalog.log 2>/dev/null || true
             echo '--- catalog audit tail ---'
