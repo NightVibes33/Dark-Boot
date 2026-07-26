@@ -1,10 +1,51 @@
 #import <objc/runtime.h>
+#import <CommonCrypto/CommonDigest.h>
+
+static NSString *G2SHA256StringForData(NSData *data) {
+    if (!data.length || data.length > UINT32_MAX) return nil;
+    unsigned char digest[CC_SHA256_DIGEST_LENGTH];
+    CC_SHA256(data.bytes, (CC_LONG)data.length, digest);
+    static const char hex[] = "0123456789abcdef";
+    char output[CC_SHA256_DIGEST_LENGTH * 2 + 1];
+    for (NSUInteger index = 0; index < CC_SHA256_DIGEST_LENGTH; index++) {
+        output[index * 2] = hex[(digest[index] >> 4) & 0x0F];
+        output[index * 2 + 1] = hex[digest[index] & 0x0F];
+    }
+    output[CC_SHA256_DIGEST_LENGTH * 2] = '\0';
+    return [NSString stringWithUTF8String:output];
+}
+
+static BOOL G2RemoteDataMatchesManifest(NSData *data, NSDictionary *pack, NSError **error) {
+    NSNumber *expectedBytes = pack[@"expectedBytes"];
+    NSString *expectedSHA256 = [pack[@"sha256"] lowercaseString];
+    if (![expectedBytes isKindOfClass:NSNumber.class] || expectedBytes.unsignedLongLongValue == 0 ||
+        ![expectedSHA256 isKindOfClass:NSString.class] || expectedSHA256.length != 64) {
+        if (error) *error = [NSError errorWithDomain:@"Gif2AniGallery" code:42 userInfo:@{
+            NSLocalizedDescriptionKey:@"This downloadable theme is missing its pinned integrity metadata."
+        }];
+        return NO;
+    }
+    if (data.length != expectedBytes.unsignedLongLongValue) {
+        if (error) *error = [NSError errorWithDomain:@"Gif2AniGallery" code:43 userInfo:@{
+            NSLocalizedDescriptionKey:@"The downloaded theme byte count does not match the pinned manifest."
+        }];
+        return NO;
+    }
+    NSString *actualSHA256 = G2SHA256StringForData(data);
+    if (!actualSHA256 || ![actualSHA256 isEqualToString:expectedSHA256]) {
+        if (error) *error = [NSError errorWithDomain:@"Gif2AniGallery" code:44 userInfo:@{
+            NSLocalizedDescriptionKey:@"The downloaded theme SHA-256 does not match the pinned manifest."
+        }];
+        return NO;
+    }
+    return YES;
+}
 
 static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
     NSString *path = G2RemoteThemeCachePath(pack);
     if (!path.length || ![[NSFileManager defaultManager] fileExistsAtPath:path]) return NO;
     NSData *data = [NSData dataWithContentsOfFile:path options:NSDataReadingMappedIfSafe error:nil];
-    if (!data || !G2ValidateGIFData(data, nil)) {
+    if (!data || !G2RemoteDataMatchesManifest(data, pack, nil) || !G2ValidateGIFData(data, nil)) {
         [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
         return NO;
     }
@@ -48,7 +89,7 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
             self.imageView.contentMode = UIViewContentModeCenter;
             self.imageView.tintColor = self.view.tintColor;
             self.imageView.image = [UIImage systemImageNamed:@"icloud.and.arrow.down.fill"];
-            self.statusLabel.text = @"Built-in catalog theme • not downloaded yet\nTap Download & Preview. The GIF is validated before it is cached.";
+            self.statusLabel.text = @"Built-in catalog theme • not downloaded yet\nTap Download & Preview. The GIF byte count, SHA-256, and animation structure are verified before it is cached.";
             [self.stageButton setTitle:@"Download & Preview" forState:UIControlStateNormal];
             self.stageButton.enabled = YES;
             self.stageButton.alpha = 1.0;
@@ -156,7 +197,7 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
     self.stageButton.enabled = NO;
     self.stageButton.alpha = 0.45;
     [self.stageButton setTitle:@"" forState:UIControlStateNormal];
-    self.statusLabel.text = @"Downloading from the pinned Gif2Ani catalog…";
+    self.statusLabel.text = @"Downloading and verifying the pinned Gif2Ani catalog theme…";
     [self.activity startAnimating];
 
     NSURLSessionConfiguration *configuration = NSURLSessionConfiguration.ephemeralSessionConfiguration;
@@ -177,6 +218,7 @@ static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
             }];
         }
         NSDictionary *metadata = nil;
+        if (!error && !G2RemoteDataMatchesManifest(data, pack, &error)) metadata = nil;
         if (!error) metadata = G2ValidateGIFData(data, &error);
         if (!error && metadata) {
             NSFileManager *manager = [NSFileManager defaultManager];
