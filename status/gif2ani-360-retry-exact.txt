@@ -1,0 +1,19 @@
+Gif2Ani 3.6.0 Exact Retry
+target_sha=8c1510104b1b8e101028a6bbee84de514a88eb23
+id=30216388601
+head_sha=8c1510104b1b8e101028a6bbee84de514a88eb23
+status=in_progress
+conclusion=None
+created_at=2026-07-26T19:13:13Z
+updated_at=2026-07-26T19:13:33Z
+html_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30216388601
+job=89831257907|build|in_progress|None
+step=1|Set up job|completed|success
+step=2|Run actions/checkout@v4|completed|success
+step=3|Install dependencies and Theos|completed|success
+step=4|Apply animated card patch|completed|success
+step=5|Validate bundled preview inventory|completed|success
+step=6|Compile and verify rootless package|completed|success
+step=7|Upload evidence|completed|success
+step=8|Publish package and status|in_progress|None
+step=16|Post Run actions/checkout@v4|pending|None
