@@ -1,124 +1,124 @@
 Gif2Ani 3.5.4 Verified Immutable Springy Catalog
-run_id=30208227720
-source_commit=d3a5a06a9cc7a145aa9cb126841e5aa9dff04567
+run_id=30208339523
+source_commit=5d17e50d0bc3348b7002017881c549f4c4d76f15
 status=success
-completed_at_utc=2026-07-26T15:28:17Z
-0352bee74430695f5edc657d0956aee30faa3fe832b7fe0f6996a87c54fd05a3  release-packages/Gif2Ani-3.5.4-verified-immutable-springy.deb
+completed_at_utc=2026-07-26T15:31:32Z
+3dbfd641411d98cdb766d059a01da55c2c03cfe8e7b70fd7551e942ba3492bb2  release-packages/Gif2Ani-3.5.4-verified-immutable-springy.deb
 catalog=48 immutable raw Git DEBs independently downloaded and inspected
 checks=effective URL, size, SHA-256, package ID, architecture, extracted artwork
 previews=102 real 220x220 PNG thumbnails
 --- immutable manifest tail ---
-verified 01/48 io.github.virenmohindra.bubbles bytes=4775942 sha256=89dc75d9f9b39150c15f0031f238ad6c145bc307effaacd890b61a549560d677
-verified 02/48 io.github.virenmohindra.a-wave bytes=2971666 sha256=93525b61259e64cc0a42ff2393935c337cfbb35d0116fd5af6c48178ec89566e
-verified 03/48 io.github.virenmohindra.boo bytes=4679192 sha256=a9ff2a73348e570c7362d853533c949458772fea71a4abd11d8eea8a36293d87
-verified 04/48 io.github.virenmohindra.bipolar-balls bytes=12971146 sha256=ea11c646296cfaf272fb6f2082ea299da2d9bde1e04c40f5333f8b91ae77e9b4
+verified 01/48 io.github.virenmohindra.boo bytes=4679192 sha256=a9ff2a73348e570c7362d853533c949458772fea71a4abd11d8eea8a36293d87
+verified 02/48 io.github.virenmohindra.bipolar-balls bytes=12971146 sha256=ea11c646296cfaf272fb6f2082ea299da2d9bde1e04c40f5333f8b91ae77e9b4
+verified 03/48 io.github.virenmohindra.colorful-stars-in-space bytes=2098926 sha256=52d4475f04b3e01d4718db630a22853ac563157e645b1f4dc7d25aab7cd72e04
+verified 04/48 io.github.virenmohindra.columns bytes=3588428 sha256=6168269071b56227806d1a6be8ed5e2683309b1c79cc7451164e038c492236dd
 verified 05/48 io.github.virenmohindra.alone bytes=2427982 sha256=226c158022947c6d430726e24300277293cb9841da69e98950fb48947dcc43d1
-verified 06/48 io.github.virenmohindra.colorful-stars-in-space bytes=2098926 sha256=52d4475f04b3e01d4718db630a22853ac563157e645b1f4dc7d25aab7cd72e04
-verified 07/48 io.github.virenmohindra.black-hole bytes=22081110 sha256=5aa1956c3be2c4f022bad9d595f95d933c6bf20733a252b827697f33e64c9e16
-verified 08/48 io.github.virenmohindra.complicated bytes=6293850 sha256=d1688e8a7eca355ca5d825450c5b43273710e4249d8aad6c7cd57119fe780078
-verified 09/48 io.github.virenmohindra.fall-leaves bytes=2904484 sha256=fbcdf8c373f1240c0224f1dd02f5cab00fc3e938af2d7350efaec3da966607aa
-verified 10/48 io.github.virenmohindra.columns bytes=3588428 sha256=6168269071b56227806d1a6be8ed5e2683309b1c79cc7451164e038c492236dd
-verified 11/48 io.github.virenmohindra.fluid bytes=883832 sha256=90ee46f893a2b720e116f6ba793eb457bfdd4e45993ae4d07a9484b6f0f3b7d2
-verified 12/48 io.github.virenmohindra.flower bytes=3313438 sha256=428dfc9e73ad09cbfc37ffca3079f922368b0922a3a5c7929d4663097ca42b2f
-verified 13/48 io.github.virenmohindra.echo bytes=5357912 sha256=a55e1cfd23f4421f251b8d9b572c4b92fc3b0c5d575d899825db6bc461154598
-verified 14/48 io.github.virenmohindra.fragments bytes=8658140 sha256=ea554cd8604e0746516e6ff58c14b86b816d1d301f47b1826abdba75a80d72b4
-verified 15/48 io.github.virenmohindra.funny-computer bytes=7708912 sha256=b5379dbc81113b788dbc91c7ab86c161e8c2cbf7c3f59bdcd62856384e9387ed
-verified 16/48 io.github.virenmohindra.gameboy-advance bytes=3313038 sha256=6cb23ec7a5087de45fc2ce1be01b8bd1e14ae5ca0c5cc72cb6c11e4b0bae6a18
-verified 17/48 io.github.virenmohindra.gamecube-logo bytes=1418168 sha256=7c569d87b9dc3b0ab85e93adb141e357cb218cf5ca068e0ba9ec61551f4f1cc6
+verified 06/48 io.github.virenmohindra.black-hole bytes=22081110 sha256=5aa1956c3be2c4f022bad9d595f95d933c6bf20733a252b827697f33e64c9e16
+verified 07/48 io.github.virenmohindra.fall-leaves bytes=2904484 sha256=fbcdf8c373f1240c0224f1dd02f5cab00fc3e938af2d7350efaec3da966607aa
+verified 08/48 io.github.virenmohindra.echo bytes=5357912 sha256=a55e1cfd23f4421f251b8d9b572c4b92fc3b0c5d575d899825db6bc461154598
+verified 09/48 io.github.virenmohindra.fragments bytes=8658140 sha256=ea554cd8604e0746516e6ff58c14b86b816d1d301f47b1826abdba75a80d72b4
+verified 10/48 io.github.virenmohindra.flower bytes=3313438 sha256=428dfc9e73ad09cbfc37ffca3079f922368b0922a3a5c7929d4663097ca42b2f
+verified 11/48 io.github.virenmohindra.complicated bytes=6293850 sha256=d1688e8a7eca355ca5d825450c5b43273710e4249d8aad6c7cd57119fe780078
+verified 12/48 io.github.virenmohindra.a-wave bytes=2971666 sha256=93525b61259e64cc0a42ff2393935c337cfbb35d0116fd5af6c48178ec89566e
+verified 13/48 io.github.virenmohindra.fluid bytes=883832 sha256=90ee46f893a2b720e116f6ba793eb457bfdd4e45993ae4d07a9484b6f0f3b7d2
+verified 14/48 io.github.virenmohindra.funny-computer bytes=7708912 sha256=b5379dbc81113b788dbc91c7ab86c161e8c2cbf7c3f59bdcd62856384e9387ed
+verified 15/48 io.github.virenmohindra.gamecube-logo bytes=1418168 sha256=7c569d87b9dc3b0ab85e93adb141e357cb218cf5ca068e0ba9ec61551f4f1cc6
+verified 16/48 io.github.virenmohindra.bubbles bytes=4775942 sha256=89dc75d9f9b39150c15f0031f238ad6c145bc307effaacd890b61a549560d677
+verified 17/48 io.github.virenmohindra.gameboy-advance bytes=3313038 sha256=6cb23ec7a5087de45fc2ce1be01b8bd1e14ae5ca0c5cc72cb6c11e4b0bae6a18
 verified 18/48 io.github.virenmohindra.mograph bytes=4300166 sha256=24605d54f1a91ec163fc9aad68cc8465c014f9f4828e1ec28dd0ea601f5ada4a
-verified 19/48 io.github.virenmohindra.lines bytes=3904316 sha256=b1eec7182ec3809fd7bb22239ec130b6f640b0149530420947e72b7170b93615
-verified 20/48 io.github.virenmohindra.only-human bytes=6522934 sha256=26c3cd436ec6f748c1d956b99f5b1048f6343e8633a4fa41042123484240bb7c
-verified 21/48 io.github.virenmohindra.pizza bytes=1343942 sha256=cf89e99886cfc6e567222ae7241ba30d244d0db1356558c9c0d1172b50570b32
-verified 22/48 io.github.virenmohindra.pepe-matrix bytes=2938872 sha256=c24786a12980b162c51ae726b5ae6032a8311a145e728aa42421444140c98ee2
-verified 23/48 io.github.virenmohindra.hello-again bytes=14487054 sha256=bb6505d022a2234f315fae0fb876cad36f775fc8a13bf59de27d5e6b2e80e238
-verified 24/48 io.github.virenmohindra.pizza-hi bytes=2713888 sha256=45abdb46309c408b209248d3f377039ba36f158ed43c9c4bde65f512a85b0862
-verified 25/48 io.github.virenmohindra.pokemon bytes=4229932 sha256=4ba4460a43e09a4e93039bdabab883f99beac928382125d10e1eb83c2f9a4f13
-verified 26/48 io.github.virenmohindra.rainbow-8 bytes=313540 sha256=272e0315606711bb63a7fcba544fd11aac07cb7473e2d912c2bbdc29d0e34e31
-verified 27/48 io.github.virenmohindra.pulse bytes=1168182 sha256=70bac1bc39b9b9e3b92c5b03b32c5e0e3530a4ea220594c645d02b3e9ff9c6ca
-verified 28/48 io.github.virenmohindra.hypnotoad bytes=25036082 sha256=0063649fb458208270a6c6c457ce349b5f2bff7034b007355abdab5ac93746ef
-verified 29/48 io.github.virenmohindra.rolling-circles bytes=4297702 sha256=4dfc9f5f0ef47ac622cbdc3c6d4abeb6150c5e28313a37271b2871509dc25134
-verified 30/48 io.github.virenmohindra.rainy bytes=5127646 sha256=6e1b82f6805524627f93ea695a17f8cf8249f895a458f6d005136ec5d6143e86
-verified 31/48 io.github.virenmohindra.sonic-running bytes=264870 sha256=e099101ca35b7e827e21cc32ae1b47fe5322cf053390427f80c9798957cef472
-verified 32/48 io.github.virenmohindra.soup bytes=2531792 sha256=5f468621e705b4a3e7a1fee792733a8b08524324d8f2a13ed715c2e5255d202f
-verified 33/48 io.github.virenmohindra.sploosh bytes=2311362 sha256=0370876debddf3f35f581f46589e16a9820b50f9987fa72b66a5e45d92b146cc
-verified 34/48 io.github.virenmohindra.spikey bytes=6630608 sha256=2abb8cc8f538cf926eacea9dcc77415abff537842dd7912ff32fba036faa31eb
-verified 35/48 io.github.virenmohindra.super-mario bytes=3506820 sha256=9d2deb4cbaa164444ff8919213c3c92847431a56070e89e03c3dc523fa60c6ab
-verified 36/48 io.github.virenmohindra.stranger-things bytes=3568518 sha256=37793745f2f9214cd35ca8c1f27a2974d1a4c4262941bb03e9d0e4f4bd2fed03
-verified 37/48 io.github.virenmohindra.routine bytes=5599302 sha256=d6653b6b9dd615b7e285c7920d42518040a6dcb292b0fdb9ce166762a1939e2f
+verified 19/48 io.github.virenmohindra.hello-again bytes=14487054 sha256=bb6505d022a2234f315fae0fb876cad36f775fc8a13bf59de27d5e6b2e80e238
+verified 20/48 io.github.virenmohindra.pepe-matrix bytes=2938872 sha256=c24786a12980b162c51ae726b5ae6032a8311a145e728aa42421444140c98ee2
+verified 21/48 io.github.virenmohindra.hypnotoad bytes=25036082 sha256=0063649fb458208270a6c6c457ce349b5f2bff7034b007355abdab5ac93746ef
+verified 22/48 io.github.virenmohindra.pizza-hi bytes=2713888 sha256=45abdb46309c408b209248d3f377039ba36f158ed43c9c4bde65f512a85b0862
+verified 23/48 io.github.virenmohindra.pokemon bytes=4229932 sha256=4ba4460a43e09a4e93039bdabab883f99beac928382125d10e1eb83c2f9a4f13
+verified 24/48 io.github.virenmohindra.rainbow-8 bytes=313540 sha256=272e0315606711bb63a7fcba544fd11aac07cb7473e2d912c2bbdc29d0e34e31
+verified 25/48 io.github.virenmohindra.pulse bytes=1168182 sha256=70bac1bc39b9b9e3b92c5b03b32c5e0e3530a4ea220594c645d02b3e9ff9c6ca
+verified 26/48 io.github.virenmohindra.rolling-circles bytes=4297702 sha256=4dfc9f5f0ef47ac622cbdc3c6d4abeb6150c5e28313a37271b2871509dc25134
+verified 27/48 io.github.virenmohindra.routine bytes=5599302 sha256=d6653b6b9dd615b7e285c7920d42518040a6dcb292b0fdb9ce166762a1939e2f
+verified 28/48 io.github.virenmohindra.sonic-running bytes=264870 sha256=e099101ca35b7e827e21cc32ae1b47fe5322cf053390427f80c9798957cef472
+verified 29/48 io.github.virenmohindra.soup bytes=2531792 sha256=5f468621e705b4a3e7a1fee792733a8b08524324d8f2a13ed715c2e5255d202f
+verified 30/48 io.github.virenmohindra.lines bytes=3904316 sha256=b1eec7182ec3809fd7bb22239ec130b6f640b0149530420947e72b7170b93615
+verified 31/48 io.github.virenmohindra.sploosh bytes=2311362 sha256=0370876debddf3f35f581f46589e16a9820b50f9987fa72b66a5e45d92b146cc
+verified 32/48 io.github.virenmohindra.spikey bytes=6630608 sha256=2abb8cc8f538cf926eacea9dcc77415abff537842dd7912ff32fba036faa31eb
+verified 33/48 io.github.virenmohindra.rainy bytes=5127646 sha256=6e1b82f6805524627f93ea695a17f8cf8249f895a458f6d005136ec5d6143e86
+verified 34/48 io.github.virenmohindra.pizza bytes=1343942 sha256=cf89e99886cfc6e567222ae7241ba30d244d0db1356558c9c0d1172b50570b32
+verified 35/48 io.github.virenmohindra.only-human bytes=6522934 sha256=26c3cd436ec6f748c1d956b99f5b1048f6343e8633a4fa41042123484240bb7c
+verified 36/48 io.github.virenmohindra.stay-in-lane bytes=4858468 sha256=45256616acfaed07eb8dd9b24d2f688ed1fb5edfbf9ea2c0808c89c57b1de37e
+verified 37/48 io.github.virenmohindra.stranger-things bytes=3568518 sha256=37793745f2f9214cd35ca8c1f27a2974d1a4c4262941bb03e9d0e4f4bd2fed03
 verified 38/48 io.github.virenmohindra.swimmer bytes=1573504 sha256=00717e2df111de2420bf6110526146d3035b5f45f53dce7491f6c7fadb564424
 verified 39/48 io.github.virenmohindra.swish bytes=988034 sha256=9222d95626886b0b1c81e06077f3d25a0a2e57e46302d19d088a45206439b8b5
-verified 40/48 io.github.virenmohindra.tesseract bytes=3522024 sha256=020828c3db79c55c8b838869734062b610ec78811a6a294316166aa86f8d2cf3
-verified 41/48 io.github.virenmohindra.time-and-money bytes=1404558 sha256=d4945e239377a86aa75c34eb8483052a7d469138a27abee1d69fe59b30d0cab5
-verified 42/48 io.github.virenmohindra.stay-in-lane bytes=4858468 sha256=45256616acfaed07eb8dd9b24d2f688ed1fb5edfbf9ea2c0808c89c57b1de37e
+verified 40/48 io.github.virenmohindra.time-and-money bytes=1404558 sha256=d4945e239377a86aa75c34eb8483052a7d469138a27abee1d69fe59b30d0cab5
+verified 41/48 io.github.virenmohindra.tesseract bytes=3522024 sha256=020828c3db79c55c8b838869734062b610ec78811a6a294316166aa86f8d2cf3
+verified 42/48 io.github.virenmohindra.upload bytes=979518 sha256=d5ab701ea35402affc0482c6421c8fd2a22da378b845df66fad47c83bdc8ccc4
 verified 43/48 io.github.virenmohindra.three-waves bytes=4415714 sha256=57e88f9cf9357c4b192b57690fb0c8448e4ca6e4e1f81ea8c55332283f9a7526
-verified 44/48 io.github.virenmohindra.upload bytes=979518 sha256=d5ab701ea35402affc0482c6421c8fd2a22da378b845df66fad47c83bdc8ccc4
-verified 45/48 io.github.virenmohindra.waiting bytes=5712876 sha256=b65f5e3251d155a0e15bdc7abcb1bb8450d3efad7c088cd10f21bf7a819e2ad4
-verified 46/48 io.github.virenmohindra.yin-and-yang bytes=1372814 sha256=c43b7634d624aad4375043bf631d870f8384d506c325e78bb3bb77b9ee06d6ad
-verified 47/48 io.github.virenmohindra.world-swap bytes=2503382 sha256=8ae2c0718edae87be4db3070abebc0b2c76352455906dd21c605aefe08fa1923
+verified 44/48 io.github.virenmohindra.world-swap bytes=2503382 sha256=8ae2c0718edae87be4db3070abebc0b2c76352455906dd21c605aefe08fa1923
+verified 45/48 io.github.virenmohindra.yin-and-yang bytes=1372814 sha256=c43b7634d624aad4375043bf631d870f8384d506c325e78bb3bb77b9ee06d6ad
+verified 46/48 io.github.virenmohindra.super-mario bytes=3506820 sha256=9d2deb4cbaa164444ff8919213c3c92847431a56070e89e03c3dc523fa60c6ab
+verified 47/48 io.github.virenmohindra.waiting bytes=5712876 sha256=b65f5e3251d155a0e15bdc7abcb1bb8450d3efad7c088cd10f21bf7a819e2ad4
 verified 48/48 io.github.virenmohindra.twisting-cubes bytes=24403780 sha256=5a521054710cde2e621aa271c522cfe8aa5fbfeaa19e79662b7134771c4e328d
 immutable_manifest_count=48
 immutable_manifest_total_bytes=247978366
 records_changed_from_pages_snapshot=47
-immutable_catalog_verified_at_utc=2026-07-26T15:27:52Z
+immutable_catalog_verified_at_utc=2026-07-26T15:31:08Z
 --- previews tail ---
-preview 045/102: ice-orbit-dots
-preview 046/102: ice-equalizer
-preview 047/102: ice-radar-sweep
-preview 048/102: ice-cyber-grid
-preview 049/102: ice-spark-burst
+preview 045/102: ice-equalizer
+preview 046/102: violet-spark-burst
+preview 047/102: violet-halo-spinner
+preview 048/102: ice-square-tunnel
+preview 049/102: ice-energy-wave
 preview 050/102: ice-halo-spinner
-preview 051/102: ice-square-tunnel
-preview 052/102: ice-energy-wave
-preview 053/102: io.github.virenmohindra.a-wave
+preview 051/102: violet-cyber-grid
+preview 052/102: ice-cyber-grid
+preview 053/102: ice-spark-burst
 preview 054/102: io.github.virenmohindra.alone
-preview 055/102: io.github.virenmohindra.bubbles
-preview 056/102: io.github.virenmohindra.black-hole
-preview 057/102: io.github.virenmohindra.colorful-stars-in-space
-preview 058/102: io.github.virenmohindra.complicated
-preview 059/102: io.github.virenmohindra.boo
-preview 060/102: amber-energy-wave
-preview 061/102: io.github.virenmohindra.columns
+preview 055/102: io.github.virenmohindra.a-wave
+preview 056/102: ice-radar-sweep
+preview 057/102: io.github.virenmohindra.bipolar-balls
+preview 058/102: io.github.virenmohindra.boo
+preview 059/102: io.github.virenmohindra.bubbles
+preview 060/102: io.github.virenmohindra.columns
+preview 061/102: io.github.virenmohindra.echo
 preview 062/102: io.github.virenmohindra.flower
-preview 063/102: io.github.virenmohindra.fluid
-preview 064/102: violet-pulse-rings
-preview 065/102: io.github.virenmohindra.echo
-preview 066/102: io.github.virenmohindra.bipolar-balls
-preview 067/102: io.github.virenmohindra.fall-leaves
-preview 068/102: io.github.virenmohindra.gameboy-advance
-preview 069/102: io.github.virenmohindra.lines
-preview 070/102: io.github.virenmohindra.funny-computer
-preview 071/102: io.github.virenmohindra.gamecube-logo
-preview 072/102: io.github.virenmohindra.only-human
-preview 073/102: io.github.virenmohindra.fragments
-preview 074/102: io.github.virenmohindra.pizza
+preview 063/102: io.github.virenmohindra.fall-leaves
+preview 064/102: io.github.virenmohindra.fluid
+preview 065/102: io.github.virenmohindra.gameboy-advance
+preview 066/102: io.github.virenmohindra.funny-computer
+preview 067/102: io.github.virenmohindra.complicated
+preview 068/102: io.github.virenmohindra.fragments
+preview 069/102: io.github.virenmohindra.colorful-stars-in-space
+preview 070/102: io.github.virenmohindra.gamecube-logo
+preview 071/102: io.github.virenmohindra.lines
+preview 072/102: io.github.virenmohindra.mograph
+preview 073/102: io.github.virenmohindra.only-human
+preview 074/102: io.github.virenmohindra.hypnotoad
 preview 075/102: io.github.virenmohindra.hello-again
-preview 076/102: io.github.virenmohindra.pulse
+preview 076/102: io.github.virenmohindra.pizza
 preview 077/102: io.github.virenmohindra.pepe-matrix
-preview 078/102: io.github.virenmohindra.mograph
-preview 079/102: io.github.virenmohindra.pokemon
-preview 080/102: io.github.virenmohindra.hypnotoad
-preview 081/102: io.github.virenmohindra.pizza-hi
+preview 078/102: io.github.virenmohindra.pulse
+preview 079/102: io.github.virenmohindra.pizza-hi
+preview 080/102: io.github.virenmohindra.black-hole
+preview 081/102: io.github.virenmohindra.rainbow-8
 preview 082/102: io.github.virenmohindra.rainy
-preview 083/102: io.github.virenmohindra.rainbow-8
-preview 084/102: io.github.virenmohindra.spikey
-preview 085/102: io.github.virenmohindra.sonic-running
-preview 086/102: io.github.virenmohindra.rolling-circles
+preview 083/102: io.github.virenmohindra.sonic-running
+preview 084/102: io.github.virenmohindra.rolling-circles
+preview 085/102: io.github.virenmohindra.soup
+preview 086/102: io.github.virenmohindra.pokemon
 preview 087/102: io.github.virenmohindra.routine
-preview 088/102: io.github.virenmohindra.swimmer
-preview 089/102: io.github.virenmohindra.stranger-things
-preview 090/102: io.github.virenmohindra.super-mario
-preview 091/102: io.github.virenmohindra.soup
-preview 092/102: io.github.virenmohindra.swish
-preview 093/102: io.github.virenmohindra.sploosh
-preview 094/102: io.github.virenmohindra.time-and-money
-preview 095/102: io.github.virenmohindra.tesseract
-preview 096/102: io.github.virenmohindra.upload
+preview 088/102: io.github.virenmohindra.sploosh
+preview 089/102: io.github.virenmohindra.stay-in-lane
+preview 090/102: io.github.virenmohindra.spikey
+preview 091/102: io.github.virenmohindra.stranger-things
+preview 092/102: io.github.virenmohindra.super-mario
+preview 093/102: io.github.virenmohindra.swish
+preview 094/102: io.github.virenmohindra.tesseract
+preview 095/102: io.github.virenmohindra.three-waves
+preview 096/102: io.github.virenmohindra.swimmer
 preview 097/102: io.github.virenmohindra.world-swap
-preview 098/102: io.github.virenmohindra.waiting
-preview 099/102: io.github.virenmohindra.yin-and-yang
-preview 100/102: io.github.virenmohindra.three-waves
+preview 098/102: io.github.virenmohindra.yin-and-yang
+preview 099/102: io.github.virenmohindra.waiting
+preview 100/102: io.github.virenmohindra.upload
 preview 101/102: io.github.virenmohindra.twisting-cubes
-preview 102/102: io.github.virenmohindra.stay-in-lane
+preview 102/102: io.github.virenmohindra.time-and-money
 generated_previews=102
 generated_preview_bytes=1338988
 --- build tail ---

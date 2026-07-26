@@ -1260,5 +1260,5 @@
   "repositoryIndexMismatchCount": 47,
   "missingPagesPayloadFallbackCount": 1,
   "verificationPolicy": "Each DEB was downloaded over HTTPS and verified for package identity, byte count, SHA-256, safe archive paths/types, no extracted symlinks, and previewable media. Bundled records remain authoritative over stale live index metadata.",
-  "immutableCatalogVerifiedAtUTC": "2026-07-26T15:27:52Z"
+  "immutableCatalogVerifiedAtUTC": "2026-07-26T15:31:08Z"
 }
