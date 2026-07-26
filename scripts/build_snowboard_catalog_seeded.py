@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
-"""Build the SnowBoard catalog with deterministic verified package seeds.
+"""Build the SnowBoard catalog from deterministic published package metadata.
 
-The listing site may block GitHub-hosted runners. These seeds contain metadata
-published on the original package pages, but every DEB is still downloaded from
-its original repository and must pass the normal SHA-256, package ID, version,
-architecture, archive-path, .theme-path, and artwork verification in
-build_snowboard_catalog.py.
+Every package is still downloaded directly from its original repository and
+must pass SHA-256, package ID, version, architecture, archive-path, .theme-path,
+and artwork verification. Unreachable or mismatched packages are excluded.
 """
 from __future__ import annotations
 
+import concurrent.futures
+import json
+import tempfile
+from pathlib import Path
+
 import build_snowboard_catalog as base
+import requests as transport
 
 
 SEEDS = {
@@ -59,35 +63,108 @@ SEEDS = {
     ),
 }
 
-EXTRA_PAGES = {
-    "https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.soda-ldz.respringpack/",
-    "https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.soda-ldz.respringrespringpack2/",
-    "https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.soda-ldz.respringrespringpack3/",
-    "https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.soda-ldz.respringfxxk/",
-    "https://www.ios-repo-updates.com/repository/yourepo/package/com.yourepo.soda-ldz.doughnuts/",
-    "https://www.ios-repo-updates.com/repository/iospackix/package/respring.hende.megapack/",
-    "https://www.ios-repo-updates.com/repository/hende/package/beta.hende.megapack/",
-    "https://www.ios-repo-updates.com/repository/iospackix/package/com.rkycyku.allin1.respring/",
-}
 
-_original_parse = base.parse_package_page
-
-
-def seeded_discovery() -> list[str]:
-    # Avoid making release success depend on section-index availability. The
-    # explicit list contains the largest known packs and individual legacy rows.
-    return sorted(set(base.EXPLICIT_PACKAGE_PAGES) | set(SEEDS) | EXTRA_PAGES)
+def package_pages() -> list[base.PackagePage]:
+    pages: dict[str, base.PackagePage] = dict(SEEDS)
+    for page_url in sorted(getattr(transport, "KNOWN", {})):
+        if page_url in pages:
+            continue
+        parsed = base.parse_package_page(page_url)
+        if parsed is not None:
+            pages[page_url] = parsed
+    unique: dict[str, base.PackagePage] = {}
+    for page in pages.values():
+        unique.setdefault(page.package, page)
+    return sorted(unique.values(), key=lambda item: item.package)
 
 
-def seeded_parse(page_url: str):
-    seed = SEEDS.get(page_url)
-    if seed is not None:
-        return seed
-    return _original_parse(page_url)
+def inspect_one(page: base.PackagePage, work_root: Path):
+    try:
+        records, package = base.inspect_package(page, work_root)
+        return page, records, package, None
+    except Exception as exc:  # noqa: BLE001
+        return page, [], None, base.clean_text(str(exc))
 
 
-base.discover_package_pages = seeded_discovery
-base.parse_package_page = seeded_parse
+def main() -> None:
+    pages = package_pages()
+    print(f"candidate_page_count={len(pages)}", flush=True)
+    records: list[dict] = []
+    packages: list[dict] = []
+    failures: list[str] = []
+
+    with tempfile.TemporaryDirectory(prefix="gif2ani-snowboard-") as temporary:
+        work_root = Path(temporary)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=min(8, max(1, len(pages)))) as executor:
+            futures = [executor.submit(inspect_one, page, work_root) for page in pages]
+            completed = 0
+            for future in concurrent.futures.as_completed(futures):
+                page, package_records, package_result, error = future.result()
+                completed += 1
+                if error:
+                    failures.append(f"{page.page_url}|{error}")
+                    print(f"candidate_{completed:03d}=rejected|{page.package}|{error}", flush=True)
+                    continue
+                records.extend(package_records)
+                packages.append(package_result)
+                print(
+                    f"verified_package_{len(packages):03d}={page.package}|subthemes={len(package_records)}|"
+                    f"bytes={package_result['bytes']}|sha256={package_result['sha256']}",
+                    flush=True,
+                )
+
+    deduped = {record["identifier"]: record for record in records}
+    records = sorted(deduped.values(), key=lambda item: (item["name"].lower(), item["identifier"]))
+    packages = sorted(packages, key=lambda item: item["package"])
+    if len(packages) < 3 or len(records) < 10:
+        raise RuntimeError(f"verified SnowBoard inventory is too small: {len(packages)} packages / {len(records)} themes")
+
+    manifest = {
+        "version": 1,
+        "catalogType": "verified-snowboard-respring",
+        "count": len(records),
+        "packageCount": len(packages),
+        "candidateCount": len(pages),
+        "policy": "Only free direct public original DEBs with a published matching SHA-256 and verified .theme artwork are included. Packages are downloaded and extracted for artwork only; they are never installed.",
+        "themes": records,
+    }
+    base.OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    base.OUTPUT.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
+
+    base.STATUS.parent.mkdir(parents=True, exist_ok=True)
+    lines = [
+        "Gif2Ani Verified SnowBoard Respring Catalog",
+        f"candidate_page_count={len(pages)}",
+        f"verified_package_count={len(packages)}",
+        f"verified_theme_count={len(records)}",
+        f"rejected_or_unavailable_count={len(failures)}",
+        "all_included_packages_free=true",
+        "all_included_downloads_https=true",
+        "all_included_sha256_verified=true",
+        "all_included_package_ids_verified=true",
+        "all_included_theme_paths_verified=true",
+        "",
+        "--- packages ---",
+    ]
+    for index, package in enumerate(packages, 1):
+        lines.append(
+            f"{index:03d}. {package['package']} | {package['name']} | {package['version']} | "
+            f"subthemes={package['subthemes']} | bytes={package['bytes']} | sha256={package['sha256']} | "
+            f"url={package['downloadURL']} | effective={package['effectiveURL']}"
+        )
+    lines.extend(["", "--- themes ---"])
+    for index, record in enumerate(records, 1):
+        lines.append(
+            f"{index:03d}. {record['name']} | {record['identifier']} | package={record['package']} | "
+            f"path={record['archiveSubpath']} | media={record['mediaFiles']} | kind={record['animationKind']}"
+        )
+    lines.extend(["", "--- rejected/unavailable ---", *failures])
+    base.STATUS.write_text("\n".join(lines) + "\n")
+
+    print(f"snowboard_verified_package_count={len(packages)}")
+    print(f"snowboard_verified_theme_count={len(records)}")
+    print(f"snowboard_rejected_count={len(failures)}")
+
 
 if __name__ == "__main__":
-    base.main()
+    main()
