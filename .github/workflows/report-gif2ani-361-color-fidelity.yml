@@ -29,7 +29,7 @@ jobs:
             "https://api.github.com/repos/${REPO}/actions/workflows/build-gif2ani-361-color-faithful-previews.yml/runs?per_page=30" > runs.json
           python3 - <<'PY'
           import json,os,pathlib,urllib.request
-          target='17db50b52c0391960a2974b303b78c570255bd0a'
+          target='e1c2fda15e167872d4ae238164b853dc0c51d4c5'
           runs=json.loads(pathlib.Path('runs.json').read_text()).get('workflow_runs',[])
           run=next((item for item in runs if item.get('head_sha')==target),None)
           lines=['Gif2Ani 3.6.1 Color Fidelity Build',f'target_sha={target}']
