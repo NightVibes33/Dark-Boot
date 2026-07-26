@@ -1,0 +1,2 @@
+requested_at_utc=2026-07-26T18:36:00Z
+purpose=rerun 262 animated preview generation with forced upscaling for small static artwork, then compile and publish 3.5.9
