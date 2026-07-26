@@ -23,11 +23,10 @@
       <key>footerText</key><string>Tap any downloadable theme to fetch its verified original file, preview it, and stage it. Then return here to choose scaling, background, repeat, and duration before Apply. The 48 Springy DEBs are extracted for animation media only; the old packages are never installed.</string>
     </dict>
     <dict>
-      <key>cell</key><string>PSLinkCell</string>
+      <key>cell</key><string>PSButtonCell</string>
       <key>label</key><string>Browse and Preview Animations</string>
       <key>id</key><string>G2ThemeGallery</string>
-      <key>detail</key><string>G2ThemeGalleryController</string>
-      <key>isController</key><true/>
+      <key>action</key><string>openAnimationGallery</string>
     </dict>
 
     <dict>
