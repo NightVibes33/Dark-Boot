@@ -1,0 +1,2 @@
+trigger=2026-07-26T04:20:00Z
+reason=Replace failing NSURLSession gallery downloads with verified curl and bundle 102 real thumbnails
