@@ -1,0 +1,53 @@
+name: Report Gif2Ani 3.6.0 Patch Failure
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/report-gif2ani-360-patch-failure.yml
+      - triggers/report-gif2ani-360-patch-failure.txt
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Extract failed patch diagnostics
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          JOB_ID: '89830833973'
+        run: |
+          set -euo pipefail
+          curl -fsSL -H "Authorization: Bearer ${GH_TOKEN}" -H 'Accept: application/vnd.github+json' \
+            "https://api.github.com/repos/${REPO}/actions/jobs/${JOB_ID}/logs" -o job.log
+          python3 - <<'PY'
+          from pathlib import Path
+          text=Path('job.log').read_text(errors='replace')
+          lines=text.splitlines()
+          chosen=[]
+          needles=('Traceback','RuntimeError','missing ','AssertionError','apply_gif2ani_360','source block')
+          for i,line in enumerate(lines):
+              if any(n in line for n in needles):
+                  start=max(0,i-8); end=min(len(lines),i+18)
+                  chosen.extend(lines[start:end])
+          chosen.extend(['--- final 100 lines ---',*lines[-100:]])
+          Path('status').mkdir(exist_ok=True)
+          Path('status/gif2ani-360-patch-failure.txt').write_text('\n'.join(chosen)+'\n')
+          PY
+      - name: Publish diagnostic
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add status/gif2ani-360-patch-failure.txt
+          git commit -m 'Report Gif2Ani 3.6.0 patch failure [skip ci]' || exit 0
+          git push origin HEAD:main
