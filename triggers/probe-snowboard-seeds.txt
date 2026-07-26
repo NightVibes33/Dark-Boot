@@ -1,2 +1,2 @@
-triggered_at_utc=2026-07-26T16:30:00Z
-purpose=download all deterministic candidate DEBs concurrently, verify published SHA-256 and package metadata, enumerate real .theme subpacks, and publish exact accepted and rejected inventory before the full Gif2Ani build
+triggered_at_utc=2026-07-26T16:34:00Z
+purpose=rerun deterministic SnowBoard source verification after fixing ./Library archive path parsing; publish exact accepted packages, real subtheme count, and rejected sources
