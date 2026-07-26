@@ -25,6 +25,7 @@ static BOOL G2OpenThemeURLIsAllowed(NSURL *url, BOOL indexURL) {
     if ([host isEqualToString:G2OpenThemePinnedRawHost]) {
         return [path hasPrefix:G2OpenThemePinnedRawPrefix] && [path.pathExtension.lowercaseString isEqualToString:@"deb"];
     }
+    if (G2SnowBoardThemeURLIsAllowed(url)) return YES;
     return NO;
 }
 
@@ -160,10 +161,10 @@ static NSArray<NSDictionary *> *G2LoadCachedOpenThemeCatalog(void) {
 }
 
 static NSString *G2OpenThemePackageDirectory(NSDictionary *pack) {
-    NSString *package = pack[@"package"];
+    NSString *identifier = [pack[@"identifier"] isKindOfClass:NSString.class] ? pack[@"identifier"] : pack[@"package"];
     NSCharacterSet *allowed = [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-"];
-    if (![package hasPrefix:@"io.github.virenmohindra."] || !G2StringContainsOnlyCharacters(package, allowed)) return nil;
-    return [G2OpenThemeLibraryRoot stringByAppendingPathComponent:package];
+    if (!identifier.length || !G2StringContainsOnlyCharacters(identifier, allowed) || [identifier containsString:@".."] || [identifier hasPrefix:@"."]) return nil;
+    return [G2OpenThemeLibraryRoot stringByAppendingPathComponent:identifier];
 }
 
 static NSDictionary *G2OpenThemeCachedInfo(NSDictionary *pack) {
@@ -232,6 +233,15 @@ static NSDictionary *G2BestAnimationCandidateInTree(NSString *root) {
                 bestScore = score;
                 best = @{@"kind":@"frames", @"path":directory, @"count":@(files.count)};
             }
+        } else if (files.count == 1 && ![files.firstObject.pathExtension.lowercaseString isEqualToString:@"gif"]) {
+            UIImage *image = [UIImage imageWithContentsOfFile:files.firstObject];
+            if (image) {
+                NSInteger score = G2AnimationCandidateScore(files.firstObject, 1, NO) - 500;
+                if (score > bestScore) {
+                    bestScore = score;
+                    best = @{@"kind":@"still", @"path":files.firstObject, @"count":@1};
+                }
+            }
         }
     }
     return best;
@@ -251,6 +261,7 @@ static BOOL G2NormalizeOpenThemeCandidate(NSDictionary *candidate, NSDictionary 
     BOOL success = NO;
     NSString *relativePath = nil;
     NSString *kind = candidate[@"kind"];
+    NSString *normalizedKind = kind;
     NSString *sourcePath = candidate[@"path"];
     if ([kind isEqualToString:@"gif"]) {
         relativePath = @"Animation.gif";
@@ -276,6 +287,16 @@ static BOOL G2NormalizeOpenThemeCandidate(NSDictionary *candidate, NSDictionary 
         }
         if (success) success = G2FramesFromDirectory(destination, 400).count > 1;
         if (!success && error && !*error) *error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:71 userInfo:@{NSLocalizedDescriptionKey:@"The package did not contain at least two usable animation frames."}];
+    } else if ([kind isEqualToString:@"still"]) {
+        normalizedKind = @"frames";
+        relativePath = @"Frames";
+        NSString *destination = [staging stringByAppendingPathComponent:relativePath];
+        success = [manager createDirectoryAtPath:destination withIntermediateDirectories:YES attributes:@{NSFilePosixPermissions:@0755} error:error];
+        NSString *extension = sourcePath.pathExtension.lowercaseString.length ? sourcePath.pathExtension.lowercaseString : @"png";
+        if (success) success = [manager copyItemAtPath:sourcePath toPath:[destination stringByAppendingPathComponent:[NSString stringWithFormat:@"0000.%@", extension]] error:error];
+        if (success) success = [manager copyItemAtPath:sourcePath toPath:[destination stringByAppendingPathComponent:[NSString stringWithFormat:@"0001.%@", extension]] error:error];
+        if (success) success = G2FramesFromDirectory(destination, 400).count > 1;
+        if (!success && error && !*error) *error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:71 userInfo:@{NSLocalizedDescriptionKey:@"The static respring logo could not be normalized safely."}];
     }
 
     if (success) {
@@ -283,7 +304,7 @@ static BOOL G2NormalizeOpenThemeCandidate(NSDictionary *candidate, NSDictionary 
             @"package": pack[@"package"] ?: @"",
             @"version": pack[@"version"] ?: @"",
             @"sha256": pack[@"sha256"] ?: @"",
-            @"kind": kind ?: @"",
+            @"kind": normalizedKind ?: @"",
             @"relativePath": relativePath ?: @"",
             @"source": pack[@"source"] ?: @"",
             @"license": pack[@"license"] ?: @"",
@@ -332,7 +353,11 @@ static BOOL G2NormalizeOpenThemeCandidate(NSDictionary *candidate, NSDictionary 
         dispatch_async(dispatch_get_main_queue(), ^{
             typeof(self) strongSelf = weakSelf;
             if (!strongSelf) return;
-            if (packs.count) strongSelf.openThemes = packs;
+            if (packs.count) {
+                NSMutableArray<NSDictionary *> *combined = [packs mutableCopy];
+                [combined addObjectsFromArray:G2BundledSnowBoardCatalog()];
+                strongSelf.openThemes = combined.copy;
+            }
             strongSelf.openLibraryLoading = NO;
             strongSelf.openLibraryError = packs.count ? nil : (error.localizedDescription ?: @"The original theme library could not be refreshed.");
             [strongSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -383,7 +408,23 @@ static BOOL G2NormalizeOpenThemeCandidate(NSDictionary *candidate, NSDictionary 
         if (!error && !G2PreflightArchive(debPath, @"deb", &error)) success = NO;
         if (!error && G2RunTool(@[@"/var/jb/usr/bin/dpkg-deb", @"/usr/bin/dpkg-deb"], @[@"-x", debPath, extractRoot]) != 0) error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:77 userInfo:@{NSLocalizedDescriptionKey:@"The verified theme package could not be extracted."}];
         if (!error && !G2ValidateExtractedTree(extractRoot, &error)) success = NO;
-        NSDictionary *candidate = !error ? G2BestAnimationCandidateInTree(extractRoot) : nil;
+        NSString *candidateRoot = extractRoot;
+        NSString *archiveSubpath = [pack[@"archiveSubpath"] isKindOfClass:NSString.class] ? pack[@"archiveSubpath"] : nil;
+        if (!error && archiveSubpath.length) {
+            if ([archiveSubpath hasPrefix:@"/"] || [archiveSubpath containsString:@".."] || [archiveSubpath containsString:@"\\"]) {
+                error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:79 userInfo:@{NSLocalizedDescriptionKey:@"The selected SnowBoard theme path is unsafe."}];
+            } else {
+                NSString *resolved = [[extractRoot stringByAppendingPathComponent:archiveSubpath] stringByStandardizingPath];
+                NSString *prefix = [extractRoot.stringByStandardizingPath stringByAppendingString:@"/"];
+                BOOL isDirectory = NO;
+                if (![resolved hasPrefix:prefix] || ![manager fileExistsAtPath:resolved isDirectory:&isDirectory] || !isDirectory) {
+                    error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:80 userInfo:@{NSLocalizedDescriptionKey:@"The verified SnowBoard subtheme was not present in the downloaded package."}];
+                } else {
+                    candidateRoot = resolved;
+                }
+            }
+        }
+        NSDictionary *candidate = !error ? G2BestAnimationCandidateInTree(candidateRoot) : nil;
         if (!error && !candidate) error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:78 userInfo:@{NSLocalizedDescriptionKey:@"The package did not contain a compatible animated GIF or frame sequence."}];
         if (!error) success = G2NormalizeOpenThemeCandidate(candidate, pack, &error);
         [manager removeItemAtPath:work error:nil];

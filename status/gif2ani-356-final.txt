@@ -1,0 +1,13 @@
+Gif2Ani 3.5.6 Final SnowBoard Gallery
+compiled_run_id=30211519062
+compiled_source_commit=62ba3a0586262584ab908f6af30021487674c2e4
+status=success
+published_at_utc=2026-07-26T17:00:38Z
+b3de14935aea124f665803bfaa9140c0f81021e3f15add6e324ab504c1c44c16  release-packages/Gif2Ani-3.5.6-verified-snowboard-library.deb
+verified_snowboard_packages=7
+verified_snowboard_themes=160
+verified_springy_themes=48
+combined_source_backed_themes=208
+historical_import_prompt=removed
+download_cache_owner=mobile-recursive
+compile_and_package_validation=success

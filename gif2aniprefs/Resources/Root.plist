@@ -8,8 +8,8 @@
   <array>
     <dict>
       <key>cell</key><string>PSGroupCell</string>
-      <key>label</key><string>GIF2ANI 3.5.5</string>
-      <key>footerText</key><string>114 first-class themes: 12 offline, 54 pinned CC0 downloads, and 48 original Springy pack downloads. Nothing contacts BackBoard until you explicitly tap Apply and Respring.</string>
+      <key>label</key><string>GIF2ANI 3.5.6</string>
+      <key>footerText</key><string>Expanded verified Springy and SnowBoard gallery: 12 offline, 54 pinned CC0 downloads, and 48 original Springy pack downloads. Nothing contacts BackBoard until you explicitly tap Apply and Respring.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSButtonCell</string>

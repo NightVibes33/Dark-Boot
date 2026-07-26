@@ -78,7 +78,7 @@
     self.thumbnailCache.countLimit = 120;
     self.builtIn = G2BuiltInPacks();
     self.openThemes = G2LoadCachedOpenThemeCatalog();
-    self.legacy = G2LegacyCatalog();
+    self.legacy = @[];
     [self refreshGallery];
     [self refreshOpenThemeLibrary];
 }
@@ -182,7 +182,7 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     (void)tableView;
     if (section == 0) return @"Built-In • Offline and Downloadable";
-    if (section == 1) return @"Open Source Pack Library";
+    if (section == 1) return @"Verified Springy & SnowBoard Library";
     if (section == 2) return @"Installed or Imported Packs";
     return @"Additional Legacy References";
 }
@@ -190,7 +190,7 @@
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
     (void)tableView;
     if (section == 0) return @"Twelve offline animations and 54 pinned CC0 downloads are first-class Gif2Ani themes.";
-    if (section == 1) return @"Every row downloads its original Springy DEB, verifies SHA-256 and package identity, extracts only safe image content, previews it, and stages it without installing the old package.";
+    if (section == 1) return @"Every row downloads its original verified DEB, checks SHA-256 and package identity, extracts only its selected Springy or SnowBoard respring artwork, previews it, and never installs the old package.";
     if (section == 2) return self.discovered.count ? @"Springy, SnowBoard Respring, GIF, frame-folder, ZIP, and DEB packs are detected here." : @"Tap + to import a GIF, ZIP, DEB, or theme folder. Installed Springy and SnowBoard packs are detected automatically.";
     return @"References from other historical repositories remain listed when their original files or redistribution terms cannot be verified.";
 }

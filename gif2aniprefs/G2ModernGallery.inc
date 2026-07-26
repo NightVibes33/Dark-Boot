@@ -188,10 +188,10 @@ static NSString *G2MSourceText(NSDictionary *pack) {
     }
     if ([kind isEqualToString:@"sourceDeb"]) {
         NSString *bytes = [NSByteCountFormatter stringFromByteCount:[pack[@"downloadBytes"] longLongValue] countStyle:NSByteCountFormatterCountStyleFile];
-        return [NSString stringWithFormat:@"%@ • %@", pack[@"source"] ?: @"Original Springy repository", bytes];
+        return [NSString stringWithFormat:@"%@ • %@", pack[@"source"] ?: @"Original verified repository", bytes];
     }
     if ([kind isEqualToString:@"gif"] || [kind isEqualToString:@"frames"]) return @"Installed / Imported";
-    return @"Historical compatibility";
+    return @"Verified source";
 }
 
 static NSArray<NSString *> *G2MFavorites(void) {

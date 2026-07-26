@@ -53,7 +53,7 @@ static NSArray<NSDictionary *> *G2BuiltInPacks(void) {
     ];
 }
 
-static NSArray<NSDictionary *> *G2LegacyCatalog(void) {
+__attribute__((unused)) static NSArray<NSDictionary *> *G2LegacyCatalog(void) {
     return @[
         @{@"name":@"A Wave", @"package":@"io.github.virenmohindra.a-wave", @"source":@"Viren's Repo", @"format":@"Springy"},
         @{@"name":@"Alone", @"package":@"io.github.virenmohindra.alone", @"source":@"Viren's Repo", @"format":@"Springy"},

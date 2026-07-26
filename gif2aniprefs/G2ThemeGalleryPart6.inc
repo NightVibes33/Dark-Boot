@@ -67,10 +67,9 @@
     }
     NSDictionary *pack = [self packAtIndexPath:indexPath];
     if ([pack[@"kind"] isEqualToString:@"legacy"]) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:pack[@"name"]
-                                                                       message:[NSString stringWithFormat:@"%@ is a historical respring package whose current original file or redistribution terms could not be verified. The verified open-source library above is one-tap downloadable; this separate row remains an import/reference fallback.", pack[@"package"]]
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Source unavailable"
+                                                                       message:[NSString stringWithFormat:@"%@ is not in the verified download catalog because no free original public DEB with matching integrity metadata was found. It cannot be imported from this row.", pack[@"package"]]
                                                                 preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Import Pack File" style:UIAlertActionStyleDefault handler:^(__unused UIAlertAction *action) { [self importPack]; }]];
         [alert addAction:[UIAlertAction actionWithTitle:@"Close" style:UIAlertActionStyleCancel handler:nil]];
         [self presentViewController:alert animated:YES completion:nil];
         return;

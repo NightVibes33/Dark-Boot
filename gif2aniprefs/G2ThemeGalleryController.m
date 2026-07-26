@@ -10,9 +10,11 @@ static NSArray<NSDictionary *> *G2OfflineBuiltInPacks(void);
 static BOOL G2StageGIFAtPath(NSString *sourcePath, NSDictionary *recommended, NSError **error);
 static NSArray<NSDictionary *> *G2LoadCachedOpenThemeCatalog(void);
 static NSArray<NSDictionary *> *G2PreferredOpenThemeCatalog(void);
+static NSArray<NSDictionary *> *G2BundledSnowBoardCatalog(void);
 static NSDictionary *G2OpenThemeCachedInfo(NSDictionary *pack);
 static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack);
 static BOOL G2OpenThemeURLIsAllowed(NSURL *url, BOOL indexURL);
+static BOOL G2SnowBoardThemeURLIsAllowed(NSURL *url);
 static NSData *G2CurlDownloadData(NSURL *url, BOOL openTheme, unsigned long long maximumBytes, NSError **error);
 static UIImage *G2BundledThemePreview(NSDictionary *pack);
 
@@ -46,15 +48,16 @@ static UIImage *G2BundledThemePreview(NSDictionary *pack);
 #include "G2ThemeGalleryPart6.inc"
 
 #include "G2BundledOpenThemeCatalog.inc"
+#include "G2BundledSnowBoardCatalog.inc"
 
 static NSArray<NSDictionary *> *G2PreferredOpenThemeCatalog(void) {
-    NSArray<NSDictionary *> *bundled = G2BundledOpenThemeCatalog();
-    // The bundled snapshot is independently verified and must be usable even
-    // when an older on-device catalog.plist is malformed or stale.
-    if (bundled.count >= 48) return bundled;
-
-    NSArray<NSDictionary *> *cached = G2LoadCachedOpenThemeCatalog();
-    return cached ?: @[];
+    NSArray<NSDictionary *> *springy = G2BundledOpenThemeCatalog();
+    if (springy.count < 48) springy = G2LoadCachedOpenThemeCatalog() ?: @[];
+    NSArray<NSDictionary *> *snowboard = G2BundledSnowBoardCatalog();
+    NSMutableArray<NSDictionary *> *combined = [NSMutableArray arrayWithCapacity:springy.count + snowboard.count];
+    [combined addObjectsFromArray:springy];
+    [combined addObjectsFromArray:snowboard];
+    return combined.copy;
 }
 
 #include "G2ThemeStageOverride.inc"
