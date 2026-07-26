@@ -1,7 +1,20 @@
 #!/bin/sh
 set -e
-mkdir -p "/var/mobile/Library/Application Support/Gif2Ani"
-chown mobile:mobile "/var/mobile/Library/Application Support/Gif2Ani" 2>/dev/null || true
-chmod 0755 "/var/mobile/Library/Application Support/Gif2Ani" 2>/dev/null || true
+
+MEDIA_ROOT="/var/mobile/Library/Application Support/Gif2Ani"
+
+mkdir -p \
+  "$MEDIA_ROOT" \
+  "$MEDIA_ROOT/OpenThemeLibrary" \
+  "$MEDIA_ROOT/RemoteThemes" \
+  "$MEDIA_ROOT/Packs" \
+  "$MEDIA_ROOT/Rollbacks"
+
+# Settings runs as mobile. Package installs and SSH validation run as root, so
+# repair the complete writable tree rather than only its top-level directory.
+chown -R mobile:mobile "$MEDIA_ROOT" 2>/dev/null || true
+find "$MEDIA_ROOT" -type d -exec chmod 0755 {} + 2>/dev/null || true
+find "$MEDIA_ROOT" -type f -exec chmod 0644 {} + 2>/dev/null || true
+
 killall -9 Preferences 2>/dev/null || true
 exit 0
