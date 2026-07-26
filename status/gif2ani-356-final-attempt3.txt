@@ -1,0 +1,20 @@
+Gif2Ani 3.5.6 Final Attempt 3
+target_sha=62ba3a0586262584ab908f6af30021487674c2e4
+id=30211519062
+head_sha=62ba3a0586262584ab908f6af30021487674c2e4
+status=completed
+conclusion=failure
+created_at=2026-07-26T16:56:19Z
+updated_at=2026-07-26T16:57:40Z
+html_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30211519062
+job=89818432852|build|completed|failure
+step=1|Set up job|completed|success
+step=2|Run actions/checkout@v4|completed|success
+step=3|Install build dependencies and Theos|completed|success
+step=4|Verify all reachable SnowBoard source DEBs|completed|success
+step=5|Integrate catalog and validate generated Objective-C|completed|success
+step=6|Compile and verify rootless package|completed|success
+step=7|Upload final package evidence|completed|success
+step=8|Publish final package and status|completed|failure
+step=16|Post Run actions/checkout@v4|completed|success
+step=17|Complete job|completed|success
