@@ -8,6 +8,7 @@
 static NSArray<NSDictionary *> *G2OfflineBuiltInPacks(void);
 static BOOL G2StageGIFAtPath(NSString *sourcePath, NSDictionary *recommended, NSError **error);
 static NSArray<NSDictionary *> *G2LoadCachedOpenThemeCatalog(void);
+static NSArray<NSDictionary *> *G2PreferredOpenThemeCatalog(void);
 static NSDictionary *G2OpenThemeCachedInfo(NSDictionary *pack);
 static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack);
 static BOOL G2OpenThemeURLIsAllowed(NSURL *url, BOOL indexURL);
@@ -35,6 +36,12 @@ static BOOL G2OpenThemeURLIsAllowed(NSURL *url, BOOL indexURL);
 #undef G2StageGIFAtPath
 #pragma clang diagnostic pop
 
+#include "G2ThemeGalleryPart4.inc"
+#define G2LoadCachedOpenThemeCatalog G2PreferredOpenThemeCatalog
+#include "G2ThemeGalleryPart5.inc"
+#undef G2LoadCachedOpenThemeCatalog
+#include "G2ThemeGalleryPart6.inc"
+
 #include "G2BundledOpenThemeCatalog.inc"
 
 static NSArray<NSDictionary *> *G2PreferredOpenThemeCatalog(void) {
@@ -42,12 +49,6 @@ static NSArray<NSDictionary *> *G2PreferredOpenThemeCatalog(void) {
     if (cached.count >= 48) return cached;
     return G2BundledOpenThemeCatalog();
 }
-
-#include "G2ThemeGalleryPart4.inc"
-#define G2LoadCachedOpenThemeCatalog G2PreferredOpenThemeCatalog
-#include "G2ThemeGalleryPart5.inc"
-#undef G2LoadCachedOpenThemeCatalog
-#include "G2ThemeGalleryPart6.inc"
 
 #include "G2ThemeStageOverride.inc"
 #include "G2OpenThemeLibrary.inc"
