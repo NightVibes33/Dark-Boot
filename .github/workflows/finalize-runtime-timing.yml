@@ -1,0 +1,276 @@
+name: Finalize Gif2Ani Runtime Timing
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/finalize-runtime-timing.yml
+      - triggers/finalize-runtime-timing.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-runtime-timing
+  cancel-in-progress: true
+
+jobs:
+  finalize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Preserve frame timing and restore Apple loader safely
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('Tweak.xm')
+          text = path.read_text()
+
+          def replace_once(old, new, label):
+              global text
+              if new in text:
+                  return
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{label}: expected one source block, found {count}')
+              text = text.replace(old, new, 1)
+
+          replace_once(
+              'static NSArray<UIImage *> *g2Frames;\nstatic NSTimeInterval g2NaturalDuration;\n',
+              'static NSArray<UIImage *> *g2Frames;\nstatic NSArray<NSNumber *> *g2KeyTimes;\nstatic NSTimeInterval g2NaturalDuration;\n',
+              'key-time global')
+
+          replace_once(
+              'static CALayer *g2PreparedContentLayer;\nstatic CALayer *g2DedicatedAnimationLayer;\nstatic CGRect g2PresentationBounds;\n',
+              'static CALayer *g2PreparedContentLayer;\nstatic CALayer *g2DedicatedAnimationLayer;\nstatic __weak CALayer *g2AppleLoaderLayer;\nstatic float g2AppleLoaderOriginalOpacity = 1.0f;\nstatic CGRect g2PresentationBounds;\n',
+              'Apple loader globals')
+
+          replace_once(
+              '''static void G2ClearLoadSentinel(void) {
+    [[NSFileManager defaultManager] removeItemAtPath:G2LoadSentinelPath error:nil];
+}
+''',
+              '''static void G2ClearLoadSentinel(void) {
+    [[NSFileManager defaultManager] removeItemAtPath:G2LoadSentinelPath error:nil];
+}
+
+static void G2RestoreAppleLoader(void) {
+    CALayer *layer = g2AppleLoaderLayer;
+    if (layer) layer.opacity = g2AppleLoaderOriginalOpacity;
+    g2AppleLoaderLayer = nil;
+    g2AppleLoaderOriginalOpacity = 1.0f;
+}
+''',
+              'Apple loader restore helper')
+
+          text = text.replace('    g2NaturalDuration = 0;\n', '    g2NaturalDuration = 0;\n    g2KeyTimes = nil;\n')
+
+          text = text.replace(
+              '    g2PreparedContentLayer = nil;\n    [g2DedicatedAnimationLayer removeFromSuperlayer];\n',
+              '    g2PreparedContentLayer = nil;\n    G2RestoreAppleLoader();\n    [g2DedicatedAnimationLayer removeFromSuperlayer];\n')
+
+          replace_once(
+              '''static BOOL G2DecodeActiveGIF(NSDictionary *metadata,
+                               NSArray<UIImage *> **framesOut,
+                               NSTimeInterval *durationOut,
+                               unsigned long long *decodedBytesOut,
+                               NSString **failureReasonOut) {''',
+              '''static BOOL G2DecodeActiveGIF(NSDictionary *metadata,
+                               NSArray<UIImage *> **framesOut,
+                               NSArray<NSNumber *> **keyTimesOut,
+                               NSTimeInterval *durationOut,
+                               unsigned long long *decodedBytesOut,
+                               NSString **failureReasonOut) {''',
+              'decoder signature')
+
+          replace_once(
+              '''    NSMutableArray<UIImage *> *frames = [NSMutableArray arrayWithCapacity:decodedFrames];
+    unsigned long long decodedBytes = 0;
+    NSTimeInterval duration = 0;
+
+    for (NSUInteger index = 0; index < sourceFrames; index++) {
+        duration += G2FrameDelay(source, index);
+    }
+''',
+              '''    NSMutableArray<UIImage *> *frames = [NSMutableArray arrayWithCapacity:decodedFrames];
+    NSMutableArray<NSNumber *> *keyTimes = [NSMutableArray arrayWithCapacity:decodedFrames];
+    NSMutableArray<NSNumber *> *sourceFrameStartTimes = [NSMutableArray arrayWithCapacity:sourceFrames];
+    unsigned long long decodedBytes = 0;
+    NSTimeInterval duration = 0;
+
+    for (NSUInteger index = 0; index < sourceFrames; index++) {
+        [sourceFrameStartTimes addObject:@(duration)];
+        duration += G2FrameDelay(source, index);
+    }
+''',
+              'duration accumulation')
+
+          replace_once(
+              '''        [frames addObject:frame];
+    }
+
+    CFRelease(source);''',
+              '''        [frames addObject:frame];
+        NSTimeInterval start = [sourceFrameStartTimes[sourceIndex] doubleValue];
+        [keyTimes addObject:@(duration > 0 ? MIN(1.0, MAX(0.0, start / duration)) : 0.0)];
+    }
+
+    CFRelease(source);''',
+              'sampled key times')
+
+          replace_once(
+              '''    if (framesOut) *framesOut = [frames copy];
+    if (durationOut) *durationOut = MAX(0.05, duration);
+    if (decodedBytesOut) *decodedBytesOut = decodedBytes;
+''',
+              '''    if (framesOut) *framesOut = [frames copy];
+    if (keyTimesOut) *keyTimesOut = [keyTimes copy];
+    if (durationOut) *durationOut = MAX(0.05, duration);
+    if (decodedBytesOut) *decodedBytesOut = decodedBytes;
+''',
+              'decoder outputs')
+
+          replace_once(
+              '''    NSArray<UIImage *> *frames = nil;
+    NSTimeInterval duration = 0;
+    unsigned long long decodedBytes = 0;
+''',
+              '''    NSArray<UIImage *> *frames = nil;
+    NSArray<NSNumber *> *keyTimes = nil;
+    NSTimeInterval duration = 0;
+    unsigned long long decodedBytes = 0;
+''',
+              'load locals')
+
+          replace_once(
+              'decoded = G2DecodeActiveGIF(metadata, &frames, &duration, &decodedBytes, &failureReason);',
+              'decoded = G2DecodeActiveGIF(metadata, &frames, &keyTimes, &duration, &decodedBytes, &failureReason);',
+              'decoder call')
+
+          replace_once(
+              '''    g2Frames = frames;
+    g2NaturalDuration = duration;
+''',
+              '''    g2Frames = frames;
+    g2KeyTimes = keyTimes.count == frames.count ? keyTimes : nil;
+    g2NaturalDuration = duration;
+''',
+              'runtime timing assignment')
+
+          replace_once(
+              '''    BOOL appleLoaderHidden = container != appleLayer;
+    if (appleLoaderHidden) appleLayer.opacity = 0.0;
+''',
+              '''    BOOL appleLoaderHidden = container != appleLayer;
+    if (appleLoaderHidden) {
+        if (g2AppleLoaderLayer != appleLayer) {
+            G2RestoreAppleLoader();
+            g2AppleLoaderLayer = appleLayer;
+            g2AppleLoaderOriginalOpacity = appleLayer.opacity;
+        }
+        appleLayer.opacity = 0.0;
+    }
+''',
+              'Apple loader capture')
+
+          replace_once(
+              '''    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"contents"];
+    animation.values = values;
+    animation.calculationMode = kCAAnimationDiscrete;
+''',
+              '''    CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"contents"];
+    animation.values = values;
+    animation.keyTimes = g2KeyTimes.count == values.count ? g2KeyTimes : nil;
+    animation.calculationMode = kCAAnimationDiscrete;
+''',
+              'animation key times')
+
+          replace_once(
+              '''static void G2Reload(__unused CFNotificationCenterRef center,
+                      __unused void *observer,
+                      __unused CFStringRef name,
+                      __unused const void *object,
+                      __unused CFDictionaryRef userInfo) {
+    [[G2PreferencesManager sharedInstance] reload];
+    g2Frames = nil;
+    g2NaturalDuration = 0;
+    g2KeyTimes = nil;
+    g2MediaMetadata = nil;
+    g2AnimationPending = NO;
+    g2PreparedContentLayer = nil;
+    G2RestoreAppleLoader();
+    [g2DedicatedAnimationLayer removeFromSuperlayer];
+    g2DedicatedAnimationLayer = nil;
+    g2PresentationBounds = CGRectZero;
+    G2WriteStatus(@"preferences-reloaded-without-media-decode", nil);
+}
+''',
+              '''static void G2Reload(__unused CFNotificationCenterRef center,
+                      __unused void *observer,
+                      __unused CFStringRef name,
+                      __unused const void *object,
+                      __unused CFDictionaryRef userInfo) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[G2PreferencesManager sharedInstance] reload];
+        g2Frames = nil;
+        g2NaturalDuration = 0;
+        g2KeyTimes = nil;
+        g2MediaMetadata = nil;
+        g2AnimationPending = NO;
+        g2PreparedContentLayer = nil;
+        G2RestoreAppleLoader();
+        [g2DedicatedAnimationLayer removeFromSuperlayer];
+        g2DedicatedAnimationLayer = nil;
+        g2PresentationBounds = CGRectZero;
+        G2WriteStatus(@"preferences-reloaded-without-media-decode", @{ @"mainThread": @YES });
+    });
+}
+''',
+              'main-thread reload')
+
+          path.write_text(text)
+          PY
+
+      - name: Validate runtime safety contract
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('Tweak.xm').read_text()
+          required = [
+              'g2KeyTimes',
+              'sourceFrameStartTimes',
+              'animation.keyTimes',
+              'G2RestoreAppleLoader',
+              'g2AppleLoaderOriginalOpacity',
+              'dispatch_async(dispatch_get_main_queue()',
+              '@"mainThread": @YES',
+          ]
+          missing = [token for token in required if token not in text]
+          assert not missing, missing
+          assert text.count('G2DecodeActiveGIF(metadata, &frames, &keyTimes, &duration, &decodedBytes, &failureReason)') == 1
+          assert text.count('G2RestoreAppleLoader();') >= 3
+          print('frame_delay_key_times=preserved')
+          print('reload_layer_mutation=main_thread')
+          print('Apple_loader_opacity=restored')
+          PY
+
+      - name: Commit runtime fixes
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Tweak.xm
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'Preserve GIF frame timing and harden BackBoard reloads'
+          git pull --rebase origin main
+          git push origin HEAD:main
