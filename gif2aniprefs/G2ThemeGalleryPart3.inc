@@ -148,8 +148,11 @@ static int G2RunTool(NSArray<NSString *> *candidates, NSArray<NSString *> *argum
 static NSString *G2RunToolCapture(NSArray<NSString *> *candidates,
                                   NSArray<NSString *> *arguments,
                                   int *exitCode) {
+    NSString *token = [[NSUUID UUID] UUIDString];
     NSString *capturePath = [NSTemporaryDirectory() stringByAppendingPathComponent:
-                             [NSString stringWithFormat:@"gif2ani-capture-%@.txt", [[NSUUID UUID] UUIDString]]];
+                             [NSString stringWithFormat:@"gif2ani-capture-%@.txt", token]];
+    NSString *errorPath = [NSTemporaryDirectory() stringByAppendingPathComponent:
+                           [NSString stringWithFormat:@"gif2ani-stderr-%@.txt", token]];
     for (NSString *tool in candidates) {
         if (![[NSFileManager defaultManager] isExecutableFileAtPath:tool]) continue;
         NSUInteger argc = arguments.count + 2;
@@ -163,7 +166,8 @@ static NSString *G2RunToolCapture(NSArray<NSString *> *candidates,
         posix_spawn_file_actions_init(&actions);
         posix_spawn_file_actions_addopen(&actions, STDOUT_FILENO, capturePath.fileSystemRepresentation,
                                          O_WRONLY | O_CREAT | O_TRUNC, 0600);
-        posix_spawn_file_actions_adddup2(&actions, STDOUT_FILENO, STDERR_FILENO);
+        posix_spawn_file_actions_addopen(&actions, STDERR_FILENO, errorPath.fileSystemRepresentation,
+                                         O_WRONLY | O_CREAT | O_TRUNC, 0600);
         pid_t pid = 0;
         int spawnResult = posix_spawn(&pid, tool.fileSystemRepresentation, &actions, NULL, argv, environ);
         posix_spawn_file_actions_destroy(&actions);
@@ -175,10 +179,12 @@ static NSString *G2RunToolCapture(NSArray<NSString *> *candidates,
         if (waitpid(pid, &status, 0) == pid && WIFEXITED(status)) code = WEXITSTATUS(status);
         NSData *data = [NSData dataWithContentsOfFile:capturePath];
         [[NSFileManager defaultManager] removeItemAtPath:capturePath error:nil];
+        [[NSFileManager defaultManager] removeItemAtPath:errorPath error:nil];
         if (exitCode) *exitCode = code;
         return data ? [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] : @"";
     }
     [[NSFileManager defaultManager] removeItemAtPath:capturePath error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:errorPath error:nil];
     if (exitCode) *exitCode = -1;
     return nil;
 }

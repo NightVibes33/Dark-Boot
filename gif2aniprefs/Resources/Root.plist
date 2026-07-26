@@ -8,8 +8,8 @@
   <array>
     <dict>
       <key>cell</key><string>PSGroupCell</string>
-      <key>label</key><string>GIF2ANI 3.5.6</string>
-      <key>footerText</key><string>Expanded verified Springy and SnowBoard gallery: 12 offline, 54 pinned CC0 downloads, and 48 original Springy pack downloads. Nothing contacts BackBoard until you explicitly tap Apply and Respring.</string>
+      <key>label</key><string>GIF2ANI 3.5.7</string>
+      <key>footerText</key><string>Expanded verified gallery: 12 offline animations, 54 pinned CC0 downloads, 48 original Springy pack downloads, and 160 verified SnowBoard respring themes. Nothing contacts BackBoard until you explicitly tap Apply and Respring.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSButtonCell</string>
@@ -19,8 +19,8 @@
 
     <dict>
       <key>cell</key><string>PSGroupCell</string>
-      <key>label</key><string>114-THEME ANIMATION GALLERY</string>
-      <key>footerText</key><string>Tap any downloadable theme to fetch its verified original file, preview it, and stage it. Then return here to choose scaling, background, repeat, and duration before Apply. The 48 Springy DEBs are extracted for animation media only; the old packages are never installed.</string>
+      <key>label</key><string>274-THEME ANIMATION GALLERY</string>
+      <key>footerText</key><string>Tap any downloadable theme to fetch its verified original file, preview it, and stage it. Then return here to choose scaling, background, repeat, and duration before Apply. The 48 Springy packs and 160 SnowBoard themes are extracted for respring artwork only; the original packages are never installed.</string>
     </dict>
     <dict>
       <key>cell</key><string>PSButtonCell</string>

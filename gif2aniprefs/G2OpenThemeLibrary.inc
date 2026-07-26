@@ -402,8 +402,15 @@ static BOOL G2NormalizeOpenThemeCandidate(NSDictionary *candidate, NSDictionary 
         if (!error && ![data writeToFile:debPath options:NSDataWritingAtomic error:&error]) success = NO;
         if (!error) {
             int code = -1;
-            NSString *packageID = [G2RunToolCapture(@[@"/var/jb/usr/bin/dpkg-deb", @"/usr/bin/dpkg-deb"], @[@"-f", debPath, @"Package"], &code) stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
-            if (code != 0 || ![packageID isEqualToString:pack[@"package"]]) error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:76 userInfo:@{NSLocalizedDescriptionKey:@"The downloaded DEB package identifier does not match the selected theme."}];
+            NSString *expectedPackageID = [pack[@"package"] isKindOfClass:NSString.class] ? pack[@"package"] : @"";
+            NSString *packageOutput = G2RunToolCapture(@[@"/var/jb/usr/bin/dpkg-deb", @"/usr/bin/dpkg-deb"], @[@"-f", debPath, @"Package"], &code);
+            NSString *packageID = [packageOutput stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+            if (code != 0 || !expectedPackageID.length || ![packageID isEqualToString:expectedPackageID]) {
+                NSString *actual = packageID.length ? packageID : @"(empty)";
+                NSString *expected = expectedPackageID.length ? expectedPackageID : @"(missing catalog package)";
+                NSString *message = [NSString stringWithFormat:@"The downloaded DEB package identifier does not match the selected theme. Expected %@, received %@.", expected, actual];
+                error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:76 userInfo:@{NSLocalizedDescriptionKey:message}];
+            }
         }
         if (!error && !G2PreflightArchive(debPath, @"deb", &error)) success = NO;
         if (!error && G2RunTool(@[@"/var/jb/usr/bin/dpkg-deb", @"/usr/bin/dpkg-deb"], @[@"-x", debPath, extractRoot]) != 0) error = [NSError errorWithDomain:@"Gif2AniOpenLibrary" code:77 userInfo:@{NSLocalizedDescriptionKey:@"The verified theme package could not be extracted."}];
