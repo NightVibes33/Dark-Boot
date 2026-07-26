@@ -1,0 +1,27 @@
+Gif2Ani SnowBoard Source Probe
+run_id=30210520183
+source_commit=aa3fb4488991d5293a7c61bc001fb08152f3ce05
+status=cancelled
+completed_at_utc=2026-07-26T16:30:13Z
+candidate_page_count=18
+candidate_failure_001=https://www.ios-repo-updates.com/repository/basepack/package/com.project.brooklyn/|could not fetch https://repo.basepack.co/download/com.project.brooklyn.deb: HTTP Error 404: Not Found
+candidate_failure_002=https://www.ios-repo-updates.com/repository/hende/package/beta.hende.megapack/|unsafe archive path /
+candidate_failure_003=https://www.ios-repo-updates.com/repository/iospackix/package/com.rkycyku.allin1.respring/|unsafe archive path /
+candidate_failure_004=https://www.ios-repo-updates.com/repository/iospackix/package/com.shadows.respringmix/|unsafe archive path /
+candidate_failure_005=https://www.ios-repo-updates.com/repository/iospackix/package/respring.hende.megapack/|unsafe archive path /Library
+candidate_failure_006=https://www.ios-repo-updates.com/repository/packix/package/beta.hende.megapack/|could not fetch https://www.ios-repo-updates.com/repository/packix/package/beta.hende.megapack/: HTTP Error 404: Not Found
+candidate_failure_007=https://www.ios-repo-updates.com/repository/packix/package/com.bluspark.pixeliosrespringpack1/|could not fetch https://www.ios-repo-updates.com/repository/packix/package/com.bluspark.pixeliosrespringpack1/: HTTP Error 404: Not Found
+candidate_failure_008=https://www.ios-repo-updates.com/repository/packix/package/com.shadows.checkra1nrespring/|could not fetch https://www.ios-repo-updates.com/repository/packix/package/com.shadows.checkra1nrespring/: HTTP Error 404: Not Found
+candidate_failure_009=https://www.ios-repo-updates.com/repository/packix/package/respring.hende.megapack/|could not fetch https://www.ios-repo-updates.com/repository/packix/package/respring.hende.megapack/: HTTP Error 404: Not Found
+--- audit tail ---
+--- log tail ---
+candidate_page_count=18
+candidate_failure_001=https://www.ios-repo-updates.com/repository/basepack/package/com.project.brooklyn/|could not fetch https://repo.basepack.co/download/com.project.brooklyn.deb: HTTP Error 404: Not Found
+candidate_failure_002=https://www.ios-repo-updates.com/repository/hende/package/beta.hende.megapack/|unsafe archive path /
+candidate_failure_003=https://www.ios-repo-updates.com/repository/iospackix/package/com.rkycyku.allin1.respring/|unsafe archive path /
+candidate_failure_004=https://www.ios-repo-updates.com/repository/iospackix/package/com.shadows.respringmix/|unsafe archive path /
+candidate_failure_005=https://www.ios-repo-updates.com/repository/iospackix/package/respring.hende.megapack/|unsafe archive path /Library
+candidate_failure_006=https://www.ios-repo-updates.com/repository/packix/package/beta.hende.megapack/|could not fetch https://www.ios-repo-updates.com/repository/packix/package/beta.hende.megapack/: HTTP Error 404: Not Found
+candidate_failure_007=https://www.ios-repo-updates.com/repository/packix/package/com.bluspark.pixeliosrespringpack1/|could not fetch https://www.ios-repo-updates.com/repository/packix/package/com.bluspark.pixeliosrespringpack1/: HTTP Error 404: Not Found
+candidate_failure_008=https://www.ios-repo-updates.com/repository/packix/package/com.shadows.checkra1nrespring/|could not fetch https://www.ios-repo-updates.com/repository/packix/package/com.shadows.checkra1nrespring/: HTTP Error 404: Not Found
+candidate_failure_009=https://www.ios-repo-updates.com/repository/packix/package/respring.hende.megapack/|could not fetch https://www.ios-repo-updates.com/repository/packix/package/respring.hende.megapack/: HTTP Error 404: Not Found
