@@ -1,8 +1,8 @@
 Gif2Ani 3.4.0 Gallery Build
-run_id=30180748672
-commit=90f31d5e5633337ec62c33efbf976e8799f0f9b2
+run_id=30180773453
+commit=cfcf48be6ddf47594c3bfb6897cedeb2091b891a
 status=failure
-completed_at_utc=2026-07-26T00:12:35Z
+completed_at_utc=2026-07-26T00:13:36Z
 
 
 --- packaged binaries ---
@@ -15,8 +15,8 @@ completed_at_utc=2026-07-26T00:12:35Z
 [0;36m==> [1;39mCleaning…[m
 [1;31m> [1;3;39mMaking all for tweak Gif2Ani…[m
 [0;31m==> [1;39mPreprocessing Tweak.xm…[m
-[0;32m==> [1;39mCompiling G2PreferencesManager.m (arm64)…[m
 [0;32m==> [1;39mCompiling UIImage+animatedGIF.m (arm64)…[m
+[0;32m==> [1;39mCompiling G2PreferencesManager.m (arm64)…[m
 [0;32m==> [1;39mCompiling Tweak.xm (arm64)…[m
 [0;33m==> [1;39mLinking tweak Gif2Ani (arm64)…[m
 [0;34m==> [1;39mGenerating debug symbols for Gif2Ani…[m
@@ -26,54 +26,13 @@ completed_at_utc=2026-07-26T00:12:35Z
 [1;31m> [1;3;39mMaking all for bundle Gif2AniPrefs…[m
 [0;35m==> [1;39mCopying resource directories into the bundle wrapper…[m
 [0;32m==> [1;39mCompiling G2ThemeGalleryController.m (arm64)…[m
-[1mG2ThemeGalleryController.m:33:1: [0m[0;1;31merror: [0m[1munexpected '@' in program[0m
+[1mG2ThemeGalleryController.m:35:1: [0m[0;1;31merror: [0m[1munexpected '@' in program[0m
 @interface G2ThemePreviewController (G2OpenThemeLibraryDownload)
 [0;1;32m^
-[0m[1mG2ThemeGalleryController.m:35:1: [0m[0;1;31merror: [0m[1munexpected '@' in program[0m
+[0m[1mG2ThemeGalleryController.m:37:1: [0m[0;1;31merror: [0m[1munexpected '@' in program[0m
 @end
 [0;1;32m^
-[0mIn file included from G2ThemeGalleryController.m:38:
-[1m./G2ThemeGalleryPart6.inc:3:77: [0m[0;1;31merror: [0m[1mimplicit declaration of function 'G2OpenThemeCachedInfo' is invalid in C99 [-Werror,-Wimplicit-function-declaration][0m
-    NSDictionary *openInfo = [pack[@"kind"] isEqualToString:@"sourceDeb"] ? G2OpenThemeCachedInfo(pack) : nil;
-[0;1;32m                                                                            ^
-[0m[1m./G2ThemeGalleryPart6.inc:3:75: [0m[0;1;31merror: [0m[1mpointer/integer type mismatch in conditional expression ('int' and 'void *') [-Werror,-Wconditional-type-mismatch][0m
-    NSDictionary *openInfo = [pack[@"kind"] isEqualToString:@"sourceDeb"] ? G2OpenThemeCachedInfo(pack) : nil;
-[0;1;32m                                                                          ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~   ~~~
-[0m[1m./G2ThemeGalleryPart6.inc:3:30: [0m[0;1;31merror: [0m[1mimplicit conversion of C pointer type 'void *' to Objective-C pointer type 'NSDictionary *' requires a bridged cast[0m
-    NSDictionary *openInfo = [pack[@"kind"] isEqualToString:@"sourceDeb"] ? G2OpenThemeCachedInfo(pack) : nil;
-[0;1;32m                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-[0m[1m./G2ThemeGalleryPart6.inc:3:30: [0m[0;1;30mnote: [0muse __bridge to convert directly (no change in ownership)[0m
-    NSDictionary *openInfo = [pack[@"kind"] isEqualToString:@"sourceDeb"] ? G2OpenThemeCachedInfo(pack) : nil;
-[0;1;32m                             ^
-[0m[0;32m                             (__bridge NSDictionary *)(                                                      )
-[0m[1m./G2ThemeGalleryPart6.inc:3:30: [0m[0;1;30mnote: [0muse CFBridgingRelease call to transfer ownership of a +1 'void *' into ARC[0m
-    NSDictionary *openInfo = [pack[@"kind"] isEqualToString:@"sourceDeb"] ? G2OpenThemeCachedInfo(pack) : nil;
-[0;1;32m                             ^
-[0m[0;32m                             CFBridgingRelease(                                                              )
-[0m[1m./G2ThemeGalleryPart6.inc:21:62: [0m[0;1;31merror: [0m[1mimplicit declaration of function 'G2RemoteCachedThemeIsValid' is invalid in C99 [-Werror,-Wimplicit-function-declaration][0m
-    } else if ([pack[@"kind"] isEqualToString:@"remote"] && !G2RemoteCachedThemeIsValid(pack)) {
-[0;1;32m                                                             ^
-[0m[1m./G2ThemeGalleryPart6.inc:35:42: [0m[0;1;31merror: [0m[1mimplicit conversion of 'int' to 'NSDictionary *' is disallowed with ARC[0m
-                    NSDictionary *info = G2OpenThemeCachedInfo(pack);
-[0;1;32m                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-[0m[1m./G2ThemeGalleryPart6.inc:35:35: [0m[0;1;31merror: [0m[1mincompatible integer to pointer conversion initializing 'NSDictionary *__strong' with an expression of type 'int' [-Werror,-Wint-conversion][0m
-                    NSDictionary *info = G2OpenThemeCachedInfo(pack);
-[0;1;32m                                  ^      ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-[0mIn file included from G2ThemeGalleryController.m:41:
-[1m./G2OpenThemeLibrary.inc:158:22: [0m[0;1;31merror: [0m[1mstatic declaration of 'G2OpenThemeCachedInfo' follows non-static declaration[0m
-static NSDictionary *G2OpenThemeCachedInfo(NSDictionary *pack) {
-[0;1;32m                     ^
-[0m[1m./G2ThemeGalleryPart6.inc:3:77: [0m[0;1;30mnote: [0mprevious implicit declaration is here[0m
-    NSDictionary *openInfo = [pack[@"kind"] isEqualToString:@"sourceDeb"] ? G2OpenThemeCachedInfo(pack) : nil;
-[0;1;32m                                                                            ^
-[0mIn file included from G2ThemeGalleryController.m:42:
-[1m./G2RemoteThemePreviewOverride.inc:3:13: [0m[0;1;31merror: [0m[1mstatic declaration of 'G2RemoteCachedThemeIsValid' follows non-static declaration[0m
-static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {
-[0;1;32m            ^
-[0m[1m./G2ThemeGalleryPart6.inc:21:62: [0m[0;1;30mnote: [0mprevious implicit declaration is here[0m
-    } else if ([pack[@"kind"] isEqualToString:@"remote"] && !G2RemoteCachedThemeIsValid(pack)) {
-[0;1;32m                                                             ^
-[0m10 errors generated.
+[0m2 errors generated.
 make[4]: *** [/opt/theos/makefiles/instance/rules.mk:305: /home/runner/work/Dark-Boot/Dark-Boot/.theos/obj/arm64/G2ThemeGalleryController.m.73f945e1.o] Error 1
 make[4]: *** Waiting for unfinished jobs....
 [0;32m==> [1;39mCompiling gif2ani2RootListController.m (arm64)…[m
