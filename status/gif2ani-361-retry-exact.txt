@@ -1,0 +1,21 @@
+Gif2Ani 3.6.1 Exact Retry
+target_sha=e1c2fda15e167872d4ae238164b853dc0c51d4c5
+id=30217070782
+head_sha=e1c2fda15e167872d4ae238164b853dc0c51d4c5
+status=completed
+conclusion=failure
+created_at=2026-07-26T19:32:38Z
+updated_at=2026-07-26T19:35:09Z
+html_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30217070782
+job=89833058359|build|completed|failure
+step=1|Set up job|completed|success
+step=2|Run actions/checkout@v4|completed|success
+step=3|Install dependencies and Theos|completed|success
+step=4|Apply 3.6.1 version and copy old comparison preview|completed|success
+step=5|Regenerate all 262 previews with shared 256-color palettes|completed|success
+step=6|Validate color fidelity and Stranger Things|completed|success
+step=7|Compile and verify rootless package|completed|success
+step=8|Upload package and comparison evidence|completed|success
+step=9|Publish package and regenerated resources|completed|failure
+step=18|Post Run actions/checkout@v4|completed|success
+step=19|Complete job|completed|success
