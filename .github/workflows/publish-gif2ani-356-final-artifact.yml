@@ -1,0 +1,123 @@
+name: Publish Compiled Gif2Ani 3.5.6 Artifact
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-gif2ani-356-final-artifact.yml
+      - triggers/publish-gif2ani-356-final-artifact.txt
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: publish-gif2ani-356-final-artifact
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Synchronize main before generating files
+        run: git pull --ff-only origin main
+
+      - name: Download exact compiled artifact from successful compile run
+        uses: actions/download-artifact@v4
+        with:
+          name: Gif2Ani-3.5.6-final-snowboard-gallery
+          path: compiled-artifact
+          repository: NightVibes33/Dark-Boot
+          run-id: 30211519062
+          github-token: ${{ github.token }}
+
+      - name: Verify artifact and apply deterministic source changes
+        run: |
+          set -euo pipefail
+          DEB='compiled-artifact/release-packages/Gif2Ani-3.5.6-verified-snowboard-library.deb'
+          SHA_FILE='compiled-artifact/release-packages/Gif2Ani-3.5.6-verified-snowboard-library.sha256'
+          SNOWBOARD='compiled-artifact/gif2aniprefs/Resources/SnowBoardCatalog.json'
+          AUDIT='compiled-artifact/status/snowboard-catalog-audit.txt'
+          test -s "$DEB" && test -s "$SHA_FILE" && test -s "$SNOWBOARD" && test -s "$AUDIT"
+          EXPECTED_SHA='b3de14935aea124f665803bfaa9140c0f81021e3f15add6e324ab504c1c44c16'
+          ACTUAL_SHA="$(sha256sum "$DEB" | awk '{print $1}')"
+          test "$ACTUAL_SHA" = "$EXPECTED_SHA"
+          test "$(dpkg-deb -f "$DEB" Package)" = 'com.nightvibes33.gif2ani'
+          test "$(dpkg-deb -f "$DEB" Version)" = '3.5.6'
+          test "$(dpkg-deb -f "$DEB" Architecture)" = 'iphoneos-arm64'
+          python3 - "$SNOWBOARD" <<'PY'
+          import json, pathlib, sys
+          catalog=json.loads(pathlib.Path(sys.argv[1]).read_text())
+          assert catalog['catalogType']=='verified-snowboard-respring'
+          assert catalog['packageCount']==7
+          assert catalog['count']==len(catalog['themes'])==160
+          assert len({x['identifier'] for x in catalog['themes']})==160
+          print('compiled_artifact_snowboard_packages=7')
+          print('compiled_artifact_snowboard_themes=160')
+          PY
+
+          cp "$SNOWBOARD" gif2aniprefs/Resources/SnowBoardCatalog.json
+          cp "$AUDIT" status/snowboard-catalog-audit.txt
+          python3 scripts/apply_snowboard_gallery_safe.py | tee publish-source-patch.log
+          grep -Fq 'snowboard_gallery_source_patch=success' publish-source-patch.log
+          grep -Fq 'snowboard_objc_backslash_escape=passed' publish-source-patch.log
+          grep -Fq 'snowboard_legacy_catalog_unused_annotation=passed' publish-source-patch.log
+          grep -Fq 'Version: 3.5.6' control
+          grep -Fq 'GIF2ANI 3.5.6' gif2aniprefs/Resources/Root.plist
+          grep -Fq 'self.legacy = @[]' gif2aniprefs/G2ThemeGalleryPart5.inc
+          ! grep -Fq 'Import Pack File' gif2aniprefs/G2ThemeGalleryPart6.inc
+
+          mkdir -p release-packages status
+          cp "$DEB" release-packages/Gif2Ani-3.5.6-verified-snowboard-library.deb
+          printf '%s  %s\n' "$EXPECTED_SHA" 'release-packages/Gif2Ani-3.5.6-verified-snowboard-library.deb' \
+            > release-packages/Gif2Ani-3.5.6-verified-snowboard-library.sha256
+          {
+            echo 'Gif2Ani 3.5.6 Final SnowBoard Gallery'
+            echo 'compiled_run_id=30211519062'
+            echo 'compiled_source_commit=62ba3a0586262584ab908f6af30021487674c2e4'
+            echo 'status=success'
+            echo "published_at_utc=$(date -u +%FT%TZ)"
+            echo "$EXPECTED_SHA  release-packages/Gif2Ani-3.5.6-verified-snowboard-library.deb"
+            echo 'verified_snowboard_packages=7'
+            echo 'verified_snowboard_themes=160'
+            echo 'verified_springy_themes=48'
+            echo 'combined_source_backed_themes=208'
+            echo 'historical_import_prompt=removed'
+            echo 'download_cache_owner=mobile-recursive'
+            echo 'compile_and_package_validation=success'
+          } > status/gif2ani-356-final.txt
+
+      - name: Commit and push with conflict retries
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add control packaging/postinst
+          git add gif2aniprefs/G2ThemeGalleryController.m
+          git add gif2aniprefs/G2OpenThemeLibrary.inc
+          git add gif2aniprefs/G2ThemeGalleryPart1.inc
+          git add gif2aniprefs/G2ThemeGalleryPart5.inc
+          git add gif2aniprefs/G2ThemeGalleryPart6.inc
+          git add gif2aniprefs/G2ModernGallery.inc
+          git add gif2aniprefs/Resources/Root.plist
+          git add gif2aniprefs/Resources/SnowBoardCatalog.json
+          git add status/snowboard-catalog-audit.txt status/gif2ani-356-final.txt
+          git add -f release-packages/Gif2Ani-3.5.6-verified-snowboard-library.deb
+          git add release-packages/Gif2Ani-3.5.6-verified-snowboard-library.sha256
+          git commit -m 'Publish final Gif2Ani 3.5.6 SnowBoard gallery (success) [skip ci]'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              echo 'artifact_publish=success'
+              exit 0
+            fi
+            git rebase --abort >/dev/null 2>&1 || true
+            sleep $((attempt * 3))
+          done
+          echo 'artifact_publish=failure' >&2
+          exit 1
