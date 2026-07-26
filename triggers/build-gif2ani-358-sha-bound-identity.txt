@@ -1,0 +1,2 @@
+requested_at_utc=2026-07-26T17:38:00Z
+purpose=build Gif2Ani 3.5.8 with SHA-bound Springy and SnowBoard package identity, strict clean mismatch blocking, metadata-tool fallback, and LastPackageVerification diagnostics
