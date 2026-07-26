@@ -1,0 +1,166 @@
+name: Build Gif2Ani 3.5.5 Exact Pack Names
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-gif2ani-355-exact-pack-names.yml
+      - triggers/build-gif2ani-355-exact-pack-names.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-355-exact-pack-names
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install build and media dependencies
+        env:
+          THEOS: /opt/theos
+          CI: '1'
+          SHELL: /bin/bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            bash curl sudo build-essential fakeroot rsync perl git libxml2 dpkg-dev \
+            unzip xz-utils ca-certificates python3 python3-pil file binutils
+          sudo rm -rf /opt/theos
+          sudo mkdir -p /opt
+          sudo chown "$USER:$USER" /opt
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          test -x /opt/theos/toolchain/linux/iphone/bin/clang
+
+      - name: Regenerate all 48 records from actual DEBs
+        run: |
+          set -euo pipefail
+          grep -Fq 'Version: 3.5.5' control
+          grep -Fq 'GIF2ANI 3.5.5' gif2aniprefs/Resources/Root.plist
+          python3 -m py_compile scripts/refresh_immutable_springy_manifest.py scripts/build_theme_previews.py
+          python3 scripts/refresh_immutable_springy_manifest.py 2>&1 | tee immutable-manifest.log
+          grep -Fq 'immutable_manifest_count=48' immutable-manifest.log
+          grep -Fq 'names_derived_from_deb_metadata=48' immutable-manifest.log
+          grep -Fq 'verified 48/48' immutable-manifest.log
+          python3 - <<'PY'
+          import json, pathlib, re
+          path = pathlib.Path('gif2aniprefs/Resources/OpenThemeCatalog.json')
+          manifest = json.loads(path.read_text())
+          themes = manifest['themes']
+          assert manifest['count'] == len(themes) == 48
+          assert manifest['namesDerivedFromDEBMetadata'] is True
+          assert len({t['identifier'] for t in themes}) == 48
+          for theme in themes:
+              assert theme['identifier'] == theme['package']
+              assert theme['name']
+              assert theme['sourcePackageName']
+              assert 'Springy BootLogo' in theme['sourcePackageName']
+              assert re.fullmatch(r'[0-9a-f]{64}', theme['sha256'])
+              assert int(theme['bytes']) > 0
+          stranger = next(t for t in themes if t['identifier'] == 'io.github.virenmohindra.stranger-things')
+          assert stranger['name'] == 'Stranger Things (DankerThings)', stranger
+          assert stranger['sourcePackageName'] == 'Stranger Things - Springy BootLogo (DankerThings)', stranger
+          print('exact_deb_names=passed')
+          print('stranger_things_dankerthings=passed')
+          PY
+
+      - name: Regenerate all 102 previews from matching sources
+        run: |
+          set -euo pipefail
+          python3 scripts/build_theme_previews.py 2>&1 | tee previews.log
+          grep -Fq 'generated_previews=102' previews.log
+          test "$(find gif2aniprefs/Resources/ThemePreviews -maxdepth 1 -type f -name '*.png' | wc -l)" = 102
+
+      - name: Build and validate rootless 3.5.5 package
+        env:
+          THEOS: /opt/theos
+        run: |
+          set -euo pipefail
+          make clean package FINALPACKAGE=1 2>&1 | tee build.log
+          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.5.5_iphoneos-arm64.deb' -print -quit)"
+          test -s "$DEB"
+          test "$(dpkg-deb -f "$DEB" Package)" = 'com.nightvibes33.gif2ani'
+          test "$(dpkg-deb -f "$DEB" Version)" = '3.5.5'
+          test "$(dpkg-deb -f "$DEB" Architecture)" = 'iphoneos-arm64'
+          rm -rf verify-root
+          dpkg-deb -x "$DEB" verify-root
+          BUNDLE='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle'
+          CATALOG="$BUNDLE/OpenThemeCatalog.json"
+          PREVIEWS="$BUNDLE/ThemePreviews"
+          ROOT_PLIST="$BUNDLE/Root.plist"
+          PREFS="$BUNDLE/Gif2AniPrefs"
+          TWEAK='verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib'
+          test -s "$CATALOG" && test -s "$PREFS" && test -s "$TWEAK"
+          grep -Fq 'GIF2ANI 3.5.5' "$ROOT_PLIST"
+          test "$(find "$PREVIEWS" -maxdepth 1 -type f -name '*.png' | wc -l)" = 102
+          cmp gif2aniprefs/Resources/OpenThemeCatalog.json "$CATALOG"
+          python3 - "$CATALOG" <<'PY'
+          import json, pathlib, sys
+          m=json.loads(pathlib.Path(sys.argv[1]).read_text())
+          assert m['count'] == len(m['themes']) == 48
+          assert m['namesDerivedFromDEBMetadata'] is True
+          s=next(x for x in m['themes'] if x['identifier']=='io.github.virenmohindra.stranger-things')
+          assert s['name']=='Stranger Things (DankerThings)'
+          print('embedded_exact_names=passed')
+          PY
+          mkdir -p release-packages
+          cp "$DEB" release-packages/Gif2Ani-3.5.5-exact-pack-names.deb
+          sha256sum release-packages/Gif2Ani-3.5.5-exact-pack-names.deb \
+            | tee release-packages/Gif2Ani-3.5.5-exact-pack-names.sha256
+
+      - name: Upload DEB and logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gif2Ani-3.5.5-exact-pack-names
+          path: |
+            release-packages/Gif2Ani-3.5.5-exact-pack-names.deb
+            release-packages/Gif2Ani-3.5.5-exact-pack-names.sha256
+            immutable-manifest.log
+            previews.log
+            build.log
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish package and status
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          mkdir -p status release-packages
+          {
+            echo 'Gif2Ani 3.5.5 Exact Pack Names'
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "source_commit=${GITHUB_SHA}"
+            echo "status=${JOB_STATUS}"
+            echo "completed_at_utc=$(date -u +%FT%TZ)"
+            cat release-packages/Gif2Ani-3.5.5-exact-pack-names.sha256 2>/dev/null || true
+            echo 'catalog=48 immutable DEBs with names derived from actual package metadata'
+            echo 'previews=102 regenerated from matching source files'
+            echo '--- manifest tail ---'
+            tail -n 120 immutable-manifest.log 2>/dev/null || true
+            echo '--- previews tail ---'
+            tail -n 80 previews.log 2>/dev/null || true
+            echo '--- build tail ---'
+            tail -n 180 build.log 2>/dev/null || true
+          } > status/gif2ani-355-exact-pack-names.txt
+          if [ "$JOB_STATUS" = success ]; then
+            git add gif2aniprefs/Resources/OpenThemeCatalog.json
+            git add -f release-packages/Gif2Ani-3.5.5-exact-pack-names.deb
+            git add release-packages/Gif2Ani-3.5.5-exact-pack-names.sha256
+          fi
+          git add status/gif2ani-355-exact-pack-names.txt
+          git commit -m "Publish Gif2Ani 3.5.5 exact pack names (${JOB_STATUS}) [skip ci]" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
