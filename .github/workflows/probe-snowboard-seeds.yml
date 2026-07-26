@@ -6,6 +6,10 @@ on:
     branches: [main]
     paths:
       - .github/workflows/probe-snowboard-seeds.yml
+      - scripts/build_snowboard_catalog.py
+      - scripts/build_snowboard_catalog_seeded.py
+      - scripts/build_snowboard_catalog_live.py
+      - scripts/requests.py
       - triggers/probe-snowboard-seeds.txt
 
 permissions:
@@ -35,7 +39,7 @@ jobs:
         id: verify
         run: |
           set -o pipefail
-          python3 scripts/build_snowboard_catalog_seeded.py 2>&1 | tee snowboard-seed-probe.log
+          python3 scripts/build_snowboard_catalog_live.py 2>&1 | tee snowboard-seed-probe.log
 
       - name: Upload probe evidence
         if: always()
@@ -65,11 +69,11 @@ jobs:
             echo "source_commit=${GITHUB_SHA}"
             echo "status=${PROBE_STATUS}"
             echo "completed_at_utc=$(date -u +%FT%TZ)"
-            grep -E 'candidate_page_count=|verified_package_|candidate_failure_|snowboard_verified_package_count=|snowboard_verified_theme_count=|snowboard_rejected_count=' snowboard-seed-probe.log 2>/dev/null || true
+            grep -E 'candidate_page_count=|live_page_warning=|verified_package_|candidate_[0-9]+=rejected|snowboard_verified_package_count=|snowboard_verified_theme_count=|snowboard_rejected_count=' snowboard-seed-probe.log 2>/dev/null || true
             echo '--- audit tail ---'
-            tail -n 220 status/snowboard-catalog-audit.txt 2>/dev/null || true
+            tail -n 260 status/snowboard-catalog-audit.txt 2>/dev/null || true
             echo '--- log tail ---'
-            tail -n 260 snowboard-seed-probe.log 2>/dev/null || true
+            tail -n 320 snowboard-seed-probe.log 2>/dev/null || true
           } > status/snowboard-seed-probe.txt
           git add status/snowboard-seed-probe.txt
           git commit -m "Record SnowBoard source probe (${PROBE_STATUS}) [skip ci]" || exit 0
