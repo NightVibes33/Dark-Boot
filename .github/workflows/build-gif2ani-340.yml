@@ -1,4 +1,4 @@
-name: Build Gif2Ani 3.4.0 Gallery
+name: Build Gif2Ani 3.4.1 Gallery
 
 on:
   workflow_dispatch:
@@ -16,7 +16,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: gif2ani-340-${{ github.ref }}
+  group: gif2ani-341-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -25,6 +25,8 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install dependencies and Theos
         env:
@@ -43,34 +45,141 @@ jobs:
           bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
           test -x /opt/theos/toolchain/linux/iphone/bin/clang
 
-      - name: Validate 3.4 source contract
+      - name: Prepare immutable theme manifest and 3.4.1 integrity source
         run: |
           set -euo pipefail
-          test "$(awk '/^Version:/{print $2}' control)" = "3.4.0"
+          mkdir -p gif2aniprefs/Resources
+          curl -fsSL --retry 4 --retry-delay 2 \
+            'https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/manifest.json' \
+            -o gif2aniprefs/Resources/ThemeCatalog.json
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+
+          manifest_path=Path('gif2aniprefs/Resources/ThemeCatalog.json')
+          manifest=json.loads(manifest_path.read_text())
+          assert manifest['version'] == 1 and manifest['count'] == 54 and len(manifest['themes']) == 54
+          ids=set()
+          for item in manifest['themes']:
+              assert re.fullmatch(r'[a-z0-9-]+', item['id'])
+              assert item['id'] not in ids
+              ids.add(item['id'])
+              assert item['file'] == item['id'] + '.gif'
+              assert re.fullmatch(r'[0-9a-f]{64}', item['sha256'])
+              assert 0 < int(item['bytes']) <= 25*1024*1024
+              assert item['sourceFrames'] == 24
+              assert item['width'] == 360 and item['height'] == 360
+              assert item['license'] == 'CC0-1.0'
+          assert manifest['themes'][0]['name'] == 'Cyan Pulse Rings'
+
+          preview_path=Path('gif2aniprefs/G2RemoteThemePreviewOverride.inc')
+          text=preview_path.read_text()
+          if '#import <CommonCrypto/CommonDigest.h>' not in text:
+              text=text.replace('#import <objc/runtime.h>\n', '#import <objc/runtime.h>\n#import <CommonCrypto/CommonDigest.h>\n', 1)
+          marker='static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {'
+          helper=r'''static NSString *G2SHA256StringForData(NSData *data) {
+    if (!data.length || data.length > UINT32_MAX) return nil;
+    unsigned char digest[CC_SHA256_DIGEST_LENGTH];
+    CC_SHA256(data.bytes, (CC_LONG)data.length, digest);
+    static const char hex[] = "0123456789abcdef";
+    char output[CC_SHA256_DIGEST_LENGTH * 2 + 1];
+    for (NSUInteger index = 0; index < CC_SHA256_DIGEST_LENGTH; index++) {
+        output[index * 2] = hex[(digest[index] >> 4) & 0x0F];
+        output[index * 2 + 1] = hex[digest[index] & 0x0F];
+    }
+    output[CC_SHA256_DIGEST_LENGTH * 2] = '\0';
+    return [NSString stringWithUTF8String:output];
+}
+
+static BOOL G2RemoteDataMatchesManifest(NSData *data, NSDictionary *pack, NSError **error) {
+    NSNumber *expectedBytes = pack[@"expectedBytes"];
+    NSString *expectedSHA256 = [pack[@"sha256"] lowercaseString];
+    if (![expectedBytes isKindOfClass:NSNumber.class] || ![expectedSHA256 isKindOfClass:NSString.class] || expectedSHA256.length != 64) {
+        if (error) *error = [NSError errorWithDomain:@"Gif2AniGallery" code:42 userInfo:@{NSLocalizedDescriptionKey:@"This downloadable theme is missing its pinned manifest metadata."}];
+        return NO;
+    }
+    if (data.length != expectedBytes.unsignedLongLongValue) {
+        if (error) *error = [NSError errorWithDomain:@"Gif2AniGallery" code:43 userInfo:@{NSLocalizedDescriptionKey:@"The downloaded theme byte count does not match the pinned manifest."}];
+        return NO;
+    }
+    NSString *actualSHA256 = G2SHA256StringForData(data);
+    if (!actualSHA256 || ![actualSHA256 isEqualToString:expectedSHA256]) {
+        if (error) *error = [NSError errorWithDomain:@"Gif2AniGallery" code:44 userInfo:@{NSLocalizedDescriptionKey:@"The downloaded theme SHA-256 does not match the pinned manifest."}];
+        return NO;
+    }
+    return YES;
+}
+
+'''
+          if 'static BOOL G2RemoteDataMatchesManifest' not in text:
+              assert marker in text
+              text=text.replace(marker, helper+marker, 1)
+          old='if (!data || !G2ValidateGIFData(data, nil)) {'
+          new='if (!data || !G2RemoteDataMatchesManifest(data, pack, nil) || !G2ValidateGIFData(data, nil)) {'
+          if old in text:
+              text=text.replace(old,new,1)
+          old='''        NSDictionary *metadata = nil;
+        if (!error) metadata = G2ValidateGIFData(data, &error);
+        if (!error && metadata) {'''
+          new='''        NSDictionary *metadata = nil;
+        if (!error) metadata = G2ValidateGIFData(data, &error);
+        if (!error && metadata && !G2RemoteDataMatchesManifest(data, pack, &error)) metadata = nil;
+        if (!error && metadata) {'''
+          if old in text:
+              text=text.replace(old,new,1)
+          assert 'G2RemoteDataMatchesManifest(data, pack, nil)' in text
+          assert 'G2RemoteDataMatchesManifest(data, pack, &error)' in text
+          preview_path.write_text(text)
+
+          control=Path('control')
+          text=control.read_text().replace('Version: 3.4.0','Version: 3.4.1').replace('Version 3.4.0 adds','Version 3.4.1 adds')
+          control.write_text(text)
+          root=Path('gif2aniprefs/Resources/Root.plist')
+          root.write_text(root.read_text().replace('<string>GIF2ANI 3.4</string>','<string>GIF2ANI 3.4.1</string>'))
+          readme=Path('README.md')
+          text=readme.read_text().replace('Version: `3.4.0`','Version: `3.4.1`')
+          text=text.replace('Gif2Ani 3.4 exposes','Gif2Ani 3.4.1 exposes')
+          text=text.replace('com.nightvibes33.gif2ani_3.4.0_iphoneos-arm64.deb','com.nightvibes33.gif2ani_3.4.1_iphoneos-arm64.deb')
+          readme.write_text(text)
+          print('prepared_manifest_entries=54')
+          print('prepared_version=3.4.1')
+          PY
+
+      - name: Validate 3.4.1 source contract
+        run: |
+          set -euo pipefail
+          test "$(awk '/^Version:/{print $2}' control)" = "3.4.1"
           test -f gif2aniprefs/G2ThemeGalleryController.m
           test -f gif2aniprefs/G2RemoteThemeCatalog.inc
           test -f gif2aniprefs/G2RemoteThemePreviewOverride.inc
           test -f gif2aniprefs/G2RemoteGalleryPolish.inc
+          test -f gif2aniprefs/G2OpenThemeLibrary.inc
+          test -f gif2aniprefs/G2ThemeStageOverride.inc
+          test -f gif2aniprefs/Resources/ThemeCatalog.json
           grep -q 'G2ThemeGalleryController.m' gif2aniprefs/Makefile
           grep -q 'G2ThemeGalleryController' gif2aniprefs/Resources/Root.plist
           python3 - <<'PY'
+          import json
           from pathlib import Path
-          wrapper = Path('gif2aniprefs/G2ThemeGalleryController.m').read_text()
-          required_includes = [
-              'G2RemoteThemeCatalog.inc',
-              'G2RemoteThemePreviewOverride.inc',
-              'G2RemoteGalleryPolish.inc',
-          ]
-          for name in required_includes:
+          wrapper=Path('gif2aniprefs/G2ThemeGalleryController.m').read_text()
+          catalog=Path('gif2aniprefs/G2RemoteThemeCatalog.inc').read_text()
+          preview=Path('gif2aniprefs/G2RemoteThemePreviewOverride.inc').read_text()
+          openlib=Path('gif2aniprefs/G2OpenThemeLibrary.inc').read_text()
+          stage=Path('gif2aniprefs/G2ThemeStageOverride.inc').read_text()
+          manifest=json.loads(Path('gif2aniprefs/Resources/ThemeCatalog.json').read_text())
+          assert len(manifest['themes']) == 54
+          for name in ['G2RemoteThemeCatalog.inc','G2OpenThemeLibrary.inc','G2RemoteThemePreviewOverride.inc','G2RemoteGalleryPolish.inc']:
               assert f'#include "{name}"' in wrapper, name
-          text = '\n'.join(Path('gif2aniprefs', name).read_text() for name in required_includes)
-          required = [
-              '54 Downloadable', 'NSURLSession', 'method_exchangeImplementations',
-              'previewGeneration', 'Stage This Animation', 'Legacy Source Catalog'
-          ]
-          missing = [item for item in required if item not in text]
-          assert not missing, missing
-          print('gif2ani_340_source_contract=success')
+          required=['expectedBytes','@"sha256"','G2RemoteThemeManifestResource']
+          assert not [x for x in required if x not in catalog]
+          required=['G2RemoteDataMatchesManifest','CC_SHA256','Download & Preview','sourceDeb']
+          assert not [x for x in required if x not in preview]
+          required=['G2OpenThemePacksFromIndexData','G2PreflightArchive','G2ValidateExtractedTree','SHA-256 verification failed']
+          assert not [x for x in required if x not in openlib]
+          assert 'G2WriteGalleryPreferences(@{@"pendingReady":@YES}' in stage
+          print('cc0_downloadable_themes=54')
+          print('source_backed_open_library_minimum=40')
+          print('gif2ani_341_source_contract=success')
           PY
 
       - name: Build rootless DEB
@@ -78,37 +187,59 @@ jobs:
           THEOS: /opt/theos
         run: |
           set -euo pipefail
-          make clean package FINALPACKAGE=1 2>&1 | tee build-340.log
-          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.4.0_iphoneos-arm64.deb' -print -quit)"
+          make clean package FINALPACKAGE=1 2>&1 | tee build-341.log
+          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.4.1_iphoneos-arm64.deb' -print -quit)"
           test -n "$DEB"
-          echo "$DEB" > deb-path-340.txt
-          dpkg-deb --contents "$DEB" | tee package-contents-340.txt
-          sha256sum "$DEB" | tee deb-sha256-340.txt
+          echo "$DEB" > deb-path-341.txt
+          dpkg-deb --contents "$DEB" | tee package-contents-341.txt
+          sha256sum "$DEB" | tee deb-sha256-341.txt
           test "$(dpkg-deb --field "$DEB" Package)" = "com.nightvibes33.gif2ani"
-          test "$(dpkg-deb --field "$DEB" Version)" = "3.4.0"
+          test "$(dpkg-deb --field "$DEB" Version)" = "3.4.1"
           test "$(dpkg-deb --field "$DEB" Architecture)" = "iphoneos-arm64"
 
-          rm -rf package-root-340
-          dpkg-deb -x "$DEB" package-root-340
-          BUNDLE="$(find package-root-340 -type d -name 'Gif2AniPrefs.bundle' -print -quit)"
+          rm -rf package-root-341
+          dpkg-deb -x "$DEB" package-root-341
+          BUNDLE="$(find package-root-341 -type d -name 'Gif2AniPrefs.bundle' -print -quit)"
           test -n "$BUNDLE"
           test -s "$BUNDLE/Gif2AniPrefs"
           test -f "$BUNDLE/Root.plist"
-          test -f package-root-340/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib
-          test -f package-root-340/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.plist
-          grep -Fq '<string>GIF2ANI 3.4</string>' "$BUNDLE/Root.plist"
+          test -f "$BUNDLE/ThemeCatalog.json"
+          test -f package-root-341/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib
+          test -f package-root-341/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.plist
+          grep -Fq '<string>GIF2ANI 3.4.1</string>' "$BUNDLE/Root.plist"
           grep -Fq '54 downloadable built-in themes' "$BUNDLE/Root.plist"
           grep -Fq 'Browse and Preview Animations' "$BUNDLE/Root.plist"
-          grep -Fq 'Apply and Respring' "$BUNDLE/Root.plist"
-          file "$BUNDLE/Gif2AniPrefs" package-root-340/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | tee packaged-binaries-340.txt
+          strings "$BUNDLE/Gif2AniPrefs" | grep -q 'SHA-256 does not match the pinned manifest'
+          strings "$BUNDLE/Gif2AniPrefs" | grep -q 'Open Source Pack Library'
+          python3 - "$BUNDLE/ThemeCatalog.json" <<'PY'
+          import json,sys
+          data=json.load(open(sys.argv[1]))
+          assert data['count']==54 and len(data['themes'])==54
+          print('packaged_theme_manifest=success')
+          PY
+          file "$BUNDLE/Gif2AniPrefs" package-root-341/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib | tee packaged-binaries-341.txt
 
-      - name: Upload Gif2Ani 3.4.0 DEB
+      - name: Upload Gif2Ani 3.4.1 DEB
         uses: actions/upload-artifact@v4
         with:
-          name: Gif2Ani-3.4.0-rootless-deb
-          path: packages/com.nightvibes33.gif2ani_3.4.0_iphoneos-arm64.deb
+          name: Gif2Ani-3.4.1-rootless-deb
+          path: packages/com.nightvibes33.gif2ani_3.4.1_iphoneos-arm64.deb
           if-no-files-found: error
           retention-days: 30
+
+      - name: Commit verified 3.4.1 source
+        if: success()
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add control README.md gif2aniprefs/G2RemoteThemePreviewOverride.inc \
+            gif2aniprefs/Resources/ThemeCatalog.json gif2aniprefs/Resources/Root.plist
+          if ! git diff --cached --quiet; then
+            git commit -m "Finalize Gif2Ani 3.4.1 verified theme downloads [skip ci]"
+          fi
+          git pull --rebase origin main
+          git push origin HEAD:main
 
       - name: Publish build status
         if: always()
@@ -121,25 +252,25 @@ jobs:
           git pull --rebase origin main
           mkdir -p status
           {
-            echo "Gif2Ani 3.4.0 Gallery Build"
+            echo "Gif2Ani 3.4.1 Gallery Build"
             echo "run_id=${GITHUB_RUN_ID}"
             echo "commit=${GITHUB_SHA}"
             echo "status=${JOB_STATUS}"
             echo "completed_at_utc=$(date -u +%FT%TZ)"
             echo
-            cat deb-sha256-340.txt 2>/dev/null || true
+            cat deb-sha256-341.txt 2>/dev/null || true
             echo
             echo "--- packaged binaries ---"
-            cat packaged-binaries-340.txt 2>/dev/null || true
+            cat packaged-binaries-341.txt 2>/dev/null || true
             echo
             echo "--- package contents ---"
-            cat package-contents-340.txt 2>/dev/null || true
+            cat package-contents-341.txt 2>/dev/null || true
             echo
             echo "--- build log tail ---"
-            tail -n 350 build-340.log 2>/dev/null || true
-          } > status/build-340.txt
-          git add status/build-340.txt
+            tail -n 350 build-341.log 2>/dev/null || true
+          } > status/build-341.txt
+          git add status/build-341.txt
           if ! git diff --cached --quiet; then
-            git commit -m "Record Gif2Ani 3.4.0 build [skip ci]"
+            git commit -m "Record Gif2Ani 3.4.1 build [skip ci]"
             git push origin HEAD:main
           fi
