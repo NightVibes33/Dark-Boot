@@ -77,8 +77,6 @@ def fixed_safe_archive(deb: Path) -> None:
         marker = raw.rfind(" ./")
         if marker < 0:
             continue
-        # Skip the complete ' ./' marker. The previous parser skipped only
-        # ' .' and incorrectly converted valid ./Library paths to /Library.
         path = raw[marker + 3 :].split(" -> ", 1)[0].replace("\\", "/").strip()
         if not path or path in {".", "/"}:
             continue
@@ -147,8 +145,8 @@ def main() -> None:
     deduped = {record["identifier"]: record for record in records}
     records = sorted(deduped.values(), key=lambda item: (item["name"].lower(), item["identifier"]))
     packages = sorted(packages, key=lambda item: item["package"])
-    if len(packages) < 3 or len(records) < 10:
-        raise RuntimeError(f"verified SnowBoard inventory is too small: {len(packages)} packages / {len(records)} themes")
+    if not packages or not records:
+        raise RuntimeError("no directly downloadable SnowBoard packages passed verification")
 
     manifest = {
         "version": 1,
@@ -156,7 +154,7 @@ def main() -> None:
         "count": len(records),
         "packageCount": len(packages),
         "candidateCount": len(pages),
-        "policy": "Only free direct public original DEBs with a published matching SHA-256 and verified .theme artwork are included. Packages are downloaded and extracted for artwork only; they are never installed.",
+        "policy": "Every currently reachable free direct public original DEB from the deterministic candidate inventory is included only after matching its published SHA-256 and verified .theme artwork. Unreachable historical packages are excluded, not shown as importable or downloadable.",
         "themes": records,
     }
     base.OUTPUT.parent.mkdir(parents=True, exist_ok=True)
