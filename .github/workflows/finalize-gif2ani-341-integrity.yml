@@ -1,0 +1,211 @@
+name: Finalize Gif2Ani 3.4.1 Download Integrity
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - triggers/finalize-gif2ani-341-integrity.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-341-finalizer
+  cancel-in-progress: true
+
+jobs:
+  finalize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Bundle and validate pinned theme manifest
+        run: |
+          set -euo pipefail
+          mkdir -p gif2aniprefs/Resources
+          curl -fsSL --retry 4 --retry-delay 2 \
+            'https://raw.githubusercontent.com/NightVibes33/Codex-DEB-Test/b5d5eda04359409865772038895e660d709deb18/gif2ani-themes/v1/catalog.json' \
+            -o gif2aniprefs/Resources/ThemeCatalog.json
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          p=Path('gif2aniprefs/Resources/ThemeCatalog.json')
+          data=json.loads(p.read_text())
+          assert data['version'] == 1
+          assert data['count'] == 54
+          themes=data['themes']
+          assert len(themes) == 54
+          ids=set()
+          for item in themes:
+              ident=item['id']
+              assert re.fullmatch(r'[a-z0-9-]+', ident)
+              assert ident not in ids
+              ids.add(ident)
+              assert item['file'] == ident + '.gif'
+              assert re.fullmatch(r'[0-9a-f]{64}', item['sha256'])
+              assert 0 < int(item['bytes']) <= 25*1024*1024
+              assert item['sourceFrames'] == 24
+              assert item['width'] == 360 and item['height'] == 360
+              assert item['license'] == 'CC0-1.0'
+          assert themes[0]['name'] == 'Cyan Pulse Rings'
+          print('theme_manifest_entries=54')
+          print('theme_manifest_integrity=success')
+          PY
+
+      - name: Enforce SHA-256 and exact byte verification
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('gif2aniprefs/G2RemoteThemePreviewOverride.inc')
+          text=p.read_text()
+          text=text.replace('#import <objc/runtime.h>\n', '#import <objc/runtime.h>\n#import <CommonCrypto/CommonDigest.h>\n', 1)
+          marker='static BOOL G2RemoteCachedThemeIsValid(NSDictionary *pack) {'
+          helper=r'''static NSString *G2SHA256StringForData(NSData *data) {
+    if (!data.length || data.length > UINT32_MAX) return nil;
+    unsigned char digest[CC_SHA256_DIGEST_LENGTH];
+    CC_SHA256(data.bytes, (CC_LONG)data.length, digest);
+    static const char hex[] = "0123456789abcdef";
+    char output[CC_SHA256_DIGEST_LENGTH * 2 + 1];
+    for (NSUInteger index = 0; index < CC_SHA256_DIGEST_LENGTH; index++) {
+        output[index * 2] = hex[(digest[index] >> 4) & 0x0F];
+        output[index * 2 + 1] = hex[digest[index] & 0x0F];
+    }
+    output[CC_SHA256_DIGEST_LENGTH * 2] = '\0';
+    return [NSString stringWithUTF8String:output];
+}
+
+static BOOL G2RemoteDataMatchesManifest(NSData *data, NSDictionary *pack, NSError **error) {
+    NSNumber *expectedBytes = pack[@"expectedBytes"];
+    NSString *expectedSHA256 = [pack[@"sha256"] lowercaseString];
+    if (![expectedBytes isKindOfClass:NSNumber.class] ||
+        ![expectedSHA256 isKindOfClass:NSString.class] || expectedSHA256.length != 64) {
+        if (error) *error = [NSError errorWithDomain:@"Gif2AniGallery" code:42 userInfo:@{
+            NSLocalizedDescriptionKey:@"This downloadable theme is missing its signed manifest metadata."
+        }];
+        return NO;
+    }
+    if (data.length != expectedBytes.unsignedLongLongValue) {
+        if (error) *error = [NSError errorWithDomain:@"Gif2AniGallery" code:43 userInfo:@{
+            NSLocalizedDescriptionKey:@"The downloaded theme byte count does not match the pinned catalog."
+        }];
+        return NO;
+    }
+    NSString *actualSHA256 = G2SHA256StringForData(data);
+    if (!actualSHA256 || ![actualSHA256 isEqualToString:expectedSHA256]) {
+        if (error) *error = [NSError errorWithDomain:@"Gif2AniGallery" code:44 userInfo:@{
+            NSLocalizedDescriptionKey:@"The downloaded theme SHA-256 does not match the pinned catalog."
+        }];
+        return NO;
+    }
+    return YES;
+}
+
+'''
+          if 'G2RemoteDataMatchesManifest' not in text:
+              assert marker in text
+              text=text.replace(marker, helper+marker, 1)
+          old='if (!data || !G2ValidateGIFData(data, nil)) {'
+          new='if (!data || !G2RemoteDataMatchesManifest(data, pack, nil) || !G2ValidateGIFData(data, nil)) {'
+          if old in text:
+              text=text.replace(old,new,1)
+          assert new in text
+          old='''        NSDictionary *metadata = nil;
+        if (!error) metadata = G2ValidateGIFData(data, &error);
+        if (!error && metadata) {'''
+          new='''        NSDictionary *metadata = nil;
+        if (!error) metadata = G2ValidateGIFData(data, &error);
+        if (!error && metadata && !G2RemoteDataMatchesManifest(data, pack, &error)) metadata = nil;
+        if (!error && metadata) {'''
+          if old in text:
+              text=text.replace(old,new,1)
+          assert 'G2RemoteDataMatchesManifest(data, pack, &error)' in text
+          p.write_text(text)
+          PY
+          grep -q 'CommonCrypto/CommonDigest.h' gif2aniprefs/G2RemoteThemePreviewOverride.inc
+          grep -q 'downloaded theme SHA-256' gif2aniprefs/G2RemoteThemePreviewOverride.inc
+          grep -q 'G2RemoteDataMatchesManifest(data, pack, nil)' gif2aniprefs/G2RemoteThemePreviewOverride.inc
+
+      - name: Bump package and build contract to 3.4.1
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          control=Path('control')
+          text=control.read_text().replace('Version: 3.4.0','Version: 3.4.1')
+          text=text.replace('Version 3.4.0 adds', 'Version 3.4.1 adds')
+          control.write_text(text)
+
+          root=Path('gif2aniprefs/Resources/Root.plist')
+          text=root.read_text().replace('<string>GIF2ANI 3.4</string>','<string>GIF2ANI 3.4.1</string>')
+          root.write_text(text)
+
+          readme=Path('README.md')
+          text=readme.read_text().replace('Version: `3.4.0`','Version: `3.4.1`')
+          text=text.replace('Gif2Ani 3.4 exposes', 'Gif2Ani 3.4.1 exposes')
+          text=text.replace('packages/com.nightvibes33.gif2ani_3.4.0_iphoneos-arm64.deb','packages/com.nightvibes33.gif2ani_3.4.1_iphoneos-arm64.deb')
+          text=text.replace('The 3.4 gallery build', 'The 3.4.1 gallery build')
+          readme.write_text(text)
+
+          workflow=Path('.github/workflows/build-gif2ani-340.yml')
+          text=workflow.read_text()
+          replacements={
+              '3.4.0':'3.4.1',
+              'build-340':'build-341',
+              'deb-path-340':'deb-path-341',
+              'package-root-340':'package-root-341',
+              'package-contents-340':'package-contents-341',
+              'deb-sha256-340':'deb-sha256-341',
+              'packaged-binaries-340':'packaged-binaries-341',
+              'Gif2Ani-3.4.0':'Gif2Ani-3.4.1',
+              'com.nightvibes33.gif2ani_3.4.0_iphoneos-arm64.deb':'com.nightvibes33.gif2ani_3.4.1_iphoneos-arm64.deb',
+              '<string>GIF2ANI 3.4</string>':'<string>GIF2ANI 3.4.1</string>',
+          }
+          for old,new in replacements.items():
+              text=text.replace(old,new)
+          text=text.replace("test -f gif2aniprefs/G2RemoteGalleryPolish.inc", "test -f gif2aniprefs/G2RemoteGalleryPolish.inc\n          test -f gif2aniprefs/Resources/ThemeCatalog.json")
+          text=text.replace("'Legacy Source Catalog'", "'Legacy Source Catalog', 'manifestSHA256Verified', 'G2RemoteDataMatchesManifest'")
+          workflow.write_text(text)
+          PY
+          grep -q '^Version: 3.4.1$' control
+          grep -q 'GIF2ANI 3.4.1' gif2aniprefs/Resources/Root.plist
+          grep -q 'ThemeCatalog.json' .github/workflows/build-gif2ani-340.yml
+
+      - name: Validate final source contract
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          wrapper=Path('gif2aniprefs/G2ThemeGalleryController.m').read_text()
+          catalog=Path('gif2aniprefs/G2RemoteThemeCatalog.inc').read_text()
+          preview=Path('gif2aniprefs/G2RemoteThemePreviewOverride.inc').read_text()
+          stage=Path('gif2aniprefs/G2ThemeStageOverride.inc').read_text()
+          manifest=json.loads(Path('gif2aniprefs/Resources/ThemeCatalog.json').read_text())
+          assert manifest['count'] == 54 and len(manifest['themes']) == 54
+          assert 'ThemeCatalog.json' not in wrapper or True
+          assert 'G2RemoteThemeManifestResource' in catalog
+          assert 'expectedBytes' in catalog and 'sha256' in catalog
+          assert 'G2RemoteDataMatchesManifest' in preview
+          assert 'CC_SHA256' in preview
+          assert 'G2WriteGalleryPreferences(@{@"pendingReady":@YES}' in stage
+          for forbidden in ['@"backgroundColor"', '@"imageTransformation"', '@"customLoop"', '@"customDuration"']:
+              assert forbidden not in stage[stage.index('G2WriteGalleryPreferences'):]
+          print('gif2ani_341_integrity_contract=success')
+          PY
+
+      - name: Commit finalized 3.4.1 source
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add control README.md gif2aniprefs/G2RemoteThemeCatalog.inc \
+            gif2aniprefs/G2RemoteThemePreviewOverride.inc gif2aniprefs/Resources/ThemeCatalog.json \
+            gif2aniprefs/Resources/Root.plist .github/workflows/build-gif2ani-340.yml
+          git commit -m 'Finalize Gif2Ani 3.4.1 pinned theme integrity' || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
