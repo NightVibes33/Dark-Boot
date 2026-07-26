@@ -1,0 +1,52 @@
+name: Probe Open Theme Audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/probe-open-theme-audit.yml
+      - triggers/probe-open-theme-audit.txt
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Query live audit workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl -fsSL \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/audit-refresh-open-theme-catalog.yml/runs?per_page=5" \
+            -o audit-runs.json
+          python3 - <<'PY'
+          import json
+          from datetime import datetime,timezone
+          from pathlib import Path
+          data=json.load(open('audit-runs.json'))
+          lines=['Gif2Ani Open Theme Audit Probe','probed_at_utc='+datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')]
+          for run in data.get('workflow_runs',[])[:5]:
+              lines += ['', 'run_id='+str(run.get('id','')), 'head_sha='+str(run.get('head_sha','')), 'status='+str(run.get('status','')), 'conclusion='+str(run.get('conclusion','')), 'created_at='+str(run.get('created_at','')), 'updated_at='+str(run.get('updated_at','')), 'url='+str(run.get('html_url',''))]
+          Path('status/open-theme-audit-probe.txt').write_text('\n'.join(lines)+'\n')
+          PY
+      - name: Commit audit probe
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add status/open-theme-audit-probe.txt
+          git commit -m 'Record open theme audit probe [skip ci]' || exit 0
+          git push origin HEAD:main
