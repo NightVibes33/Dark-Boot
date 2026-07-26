@@ -1,0 +1,125 @@
+name: Build Gif2Ani 3.5.0 Modern Gallery
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/build-gif2ani-350-modern.yml
+      - triggers/build-gif2ani-350-modern.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gif2ani-350-modern-final
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct and apply modernization source
+        run: |
+          set -euo pipefail
+          cat scripts/payload/modern-*.txt > scripts/G2ModernGallery.inc.gz.b64
+          cat scripts/payload/patch-*.txt > scripts/apply_modernization.py.b64
+          base64 -d scripts/apply_modernization.py.b64 > scripts/apply_modernization.py
+          python3 scripts/apply_modernization.py | tee modernize.log
+          test "$(grep -c 'G2ModernThemeGalleryController' gif2aniprefs/G2ModernGallery.inc)" -ge 2
+          grep -Fq 'G2ModernApplyReviewController' gif2aniprefs/G2ModernGallery.inc
+          grep -Fq 'G2DecodeQueue' Tweak.xm
+          grep -Fq 'memory-pressure-frames-released' Tweak.xm
+          grep -Fq 'Version: 3.5.0' control
+
+      - name: Install Theos toolchain
+        env:
+          THEOS: /opt/theos
+          CI: '1'
+          SHELL: /bin/bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends bash curl sudo build-essential fakeroot rsync perl git libxml2 dpkg-dev unzip xz-utils ca-certificates python3 file
+          sudo rm -rf /opt/theos
+          sudo mkdir -p /opt
+          sudo chown "$USER:$USER" /opt
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          test -x /opt/theos/toolchain/linux/iphone/bin/clang
+
+      - name: Build and validate rootless 3.5.0 package
+        env:
+          THEOS: /opt/theos
+        run: |
+          set -euo pipefail
+          make clean package FINALPACKAGE=1 2>&1 | tee gif2ani-350-build.log
+          DEB="$(find packages -maxdepth 1 -type f -name 'com.nightvibes33.gif2ani_3.5.0_iphoneos-arm64.deb' -print -quit)"
+          test -s "$DEB"
+          test "$(dpkg-deb -f "$DEB" Package)" = 'com.nightvibes33.gif2ani'
+          test "$(dpkg-deb -f "$DEB" Version)" = '3.5.0'
+          test "$(dpkg-deb -f "$DEB" Architecture)" = 'iphoneos-arm64'
+          rm -rf verify-root
+          dpkg-deb -x "$DEB" verify-root
+          PREFS='verify-root/var/jb/Library/PreferenceBundles/Gif2AniPrefs.bundle/Gif2AniPrefs'
+          TWEAK='verify-root/var/jb/Library/MobileSubstrate/DynamicLibraries/Gif2Ani.dylib'
+          test -s "$PREFS" && test -s "$TWEAK"
+          file "$PREFS" | grep -Fq 'Mach-O 64-bit arm64'
+          file "$TWEAK" | grep -Fq 'Mach-O 64-bit arm64'
+          for marker in 'Search themes' 'Download All CC0' 'Clear Download Cache' 'Favorites' 'Recently Used' 'Apply Without Respring' 'Apply and Respring' 'Emergency Disable' 'Compare with Apple'; do
+            strings "$PREFS" | grep -Fq "$marker"
+          done
+          for marker in 'memory-pressure-frames-released' 'custom-animation-finished-frames-released' 'ImageIO-bounded-thumbnail-serial-queue'; do
+            strings "$TWEAK" | grep -Fq "$marker"
+          done
+          mkdir -p release-packages
+          cp "$DEB" release-packages/Gif2Ani-3.5.0-modern-gallery.deb
+          sha256sum release-packages/Gif2Ani-3.5.0-modern-gallery.deb | tee release-packages/Gif2Ani-3.5.0-modern-gallery.sha256
+
+      - name: Upload 3.5.0 DEB
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gif2Ani-3.5.0-modern-gallery
+          path: release-packages/Gif2Ani-3.5.0-modern-gallery.deb
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish source, DEB, and status
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          mkdir -p status release-packages
+          {
+            echo 'Gif2Ani 3.5.0 Modern Gallery and BackBoard Reliability'
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "source_commit=${GITHUB_SHA}"
+            echo "status=${JOB_STATUS}"
+            echo "completed_at_utc=$(date -u +%FT%TZ)"
+            cat release-packages/Gif2Ani-3.5.0-modern-gallery.sha256 2>/dev/null || true
+            echo 'gallery=search categories filters cards favorites recent delete download-all clear-cache storage update-indicator'
+            echo 'preview=actual-background scaling play-pause restart speed fullscreen device-frames apple-comparison'
+            echo 'apply=single-review apply-without-respring apply-and-respring five-rollbacks emergency-disable'
+            echo 'backboard=serial-decode memory-pressure frame-release duration-cap telemetry async-throttled-status apple-loader-preserved'
+            echo '--- modernization log ---'
+            cat modernize.log 2>/dev/null || true
+            echo '--- build tail ---'
+            tail -n 180 gif2ani-350-build.log 2>/dev/null || true
+          } > status/gif2ani-350-modern.txt
+          if [ "$JOB_STATUS" = success ]; then
+            git rm -r scripts/payload
+            git add control Tweak.xm gif2aniprefs/G2ThemeGalleryController.m gif2aniprefs/G2ModernGallery.inc
+            git add -f release-packages/Gif2Ani-3.5.0-modern-gallery.deb
+            git add release-packages/Gif2Ani-3.5.0-modern-gallery.sha256
+          fi
+          git add status/gif2ani-350-modern.txt
+          git commit -m "Publish Gif2Ani 3.5.0 modernization (${JOB_STATUS}) [skip ci]" || exit 0
+          git push origin HEAD:main
