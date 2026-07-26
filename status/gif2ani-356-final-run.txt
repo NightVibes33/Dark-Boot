@@ -1,0 +1,19 @@
+Gif2Ani 3.5.6 Final Workflow Reporter
+report_run=30211323800
+id=30211285387
+head_sha=85e8866c52c58a2a8e224875700a62ceb67a225e
+status=in_progress
+conclusion=None
+created_at=2026-07-26T16:49:44Z
+updated_at=2026-07-26T16:49:47Z
+html_url=https://github.com/NightVibes33/Dark-Boot/actions/runs/30211285387
+job=89817822461|build|in_progress|None
+step=1|Set up job|completed|success
+step=2|Run actions/checkout@v4|completed|success
+step=3|Install build dependencies and Theos|completed|success
+step=4|Verify all reachable SnowBoard source DEBs|completed|success
+step=5|Integrate catalog and validate generated Objective-C|completed|success
+step=6|Compile and verify rootless package|in_progress|None
+step=7|Upload final package evidence|pending|None
+step=8|Publish final package and status|pending|None
+step=16|Post Run actions/checkout@v4|pending|None
